@@ -10,7 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jk.daggerrxkotlin.adapters.DataAdapter
-import com.jk.daggerrxkotlin.managers.NewsManager
+import com.jk.daggerrxkotlin.api.IApi
+import com.jk.daggerrxkotlin.application.MyApplication
 import kotlinx.android.synthetic.main.fragment_data.*
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -33,9 +34,12 @@ class DataFragment : RxBaseFragment(), DataAdapter.onViewSelectedListener {
 
 
     private var mListener: OnFragmentInteractionListener? = null
-    var newsManager: NewsManager= NewsManager()
+    @Inject
+    lateinit var api: IApi;
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MyApplication.appComponent.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -67,12 +71,19 @@ class DataFragment : RxBaseFragment(), DataAdapter.onViewSelectedListener {
     }
 
     private fun requestNews() {
-        val subscription = newsManager.getNews("", "")
+        val subscription = api.getIp("6")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     retData ->
-                    (recyclerView.adapter as DataAdapter).addItems(retData)
+                    run{
+                        var count = 10
+                        while (count < 10) {
+                            (recyclerView.adapter as DataAdapter).addItems(retData)
+                            count-=1
+                        }
+                    }
+
                 }, {
                     e ->
                     Snackbar.make(recyclerView, e.message ?: "", Snackbar.LENGTH_LONG).show();
