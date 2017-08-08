@@ -2,7 +2,7 @@ package com.jk.daggerrxkotlin.extensions
 
 import android.text.TextUtils
 import android.widget.ImageView
-import com.squareup.picasso.Picasso
+import com.bumptech.glide.Glide
 import kotlin.jk.com.daggerrxkotlin.R
 
 /**
@@ -11,8 +11,8 @@ import kotlin.jk.com.daggerrxkotlin.R
 
 fun ImageView.loading(imageUrl: String) {
     if (TextUtils.isEmpty(imageUrl)) {
-        Picasso.with(context).load(R.mipmap.ic_launcher).into(this)
+        Glide.with(context).load(R.mipmap.ic_launcher).into(this)
     } else {
-        Picasso.with(context).load(imageUrl).into(this)
+        Glide.with(context).load(imageUrl).into(this)
     }
 }

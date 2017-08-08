@@ -4,7 +4,8 @@ import com.jk.daggerrxkotlin.api.IApi
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 /**
@@ -12,14 +13,15 @@ import javax.inject.Singleton
  */
 
 @Module
-public class NetworkModule(){
+public class NetworkModule{
     @Provides
     @Singleton
     fun getRetrofit(): IApi {
         return Retrofit.Builder()
                 //http://ip.jsontest.com/?mime=6
-                .baseUrl("http://ip.jsontest.com/")
-                .addConverterFactory(MoshiConverterFactory.create())
+                .baseUrl("https://api.github.com/")
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(IApi::class.java)
 

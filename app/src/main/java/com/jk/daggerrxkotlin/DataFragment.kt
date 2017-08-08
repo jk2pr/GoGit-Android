@@ -6,15 +6,17 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jk.daggerrxkotlin.adapters.DataAdapter
 import com.jk.daggerrxkotlin.api.IApi
 import com.jk.daggerrxkotlin.application.MyApplication
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_data.*
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+
 import javax.inject.Inject
 import kotlin.jk.com.daggerrxkotlin.R
 
@@ -71,26 +73,26 @@ class DataFragment : RxBaseFragment(), DataAdapter.onViewSelectedListener {
     }
 
     private fun requestNews() {
-        val subscription = api.getIp("6")
+        api.searchUsers("Java", 1, 10)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    retData ->
-                    run{
-                        var count = 10
-                        while (count < 10) {
-                            (recyclerView.adapter as DataAdapter).addItems(retData)
-                            count-=1
-                        }
+                    abc ->
+                    run {
+                        (recyclerView.adapter as DataAdapter).addItems(abc.items)
+                        (recyclerView.adapter as DataAdapter).notifyDataSetChanged()
                     }
 
                 }, {
                     e ->
-                    Snackbar.make(recyclerView, e.message ?: "", Snackbar.LENGTH_LONG).show();
+                    run {
+                        Log.d("Tag", e.message)
+                        Snackbar.make(recyclerView, e.message ?: "", Snackbar.LENGTH_LONG).show();
+                    }
                 }
                 )
 
-        subscriptions.add(subscription)
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

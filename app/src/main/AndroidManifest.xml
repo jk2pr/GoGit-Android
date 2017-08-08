@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="kotlin.jk.com.daggerrxkotlin">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:name="com.jk.daggerrxkotlin.application.MyApplication"
         android:allowBackup="true"

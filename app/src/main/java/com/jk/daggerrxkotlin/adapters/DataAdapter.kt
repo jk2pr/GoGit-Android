@@ -3,7 +3,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.jk.daggerrxkotlin.api.DataResponse
+import com.jk.daggerrxkotlin.api.User
+import com.jk.daggerrxkotlin.extensions.loading
 import kotlinx.android.synthetic.main.news_item.view.*
 import kotlin.jk.com.daggerrxkotlin.R
 
@@ -11,7 +12,7 @@ import kotlin.jk.com.daggerrxkotlin.R
  * Created by M2353204 on 02/08/2017.
  */
 class DataAdapter(val viewActions: onViewSelectedListener) : RecyclerView.Adapter<DataAdapter.ViewHolder>() {
-    private var datas = ArrayList<DataResponse>();
+    private var datas = ArrayList<User>();
 
     interface onViewSelectedListener {
         fun onItemSelected(url: String?)
@@ -29,8 +30,8 @@ class DataAdapter(val viewActions: onViewSelectedListener) : RecyclerView.Adapte
     }
 
 
-    fun addItems(items: DataResponse){
-        datas.add(items);
+    fun addItems(items: List<User>){
+        datas.addAll(items);
     }
     override fun getItemCount(): Int {
         return datas.size;
@@ -38,15 +39,15 @@ class DataAdapter(val viewActions: onViewSelectedListener) : RecyclerView.Adapte
 
 
     inner class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
-        fun bind(item: DataResponse) = with(itemView) {
-           // img_thumbnail.loading(item.thumbnail);
-           // description.text = item.title
-            author.text = item.author
+        fun bind(item: User) = with(itemView) {
+            img_thumbnail.loading(item.avatar_url);
+            description.text = item.html_url
+            author.text = item.login
             //comments.text = """${item.numComments.toString()} comments"""
            // time.text = """${item.created}"""
 
             super.itemView.setOnClickListener {
-                viewActions.onItemSelected(item.author)
+                viewActions.onItemSelected(item.html_url)
             }
         }
     }
