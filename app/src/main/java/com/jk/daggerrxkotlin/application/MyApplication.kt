@@ -1,11 +1,9 @@
 package com.jk.daggerrxkotlin.application
 
-import android.app.Application
 
+import android.app.Application
 import di.components.AppComponent
 import di.components.DaggerAppComponent
-
-
 import di.modules.AppModule
 import di.modules.NetworkModule
 
@@ -19,8 +17,9 @@ class MyApplication : Application() {
     }
     override fun onCreate() {
         super.onCreate()
-        appComponent= DaggerAppComponent.builder().appModule(AppModule(this))
+        appComponent= DaggerAppComponent.builder()
                 .networkModule(NetworkModule())
+                .appModule(AppModule(this))
                 .build()
 
 

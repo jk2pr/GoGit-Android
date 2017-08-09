@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,7 +22,7 @@ import javax.inject.Inject
 import kotlin.jk.com.daggerrxkotlin.R
 
 
-class DataFragment : RxBaseFragment(), DataAdapter.onViewSelectedListener {
+class DataFragment : Fragment(), DataAdapter.onViewSelectedListener {
     override fun onItemSelected(url: String?) {
 
         if (url.isNullOrEmpty()) {
