@@ -19,8 +19,8 @@ class DataAdapter(val viewActions: onViewSelectedListener) : RecyclerView.Adapte
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
-        val infoator = LayoutInflater.from(parent?.context)
-        val view = infoator.inflate(R.layout.news_item, null)
+        val inflator = LayoutInflater.from(parent?.context)
+        val view = inflator.inflate(R.layout.news_item, null)
         return ViewHolder(view)
     }
 
@@ -46,7 +46,7 @@ class DataAdapter(val viewActions: onViewSelectedListener) : RecyclerView.Adapte
             //comments.text = """${item.numComments.toString()} comments"""
            // time.text = """${item.created}"""
 
-            super.itemView.setOnClickListener {
+            itemView.setOnClickListener {
                 viewActions.onItemSelected(item.html_url)
             }
         }
