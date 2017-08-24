@@ -7,7 +7,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
     defaultConfig {
-        applicationId "com.jk.daggerrxkotlin"
+        applicationId "com.jk.com.jk.dagger"
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1

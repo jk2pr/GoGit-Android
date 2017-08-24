@@ -1,4 +1,4 @@
-package di.modules
+package com.jk.daggerrxkotlin.di.modules
 
 import android.app.Application
 import android.content.Context

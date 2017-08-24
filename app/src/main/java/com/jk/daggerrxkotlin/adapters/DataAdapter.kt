@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import com.jk.daggerrxkotlin.api.User
 import com.jk.daggerrxkotlin.extensions.loading
 import kotlinx.android.synthetic.main.news_item.view.*
-import kotlin.jk.com.daggerrxkotlin.R
+import kotlin.jk.com.dagger.R
 
 /**
  * Created by M2353204 on 02/08/2017.

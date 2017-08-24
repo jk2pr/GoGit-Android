@@ -1,10 +1,10 @@
-package di.components
+package com.jk.daggerrxkotlin.di.components
 
 import android.app.Activity
 import com.jk.daggerrxkotlin.DataFragment
+import com.jk.daggerrxkotlin.di.modules.AppModule
+import com.jk.daggerrxkotlin.di.modules.NetworkModule
 import dagger.Component
-import di.modules.AppModule
-import di.modules.NetworkModule
 import javax.inject.Singleton
 
 /**

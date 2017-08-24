@@ -1,4 +1,4 @@
-package di.modules
+package com.jk.daggerrxkotlin.di.modules
 
 import com.jk.daggerrxkotlin.api.IApi
 import dagger.Module

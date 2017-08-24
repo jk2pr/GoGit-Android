@@ -3,7 +3,7 @@ package com.jk.daggerrxkotlin.extensions
 import android.text.TextUtils
 import android.widget.ImageView
 import com.bumptech.glide.Glide
-import kotlin.jk.com.daggerrxkotlin.R
+import kotlin.jk.com.dagger.R
 
 /**
  * Created by M2353204 on 02/08/2017.

@@ -19,7 +19,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_data.*
 
 import javax.inject.Inject
-import kotlin.jk.com.daggerrxkotlin.R
+import kotlin.jk.com.dagger.R
 
 
 class DataFragment : Fragment(), DataAdapter.onViewSelectedListener {
@@ -76,16 +76,14 @@ class DataFragment : Fragment(), DataAdapter.onViewSelectedListener {
         api.searchUsers("Kotlin", 1, 10)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    abc ->
+                .subscribe({ abc ->
                     run {
                         showLoader(false)
                         (recyclerView.adapter as DataAdapter).addItems(abc.items)
                         (recyclerView.adapter as DataAdapter).notifyDataSetChanged()
                     }
 
-                }, {
-                    e ->
+                }, { e ->
                     run {
                         Log.d("Tag", e.message)
                         Snackbar.make(recyclerView, e.message ?: "", Snackbar.LENGTH_LONG).show();
@@ -123,14 +121,14 @@ class DataFragment : Fragment(), DataAdapter.onViewSelectedListener {
         fun onFragmentInteraction(uri: Uri)
     }
 
-    fun showLoader(isShowing: Boolean) =
-            if (isShowing == false) {
-                recyclerView.visibility = View.VISIBLE
-                progressbar.visibility = View.GONE
-            } else {
-                recyclerView.visibility = View.GONE
-                progressbar.visibility = View.VISIBLE
-            }
+    fun showLoader(isShowing: Boolean) {
+        if (isShowing == false) {
+            recyclerView.visibility = View.VISIBLE
+            progressbar.visibility = View.GONE
+        } else {
+            recyclerView.visibility = View.GONE
+            progressbar.visibility = View.VISIBLE
+        }
 
-
+    }
 }

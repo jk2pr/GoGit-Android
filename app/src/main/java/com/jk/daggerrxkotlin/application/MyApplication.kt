@@ -2,10 +2,10 @@ package com.jk.daggerrxkotlin.application
 
 
 import android.app.Application
-import di.components.AppComponent
-import di.components.DaggerAppComponent
-import di.modules.AppModule
-import di.modules.NetworkModule
+import com.jk.daggerrxkotlin.di.components.AppComponent
+import com.jk.daggerrxkotlin.di.components.DaggerAppComponent
+import com.jk.daggerrxkotlin.di.modules.AppModule
+import com.jk.daggerrxkotlin.di.modules.NetworkModule
 
 
 /**
