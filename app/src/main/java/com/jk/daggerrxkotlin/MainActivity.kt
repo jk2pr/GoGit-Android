@@ -2,7 +2,6 @@ package com.jk.daggerrxkotlin
 
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import com.jk.daggerrxkotlin.application.MyApplication
 import kotlinx.android.synthetic.main.activity_main.*
@@ -21,17 +20,16 @@ class MainActivity : AppCompatActivity(), DataFragment.OnFragmentInteractionList
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false);
         toolbar.setBackgroundColor(resources.getColor(R.color.colorAccent));
-        //This is text commit
-        val dataFragment = DataFragment();
-        changeFragment(dataFragment)
+       // val dataFragment = DataFragment();
+      //  changeFragment(dataFragment)
     }
 
-    fun changeFragment(f: Fragment, cleanStack: Boolean = false) {
-        val ft = supportFragmentManager.beginTransaction();
-        ft.setCustomAnimations(
-                R.anim.abc_fade_in, R.anim.abc_fade_out, R.anim.abc_popup_enter, R.anim.abc_popup_exit);
-        ft.replace(R.id.activity_base_content, f);
-        ft.addToBackStack(f.javaClass.simpleName);
-        ft.commit();
-    }
+//    fun changeFragment(f: Fragment, cleanStack: Boolean = false) {
+//        val ft = supportFragmentManager.beginTransaction();
+//        ft.setCustomAnimations(
+//                R.anim.abc_fade_in, R.anim.abc_fade_out, R.anim.abc_popup_enter, R.anim.abc_popup_exit);
+//        ft.replace(R.id.activity_base_content, f);
+//        ft.addToBackStack(f.javaClass.simpleName);
+//        ft.commit();
+//    }
 }

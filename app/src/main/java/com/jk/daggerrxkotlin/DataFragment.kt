@@ -24,7 +24,6 @@ import kotlin.jk.com.daggerrxkotlin.R
 
 class DataFragment : Fragment(), DataAdapter.onViewSelectedListener {
     override fun onItemSelected(url: String?) {
-
         if (url.isNullOrEmpty()) {
             Snackbar.make(recyclerView, "No URL assigned to this news", Snackbar.LENGTH_LONG).show()
         } else {
@@ -74,12 +73,13 @@ class DataFragment : Fragment(), DataAdapter.onViewSelectedListener {
     }
 
     private fun requestNews() {
-        api.searchUsers("Java", 1, 10)
+        api.searchUsers("Kotlin", 1, 10)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     abc ->
                     run {
+                        showLoader(false)
                         (recyclerView.adapter as DataAdapter).addItems(abc.items)
                         (recyclerView.adapter as DataAdapter).notifyDataSetChanged()
                     }
@@ -122,6 +122,15 @@ class DataFragment : Fragment(), DataAdapter.onViewSelectedListener {
         // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
+
+    fun showLoader(isShowing: Boolean) =
+            if (isShowing == false) {
+                recyclerView.visibility = View.VISIBLE
+                progressbar.visibility = View.GONE
+            } else {
+                recyclerView.visibility = View.GONE
+                progressbar.visibility = View.VISIBLE
+            }
 
 
 }
