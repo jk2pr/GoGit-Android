@@ -5,6 +5,7 @@ import android.app.Application
 import com.jk.daggerrxkotlin.di.components.AppComponent
 import com.jk.daggerrxkotlin.di.components.DaggerAppComponent
 import com.jk.daggerrxkotlin.di.modules.AppModule
+import com.jk.daggerrxkotlin.di.modules.DBModule
 import com.jk.daggerrxkotlin.di.modules.NetworkModule
 
 
@@ -20,6 +21,7 @@ class MyApplication : Application() {
         appComponent= DaggerAppComponent.builder()
                 .networkModule(NetworkModule())
                 .appModule(AppModule(this))
+                .dBModule(DBModule(this))
                 .build()
 
 

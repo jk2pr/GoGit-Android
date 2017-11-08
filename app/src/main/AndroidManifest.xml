@@ -3,6 +3,7 @@
     package="kotlin.jk.com.dagger">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <application
         android:name="com.jk.daggerrxkotlin.application.MyApplication"
         android:allowBackup="true"

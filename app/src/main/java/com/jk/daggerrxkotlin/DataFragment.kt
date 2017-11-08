@@ -13,16 +13,25 @@ import android.view.View
 import android.view.ViewGroup
 import com.jk.daggerrxkotlin.adapters.DataAdapter
 import com.jk.daggerrxkotlin.api.IApi
+import com.jk.daggerrxkotlin.api.User
 import com.jk.daggerrxkotlin.application.MyApplication
+import com.jk.daggerrxkotlin.db.AppDatabase
+import com.jk.daggerrxkotlin.networkutils.NetworkUtils
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_data.*
-
 import javax.inject.Inject
 import kotlin.jk.com.dagger.R
 
 
 class DataFragment : Fragment(), DataAdapter.onViewSelectedListener {
+
+    @Inject
+    lateinit var api: IApi;
+    @Inject
+    lateinit var appDatabase: AppDatabase;
+
     override fun onItemSelected(url: String?) {
         if (url.isNullOrEmpty()) {
             Snackbar.make(recyclerView, "No URL assigned to this news", Snackbar.LENGTH_LONG).show()
@@ -33,11 +42,6 @@ class DataFragment : Fragment(), DataAdapter.onViewSelectedListener {
         }
 
     }
-
-
-    private var mListener: OnFragmentInteractionListener? = null
-    @Inject
-    lateinit var api: IApi;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,10 +70,20 @@ class DataFragment : Fragment(), DataAdapter.onViewSelectedListener {
 
 
     private fun initAdapter() {
-        if (recyclerView.adapter == null) {
-            requestNews();
+        if (recyclerView.adapter == null)
             recyclerView.adapter = DataAdapter(this)
+        if (NetworkUtils.hasActiveInternetConnection(context)) {
+            requestNews()
+        } else {
+            appDatabase.userDao().getAllPeople().subscribeOn(Schedulers.io())
+                    ?.observeOn(AndroidSchedulers.mainThread())
+                    ?.subscribe { listOfPeople ->
+                        updateAdapter(listOfPeople);
+                        Log.d("Data", listOfPeople.toList().toString());
+                    }
         }
+
+
     }
 
     private fun requestNews() {
@@ -78,9 +92,17 @@ class DataFragment : Fragment(), DataAdapter.onViewSelectedListener {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ abc ->
                     run {
-                        showLoader(false)
-                        (recyclerView.adapter as DataAdapter).addItems(abc.items)
-                        (recyclerView.adapter as DataAdapter).notifyDataSetChanged()
+                       // updateAdapter(abc.items)
+                        //(recyclerView.adapter as DataAdapter).addItems(abc.items)
+                        //(recyclerView.adapter as DataAdapter).notifyDataSetChanged()
+                        Single.fromCallable {
+                            // val user = abc.items.get(0);
+                            appDatabase.userDao().insert(abc.items)
+
+                        }.subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread()).subscribe()
+
+
                     }
 
                 }, { e ->
@@ -94,25 +116,25 @@ class DataFragment : Fragment(), DataAdapter.onViewSelectedListener {
 
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        if (mListener != null) {
-            mListener!!.onFragmentInteraction(uri)
+
+    fun updateAdapter(users: List<User>) {
+        showLoader(false)
+        if (users.isEmpty()) {
+            showEmptyView()
+            return
+        } else {
+            (recyclerView?.adapter as DataAdapter).addItems(users)
+            (recyclerView?.adapter as DataAdapter).notifyDataSetChanged()
         }
     }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            mListener = context
-        } else {
-            throw RuntimeException(context!!.toString() + " must implement OnFragmentInteractionListener")
-        }
+
     }
 
     override fun onDetach() {
         super.onDetach()
-        mListener = null
     }
 
 
@@ -123,12 +145,17 @@ class DataFragment : Fragment(), DataAdapter.onViewSelectedListener {
 
     fun showLoader(isShowing: Boolean) {
         if (isShowing == false) {
-            recyclerView.visibility = View.VISIBLE
-            progressbar.visibility = View.GONE
+            recyclerView?.visibility = View.VISIBLE
+            progressbar?.visibility = View.GONE
         } else {
-            recyclerView.visibility = View.GONE
-            progressbar.visibility = View.VISIBLE
+            recyclerView?.visibility = View.GONE
+            progressbar?.visibility = View.VISIBLE
         }
+
+    }
+
+    fun showEmptyView() {
+        emptyview.visibility = View.VISIBLE
 
     }
 }

@@ -1,7 +1,13 @@
 package com.jk.daggerrxkotlin.api
 
-data class User(
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 
+
+@Entity
+data class User(
+        @PrimaryKey(autoGenerate = true)
+        val uid: Long,
         val login: String,
         val avatar_url: String,
         val id: Long,
