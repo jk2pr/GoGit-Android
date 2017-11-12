@@ -73,7 +73,7 @@ class DataFragment : Fragment(), DataAdapter.onViewSelectedListener {
     private fun initAdapter() {
         if (recyclerView.adapter == null)
             recyclerView.adapter = DataAdapter(this)
-        if (NetworkUtils.hasActiveInternetConnection(context)) {
+        if (NetworkUtils.hasActiveInternetConnection(activity as Context)) {
             requestNews()
         } else {
             appDatabase.userDao().getAllPeople().subscribeOn(Schedulers.io())
@@ -93,7 +93,7 @@ class DataFragment : Fragment(), DataAdapter.onViewSelectedListener {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ abc ->
                     run {
-                       // updateAdapter(abc.items)
+                        updateAdapter(abc.items)
                         //(recyclerView.adapter as DataAdapter).addItems(abc.items)
                         //(recyclerView.adapter as DataAdapter).notifyDataSetChanged()
                         Single.fromCallable {

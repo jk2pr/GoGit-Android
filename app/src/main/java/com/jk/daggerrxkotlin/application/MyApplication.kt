@@ -7,6 +7,10 @@ import com.jk.daggerrxkotlin.di.components.DaggerAppComponent
 import com.jk.daggerrxkotlin.di.modules.AppModule
 import com.jk.daggerrxkotlin.di.modules.DBModule
 import com.jk.daggerrxkotlin.di.modules.NetworkModule
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
+
+
 
 
 /**
@@ -18,6 +22,7 @@ class MyApplication : Application() {
     }
     override fun onCreate() {
         super.onCreate()
+        Fabric.with(this, Crashlytics())
         appComponent= DaggerAppComponent.builder()
                 .networkModule(NetworkModule())
                 .appModule(AppModule(this))
