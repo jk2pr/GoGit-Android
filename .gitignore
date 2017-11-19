@@ -9,3 +9,5 @@
 app/libs/
 app/src/androidTest/
 app/src/test/
+app/fabric.properties
+/app/.idea/

@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity(), DataFragment.OnFragmentInteractionList
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false);
         toolbar.setBackgroundColor(resources.getColor(R.color.colorAccent));
+
        // val dataFragment = DataFragment();
       //  changeFragment(dataFragment)
     }

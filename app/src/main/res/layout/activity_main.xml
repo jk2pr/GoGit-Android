@@ -22,12 +22,13 @@
 
         </android.support.v7.widget.Toolbar>
 
-        <fragment android:name="com.jk.daggerrxkotlin.DataFragment"
+        <fragment
             android:id="@+id/activity_base_content"
+            android:name="com.jk.daggerrxkotlin.DataFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/toolbar"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
     </RelativeLayout>
