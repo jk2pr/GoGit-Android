@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "58834426442",
+    "firebase_url": "https://daggerrxkotlin.firebaseio.com",
+    "project_id": "daggerrxkotlin",
+    "storage_bucket": "daggerrxkotlin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:58834426442:android:e250c0610aeed464",
+        "android_client_info": {
+          "package_name": "com.jk.daggerrx"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "58834426442-tnqljhf4ovbku6rtkvkkfkjvu240vmq6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jk.daggerrx",
+            "certificate_hash": "d3bcedfd1d35d17bf96f6982b8051361aec89af8"
+          }
+        },
+        {
+          "client_id": "58834426442-r5ol198bg4sueekue7def700r7pb3rn3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAb7spl1N3j3cLm-V0d61a4V9DRKG_Gdy8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "58834426442-r5ol198bg4sueekue7def700r7pb3rn3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

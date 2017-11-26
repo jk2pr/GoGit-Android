@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.jk.daggerrxkotlin.adapters.DataAdapter
 import com.jk.daggerrxkotlin.api.IApi
 import com.jk.daggerrxkotlin.api.User
@@ -33,9 +34,9 @@ class DataFragment : Fragment(), AnkoLogger,DataAdapter.onViewSelectedListener {
     @Inject
     lateinit var api: IApi;
     @Inject
-
-
     lateinit var appDatabase: AppDatabase;
+    @Inject
+    lateinit var mFirebaseAnalytics :FirebaseAnalytics
 
     override fun onItemSelected(url: String?) {
         if (url.isNullOrEmpty()) {
@@ -60,6 +61,12 @@ class DataFragment : Fragment(), AnkoLogger,DataAdapter.onViewSelectedListener {
         super.onCreateView(inflater,container,savedInstanceState)
         val view = inflater.inflate(R.layout.fragment_data, container, false)
         retainInstance= true
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "006")
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Jitendra")
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "text")
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+
         return view;
 
     }
