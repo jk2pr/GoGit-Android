@@ -18,8 +18,8 @@ class MainActivity : AppCompatActivity(), DataFragment.OnFragmentInteractionList
         MyApplication.appComponent.inject(this);
         val toolbar = toolbar as android.support.v7.widget.Toolbar
         setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false);
-        toolbar.setBackgroundColor(resources.getColor(R.color.colorToolbar));
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        toolbar.setBackgroundColor(resources.getColor(R.color.colorToolbar))
 
        // val dataFragment = DataFragment();
       //  changeFragment(dataFragment)
