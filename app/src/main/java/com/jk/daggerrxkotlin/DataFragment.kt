@@ -42,7 +42,7 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
     lateinit var appDatabase: AppDatabase;
     @Inject
     lateinit var mFirebaseAnalytics: FirebaseAnalytics
-    lateinit var holdingActivity:MainActivity
+    lateinit var holdingActivity: MainActivity
 
     override fun onItemSelected(url: String?) {
         if (url.isNullOrEmpty()) {
@@ -57,7 +57,7 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        holdingActivity= activity as MainActivity
+        holdingActivity = activity as MainActivity
         MyApplication.appComponent.inject(this)
     }
 
@@ -78,27 +78,28 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
     }
 
     private fun initSearchView() {
-        val layoutParams=android.support.v7.widget.Toolbar.LayoutParams(Gravity.END)
-       // layoutParams.width=ViewGroup.LayoutParams.MATCH_PARENT
-        holdingActivity. searchView.layoutParams = layoutParams
-        holdingActivity. searchView.setOnQueryTextListener(object : android.support.v7.widget.SearchView.OnQueryTextListener {
+        val layoutParams = android.support.v7.widget.Toolbar.LayoutParams(Gravity.END)
+        // layoutParams.width=ViewGroup.LayoutParams.MATCH_PARENT
+        holdingActivity.searchView.layoutParams = layoutParams
+        holdingActivity.searchView.setOnQueryTextListener(object : android.support.v7.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null) {
-               var     searchText = "%$query%"
-                   /* appDatabase.userDao().getUserList(searchText).subscribeOn(Schedulers.io())
+                    val searchText = "%$query%"
+                    appDatabase.userDao().getUserList(searchText).subscribeOn(Schedulers.io())
                             ?.observeOn(AndroidSchedulers.mainThread())
                             ?.subscribe { listOfPeople ->
                                 updateAdapter(listOfPeople);
                                 debug(listOfPeople.toList().toString());
-                            }*/
+                            }
 
                     return true
                 }
-               return false
+                return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                return true
             }
 
         })
@@ -175,10 +176,13 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
             debug("No user")
             return
         } else {
-            if (recyclerView?.adapter != null) {
-                (recyclerView.adapter as DataAdapter).addItems(users)
-                (recyclerView.adapter as DataAdapter).notifyDataSetChanged()
+            val adapter = recyclerView?.adapter as DataAdapter
+            with(adapter) {
+                clearItems()
+                addItems(users)
+                notifyDataSetChanged()
             }
+
         }
     }
 

@@ -33,6 +33,9 @@ class DataAdapter(val viewActions: onViewSelectedListener) : RecyclerView.Adapte
     fun addItems(items: List<User>){
         datas.addAll(items)
     }
+    fun clearItems(){
+        datas.clear()
+    }
     override fun getItemCount(): Int {
         return datas.size
     }
