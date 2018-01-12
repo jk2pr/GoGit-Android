@@ -43,7 +43,7 @@ class DataAdapter(val viewActions: onViewSelectedListener) : RecyclerView.Adapte
             img_thumbnail.loading(item.avatar_url)
             description.text = item.html_url
             author.text = item.login
-            //comments.text = """${item.numComments.toString()} comments"""
+            //comments.text = """${12} comments"""
             time.text = item.type
 
             itemView.setOnClickListener {

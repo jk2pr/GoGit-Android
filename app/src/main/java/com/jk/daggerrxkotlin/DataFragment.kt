@@ -6,6 +6,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
+import android.support.v7.app.ActionBar
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,22 +23,26 @@ import com.jk.daggerrxkotlin.networkutils.NetworkUtils
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_data.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
 import org.jetbrains.anko.design.snackbar
 import javax.inject.Inject
 import kotlin.jk.com.dagger.R
+import android.view.Gravity
+import kotlin.jk.com.dagger.R.id.*
 
 
-class DataFragment : Fragment(), AnkoLogger,DataAdapter.onViewSelectedListener {
+class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener {
 
     @Inject
     lateinit var api: IApi;
     @Inject
     lateinit var appDatabase: AppDatabase;
     @Inject
-    lateinit var mFirebaseAnalytics :FirebaseAnalytics
+    lateinit var mFirebaseAnalytics: FirebaseAnalytics
+    lateinit var holdingActivity:MainActivity
 
     override fun onItemSelected(url: String?) {
         if (url.isNullOrEmpty()) {
@@ -51,41 +57,72 @@ class DataFragment : Fragment(), AnkoLogger,DataAdapter.onViewSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        holdingActivity= activity as MainActivity
         MyApplication.appComponent.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-
-        super.onCreateView(inflater,container,savedInstanceState)
+        super.onCreateView(inflater, container, savedInstanceState)
         val view = inflater.inflate(R.layout.fragment_data, container, false)
-        retainInstance= true
+        retainInstance = true
         val bundle = Bundle()
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "006")
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Jitendra")
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "text")
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
 
+
         return view;
 
     }
 
+    private fun initSearchView() {
+        val layoutParams=android.support.v7.widget.Toolbar.LayoutParams(Gravity.END)
+       // layoutParams.width=ViewGroup.LayoutParams.MATCH_PARENT
+        holdingActivity. searchView.layoutParams = layoutParams
+        holdingActivity. searchView.setOnQueryTextListener(object : android.support.v7.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null) {
+               var     searchText = "%$query%"
+                   /* appDatabase.userDao().getUserList(searchText).subscribeOn(Schedulers.io())
+                            ?.observeOn(AndroidSchedulers.mainThread())
+                            ?.subscribe { listOfPeople ->
+                                updateAdapter(listOfPeople);
+                                debug(listOfPeople.toList().toString());
+                            }*/
+
+                    return true
+                }
+               return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+        })
+
+        print(holdingActivity.searchView.getTag())
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         recyclerView.apply {
             setHasFixedSize(true)
             val linearLayout = LinearLayoutManager(context)
             layoutManager = linearLayout
-          //  clearOnScrollListeners()
+            //  clearOnScrollListeners()
         }
         initAdapter()
+        initSearchView()
     }
 
 
     private fun initAdapter() {
-      //  if (recyclerView.adapter == null)
-            recyclerView.adapter = DataAdapter(this)
+        //  if (recyclerView.adapter == null)
+        recyclerView.adapter = DataAdapter(this)
         if (NetworkUtils.hasActiveInternetConnection(activity as Context)) {
             debug("Has internet, will downloaded from server")
             requestNews()
@@ -95,7 +132,7 @@ class DataFragment : Fragment(), AnkoLogger,DataAdapter.onViewSelectedListener {
                     ?.observeOn(AndroidSchedulers.mainThread())
                     ?.subscribe { listOfPeople ->
                         updateAdapter(listOfPeople);
-                       debug(listOfPeople.toList().toString());
+                        debug(listOfPeople.toList().toString());
                     }
         }
 
@@ -121,7 +158,7 @@ class DataFragment : Fragment(), AnkoLogger,DataAdapter.onViewSelectedListener {
 
                 }, { e ->
                     run {
-                       debug( e.message)
+                        debug(e.message)
                         snackbar(recyclerView, e.message ?: "")
                     }
                 }
@@ -138,8 +175,7 @@ class DataFragment : Fragment(), AnkoLogger,DataAdapter.onViewSelectedListener {
             debug("No user")
             return
         } else {
-            if (recyclerView?.adapter!=null)
-            {
+            if (recyclerView?.adapter != null) {
                 (recyclerView.adapter as DataAdapter).addItems(users)
                 (recyclerView.adapter as DataAdapter).notifyDataSetChanged()
             }

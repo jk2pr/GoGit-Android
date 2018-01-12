@@ -15,4 +15,7 @@ interface UserDao {
     fun getAllPeople(): Flowable<List<User>>
     @Insert
     fun insert(user: List<User>)
+
+  /*  @Query("SELECT * FROM user WHERE login LIKE :nameText")
+    fun getUserList(text: String): Flowable<List<User>>*/
 }
