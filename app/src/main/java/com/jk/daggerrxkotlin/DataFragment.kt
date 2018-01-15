@@ -4,12 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v7.app.ActionBar
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,16 +19,14 @@ import com.jk.daggerrxkotlin.db.AppDatabase
 import com.jk.daggerrxkotlin.networkutils.NetworkUtils
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_data.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
 import org.jetbrains.anko.design.snackbar
 import javax.inject.Inject
 import kotlin.jk.com.dagger.R
-import android.view.Gravity
-import kotlin.jk.com.dagger.R.id.*
 
 
 class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener {
@@ -43,7 +38,7 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
     @Inject
     lateinit var mFirebaseAnalytics: FirebaseAnalytics
     lateinit var holdingActivity: MainActivity
-
+    var subscriptions = CompositeDisposable()
     override fun onItemSelected(url: String?) {
         if (url.isNullOrEmpty()) {
             snackbar(recyclerView, "No URL assigned to this news")
@@ -85,13 +80,14 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null) {
                     val searchText = "%$query%"
-                    appDatabase.userDao().getUserList(searchText).subscribeOn(Schedulers.io())
-                            ?.observeOn(AndroidSchedulers.mainThread())
-                            ?.subscribe { listOfPeople ->
+                    subscriptions.clear()
+                    val subscribeOn = appDatabase.userDao().getUserList(searchText).subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe { listOfPeople ->
                                 updateAdapter(listOfPeople);
                                 debug(listOfPeople.toList().toString());
                             }
-
+                    subscriptions.add(subscribeOn)
                     return true
                 }
                 return false
@@ -99,10 +95,17 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                return true
+                return false
             }
 
         })
+        holdingActivity.searchView.setOnCloseListener {
+            holdingActivity.searchView.clearFocus()
+            holdingActivity.searchView.setQuery(null, false)
+            holdingActivity.searchView.onActionViewCollapsed();
+            initAdapter()
+            true
+        }
 
         print(holdingActivity.searchView.getTag())
     }
@@ -129,30 +132,37 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
             requestNews()
         } else {
             debug("No Internet will fetch from database")
-            appDatabase.userDao().getAllPeople().subscribeOn(Schedulers.io())
-                    ?.observeOn(AndroidSchedulers.mainThread())
-                    ?.subscribe { listOfPeople ->
+            subscriptions.clear()
+            val subscribeOn = appDatabase.userDao().getAllPeople().subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { listOfPeople ->
                         updateAdapter(listOfPeople);
                         debug(listOfPeople.toList().toString());
                     }
+            subscriptions.add(subscribeOn)
         }
 
 
     }
 
     private fun requestNews() {
-        api.searchUsers("Kotlin", 1, 10)
+        subscriptions.clear()
+        var subscribeOn = api.searchUsers("Kotlin", 1, 10)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ abc ->
                     run {
                         updateAdapter(abc.items)
                         Single.fromCallable {
-                            // val user = abc.items.get(0);
+                          //  appDatabase.userDao().deleteAll(abc.items)
                             appDatabase.userDao().insert(abc.items)
 
                         }.subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread()).subscribe()
+                                .observeOn(AndroidSchedulers.mainThread()).subscribe(
+                                { tee ->
+                                    print(tee)
+
+                                })
 
 
                     }
@@ -163,9 +173,10 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
                         snackbar(recyclerView, e.message ?: "")
                     }
                 }
+
                 )
 
-
+        subscriptions.add(subscribeOn)
     }
 
 
@@ -176,13 +187,14 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
             debug("No user")
             return
         } else {
-            val adapter = recyclerView?.adapter as DataAdapter
-            with(adapter) {
-                clearItems()
-                addItems(users)
-                notifyDataSetChanged()
-            }
+            if (recyclerView?.adapter != null) {
+                val adapter = recyclerView?.adapter as DataAdapter
+                with(adapter) {
+                    clearItems()
+                    addItems(users)
+                }
 
+            }
         }
     }
 
@@ -205,6 +217,7 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
 
     fun showEmptyView() {
         emptyview.visibility = View.VISIBLE
+        recyclerView.visibility = View.GONE
 
     }
 
