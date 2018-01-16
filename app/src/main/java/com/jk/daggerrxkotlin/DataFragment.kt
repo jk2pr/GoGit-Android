@@ -25,8 +25,11 @@ import kotlinx.android.synthetic.main.fragment_data.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
 import org.jetbrains.anko.design.snackbar
+import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.jk.com.dagger.R
+import kotlin.jk.com.dagger.R.id.*
 
 
 class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener {
@@ -77,7 +80,7 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
         // layoutParams.width=ViewGroup.LayoutParams.MATCH_PARENT
         holdingActivity.searchView.layoutParams = layoutParams
         holdingActivity.searchView.setIconifiedByDefault(true);
-        holdingActivity.searchView.queryHint="Type to search"
+        holdingActivity.searchView.queryHint = "Type to search"
         holdingActivity.searchView.setOnQueryTextListener(object : android.support.v7.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null) {
@@ -97,6 +100,19 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                val searchText = "%$newText%"
+                subscriptions.clear()
+                val subs = appDatabase.userDao().getUserList(searchText)
+                        .debounce(400, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+                        .subscribe({ data ->
+                            run {
+                                updateAdapter(data)
+                            }
+                        },
+                                { e ->
+                                    print(e.message)
+                                })
+                subscriptions.add(subs)
                 return false
             }
 
@@ -107,9 +123,7 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
             holdingActivity.searchView.onActionViewCollapsed();
 
 
-            showAllFromDb()
-            //holdingActivity.searchView.onActionViewCollapsed();
-          //  initAdapter()
+            showAllFromLocalDb()
             true
         }
 
@@ -138,20 +152,24 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
             requestNews()
         } else {
             debug("No Internet will fetch from database")
-            showAllFromDb()
+            showAllFromLocalDb()
         }
 
 
     }
 
-    private fun showAllFromDb() {
+    private fun showAllFromLocalDb() {
         subscriptions.clear()
         val subscribeOn = appDatabase.userDao().getAllPeople().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { listOfPeople ->
+                .subscribe({ listOfPeople ->
                     updateAdapter(listOfPeople);
                     debug(listOfPeople.toList().toString());
-                }
+                }, { e ->
+                    print(e.message)
+                },{
+                    print("Test")
+                })
         subscriptions.add(subscribeOn)
     }
 
@@ -171,7 +189,6 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
                         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
 
 
-
                     }
 
                 }, { e ->
@@ -184,6 +201,7 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
                 )
 
         subscriptions.add(subscribeOn)
+
     }
 
 
