@@ -6,6 +6,7 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query
 import com.jk.daggerrxkotlin.api.User
 import io.reactivex.Flowable
+import org.intellij.lang.annotations.Flow
 
 /**
  * Created by Jitendra on 08/11/2017.
@@ -18,9 +19,9 @@ interface UserDao {
     @Insert
     fun insert(user: List<User>)
 
-    /*@Delete()
-    fun deleteAll(data: List<User>)
-*/
-    @Query("SELECT * FROM user WHERE type LIKE :nameText")
+    @Query("DELETE FROM user")
+    fun deleteAll()
+
+    @Query("SELECT * FROM user WHERE login LIKE :nameText")
     fun getUserList(nameText: String): Flowable<List<User>>
 }

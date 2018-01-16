@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity(), DataFragment.OnFragmentInteractionList
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setHomeButtonEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        supportActionBar?.setDefaultDisplayHomeAsUpEnabled(false)
+
         searchView=search
 
 
