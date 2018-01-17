@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorToolbar"
+    android:background="#9078"
     tools:context="com.jk.daggerrxkotlin.Splash"
     tools:layout_editor_absoluteY="81dp">
 
@@ -34,7 +34,7 @@
         android:padding="7dp"
         android:text="@string/login_with_git_hub"
         android:textAllCaps="true"
-        android:textColor="@android:color/holo_green_dark"
+        android:textColor="#fb036803"
         android:textStyle="bold"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintLeft_toLeftOf="parent"

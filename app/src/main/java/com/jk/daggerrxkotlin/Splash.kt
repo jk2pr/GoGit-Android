@@ -61,12 +61,12 @@ class Splash : AppCompatActivity() {
         button2.animate().apply {
             setDuration(1000)
             alpha(1.0f)
-            translationY(-((imageView.bottom.toFloat()/2)-270))
+            translationY(-((imageView.bottom/2).toFloat()/2))
         }
         button3.animate().apply {
             setDuration(1000)
             alpha(1.0f)
-            translationY(-((imageView.bottom.toFloat()/2)-150))
+            translationY(-((imageView.bottom/2.toFloat()/2)-150))
         }
 
     }
