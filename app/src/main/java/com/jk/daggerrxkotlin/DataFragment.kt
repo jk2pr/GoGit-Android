@@ -84,6 +84,7 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
         holdingActivity.searchView.setOnQueryTextListener(object : android.support.v7.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null) {
+                    showLoader(true)
                     val searchText = "%$query%"
                     subscriptions.clear()
                     val subscribeOn = appDatabase.userDao().getUserList(searchText).subscribeOn(Schedulers.io())
@@ -102,6 +103,7 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
                 // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 val searchText = "%$newText%"
                 subscriptions.clear()
+                showLoader(true)
                 val subs = appDatabase.userDao().getUserList(searchText)
                         .debounce(400, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
                         .subscribe({ data ->
@@ -135,9 +137,8 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
 
         recyclerView.apply {
             setHasFixedSize(true)
-            val linearLayout = LinearLayoutManager(context)
-            layoutManager = linearLayout
-            //  clearOnScrollListeners()
+            layoutManager =LinearLayoutManager(context)
+
         }
         initAdapter()
         initSearchView()
@@ -163,8 +164,8 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
         val subscribeOn = appDatabase.userDao().getAllPeople().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ listOfPeople ->
-                    updateAdapter(listOfPeople);
-                    debug(listOfPeople.toList().toString());
+                    updateAdapter(listOfPeople)
+                    debug(listOfPeople.toList().toString())
                 }, { e ->
                     print(e.message)
                 },{
