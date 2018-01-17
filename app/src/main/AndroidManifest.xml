@@ -2,8 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="kotlin.jk.com.dagger">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:name="com.jk.daggerrxkotlin.application.MyApplication"
         android:allowBackup="true"
@@ -12,9 +13,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name="com.jk.daggerrxkotlin.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="52815f589bd2a0305629f6f8d292a6c0c2a85d99" />
 
-        <activity android:name="com.jk.daggerrxkotlin.MainActivity"
+        <activity
+            android:name="com.jk.daggerrxkotlin.Splash"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,9 +30,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="52815f589bd2a0305629f6f8d292a6c0c2a85d99" />
+
     </application>
 
 </manifest>
