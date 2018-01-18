@@ -3,6 +3,6 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorToolbar">#ff8800</color>
-    <color name="colorStatubar">#FFD609</color>
+    <color name="colorToolbar">#00bcd4</color>
+    <color name="colorStatubar">#0088a3</color>
 </resources>

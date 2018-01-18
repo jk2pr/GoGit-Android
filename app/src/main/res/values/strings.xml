@@ -1,11 +1,7 @@
 <resources>
-    <string name="app_name">DaggerRxKotlin</string>
-    <string name="app_short_name">DRK</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">GoGIT</string>
+    <string name="app_short_name">GoGIT</string>
     <string name="no_data_available">No Data Available</string>
-    <string name="title_activity_main2">Main2Activity</string>
     <string name="login_with_git_hub">Login with Git hub</string>
-    <string name="skip">Skip</string>
+    <string name="skip">Continue without Login</string>
 </resources>
