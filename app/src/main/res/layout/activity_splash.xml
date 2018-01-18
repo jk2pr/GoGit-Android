@@ -21,7 +21,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:alpha="1.0" />
 
 
     <Button
@@ -29,8 +30,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-   android:alpha="0"
+        android:alpha="0"
         android:background="@null"
+        android:drawablePadding="7dp"
+        android:drawableRight="@drawable/github_button_selector"
         android:text="@string/login_with_git_hub"
         android:textAllCaps="true"
         android:textColor="@color/textcolor_selector"
@@ -40,8 +43,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
-        android:drawableRight="@drawable/github_button_selector"
-        android:drawablePadding="7dp"/>
+        tools:alpha="1.0" />
 
     <Button
         android:id="@+id/button3"
@@ -54,8 +56,7 @@
         android:textColor="@android:color/white"
         android:textSize="12sp"
         android:textStyle="italic"
-
-
+        tools:alpha="1.0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
