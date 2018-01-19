@@ -6,4 +6,7 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/colorStatubar</item>
     </style>
+    <style name="Dialog.Alert" parent="@style/Theme.AppCompat.Dialog.Alert">
+        <item name="titleTextColor">@color/colorAccent</item>
+    </style>
 </resources>
