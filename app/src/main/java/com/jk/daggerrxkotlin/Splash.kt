@@ -2,16 +2,20 @@ package com.jk.daggerrxkotlin
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.app.Dialog
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import kotlinx.android.synthetic.main.activity_splash.*
-import org.jetbrains.anko.browse
 import kotlin.jk.com.dagger.R
 
 
 class Splash : AppCompatActivity() {
     private val SPLASH_DELAY: Long = 8000 //3 seconds
+    private val REDIRECT_URL_CALLBACK = "https://daggerrxkotlin.firebaseapp.com/__/auth/handler"
     val mDelayHandler = Handler()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +76,8 @@ class Splash : AppCompatActivity() {
                     val clientId = getString(R.string.client_id)
                     val secretId = getString(R.string.client_secret)
                     val url = "${getString(R.string.github_login_url)}?scope=user:email user:follow public_repo &client_id=$clientId&secretId=$secretId"
-                    browse(url)
+                    openDialog(url)
+                    //  browse(url)
                 } //   startActivity(intentFor<MainActivity>())
                 //  finish()
 
@@ -83,6 +88,31 @@ class Splash : AppCompatActivity() {
 
 
         }
+    }
+
+    fun openDialog(url: String) {
+
+        val dialog = Dialog(this,android.R.style.TextAppearance_Theme_Dialog)
+        val view = layoutInflater.inflate(R.layout.web_dialog,null )
+        dialog.setContentView(view)
+        dialog.show()
+        val webView0 = view.findViewById<WebView>(R.id.webView)
+        webView0.loadUrl(url)
+        webView0.webViewClient = object : WebViewClient() {
+
+            override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+                if (url.startsWith(REDIRECT_URL_CALLBACK)) {
+                    val uri = Uri.parse(url)
+                    val code = uri.getQueryParameter("code")
+                    val state = uri.getQueryParameter("state")
+                    //       sendPost(code, state)
+                    return true
+                }
+                return super.shouldOverrideUrlLoading(view, url)
+            }
+        }
+
+
     }
 
     override fun onResume() {
