@@ -8,8 +8,5 @@
 /.idea/
 app/libs/
 app/src/androidTest/
-app/src/test/
-app/fabric.properties
-/app/.idea/
 /app/local.properties
-/app/src/main/res/values/configure.xml
+/app/src/main/res/values/configuraion.xml

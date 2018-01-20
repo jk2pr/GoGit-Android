@@ -25,11 +25,9 @@ import kotlinx.android.synthetic.main.fragment_data.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
 import org.jetbrains.anko.design.snackbar
-import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.jk.com.dagger.R
-import kotlin.jk.com.dagger.R.id.*
 
 
 class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener {

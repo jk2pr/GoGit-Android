@@ -1,7 +1,8 @@
 package com.jk.daggerrxkotlin.di.components
 
-import android.app.Activity
 import com.jk.daggerrxkotlin.DataFragment
+import com.jk.daggerrxkotlin.MainActivity
+import com.jk.daggerrxkotlin.Splash
 import com.jk.daggerrxkotlin.di.modules.AppModule
 import com.jk.daggerrxkotlin.di.modules.DBModule
 import com.jk.daggerrxkotlin.di.modules.NetworkModule
@@ -14,6 +15,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = arrayOf(AppModule::class, NetworkModule::class, DBModule::class))
 interface AppComponent {
-    fun inject(app: Activity)
+    fun inject(app: MainActivity)
+    fun inject(app: Splash)
     fun inject(dataFragment: DataFragment)
 }
