@@ -25,6 +25,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_splash.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
+import org.jetbrains.anko.displayMetrics
 import org.jetbrains.anko.intentFor
 import java.math.BigInteger
 import java.security.SecureRandom
@@ -72,8 +73,9 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
     }
 
     private fun moveLogoToTop() {
+
         imageView.animate().apply {
-            translationY(-500f)
+            translationY(  - (((displayMetrics.heightPixels/2))/2).toFloat())
             duration = 1000
             setListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator) {
