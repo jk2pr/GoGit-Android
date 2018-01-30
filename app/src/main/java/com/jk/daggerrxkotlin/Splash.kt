@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.NonNull
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.View.OnClickListener
@@ -17,8 +18,10 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GithubAuthProvider
 import com.jk.daggerrxkotlin.api.IApi
+import com.jk.daggerrxkotlin.api.LoggedInUser
 import com.jk.daggerrxkotlin.application.MyApplication
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -31,6 +34,7 @@ import java.math.BigInteger
 import java.security.SecureRandom
 import javax.inject.Inject
 import kotlin.jk.com.dagger.R
+import kotlin.jk.com.dagger.R.id.*
 
 
 class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
@@ -38,7 +42,7 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
     @Inject
     lateinit var api: IApi
     private val SPLASH_DELAY: Long = 8000 //8 seconds
-    private val REDIRECT_URL_CALLBACK = "https://daggerrxkotlin.firebaseapp.com/__/auth/handler"
+    private val REDIRECT_URL_CALLBACK = "https://gogit-5a346.firebaseapp.com/__/auth/handler"
     val mDelayHandler = Handler()
     lateinit var mAuth: FirebaseAuth
     var signed = false
@@ -53,7 +57,7 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
         if (mAuth.currentUser == null)
             animateLogoImage()
         else {
-            redirectToHome()
+            redirectToHome(mAuth.currentUser)
         }
     }
 
@@ -75,7 +79,7 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
     private fun moveLogoToTop() {
 
         imageView.animate().apply {
-            translationY(  - (((displayMetrics.heightPixels/2))/2).toFloat())
+            translationY(-(((displayMetrics.heightPixels / 2)) / 2).toFloat())
             duration = 1000
             setListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator) {
@@ -123,7 +127,7 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
                 openDialog(url)
             }
             else -> {
-                redirectToHome()
+                redirectToHome(null)
             }
         }
     }
@@ -190,8 +194,10 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
 
                         if (!task.isSuccessful()) {
                             task.getException()?.printStackTrace()
-                        } else
-                            redirectToHome()
+                        } else {
+                            val user = task.result.user
+                            redirectToHome(user)
+                        }
                     }
                 })
     }
@@ -200,8 +206,11 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
         return BigInteger(130, random).toString(32)
     }
 
-    private fun redirectToHome() {
-        startActivity(intentFor<MainActivity>())
+    private fun redirectToHome(user: FirebaseUser?) {
+        if (user != null) {
+            val loggedInUser = LoggedInUser(user.phoneNumber, user.displayName, user.email, user.photoUrl.toString())
+            startActivity(intentFor<MainActivity>(("user" to loggedInUser)))
+        }
         finish()
     }
 

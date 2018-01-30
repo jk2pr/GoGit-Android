@@ -21,5 +21,14 @@ interface IApi {
 
     @GET("search/users")
             //fun getIp(@Query("mime") number: String): Observable<User>;
-    fun searchUsers(@Query("q") query: String, @Query("page") page: Int, @Query("per_page") perPage: Int): Observable<Result>;
+    fun searchUsers(@Query("q") query: String, @Query("page") page: Int, @Query("per_page") perPage: Int): Observable<Result>
+
+
+//    @GET("users/{user}/repos")
+    //@Path
+
+
+    @GET("/user/repos")
+    fun getAllRepository(@Header("Authorization") authorization:String,@Query("visibility") visibility:String) : Observable<String>
+
 }

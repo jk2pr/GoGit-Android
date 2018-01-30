@@ -6,6 +6,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.jk.daggerrxkotlin.application.MyApplication
 import dagger.Module
 import dagger.Provides
+import javax.inject.Scope
 import javax.inject.Singleton
 
 @Module

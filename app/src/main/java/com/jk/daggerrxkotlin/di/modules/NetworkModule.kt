@@ -1,8 +1,11 @@
 package com.jk.daggerrxkotlin.di.modules
 
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.internal.FirebaseAppHelper.getToken
 import com.jk.daggerrxkotlin.api.IApi
 import dagger.Module
 import dagger.Provides
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -11,20 +14,19 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 
-
-
 /**
  * Created by M2353204 on 07/08/2017.
  */
 
 @Module
-public class NetworkModule{
+public class NetworkModule {
     @Provides
     @Singleton
     fun getRetrofit(): IApi {
 
         val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.BODY
+
         val client = OkHttpClient.Builder()
                 .addInterceptor(logging)
                 .build()
@@ -39,8 +41,6 @@ public class NetworkModule{
                 .create(IApi::class.java)
 
     }
-
-
 
 
 }
