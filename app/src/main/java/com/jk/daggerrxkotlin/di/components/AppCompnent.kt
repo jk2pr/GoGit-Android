@@ -20,4 +20,5 @@ interface AppComponent {
     fun inject(app: Splash)
     fun inject(dataFragment: DataFragment)
     fun inject(dataFragment: UserProfileFragment)
+    fun inject(networkModule: NetworkModule)
 }

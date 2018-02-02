@@ -29,6 +29,6 @@ interface IApi {
 
 
     @GET("/user/repos")
-    fun getAllRepository(@Header("Authorization") authorization:String,@Query("visibility") visibility:String) : Observable<String>
+    fun getAllRepository(@Query("visibility") visibility:String) : Observable<String>
 
 }

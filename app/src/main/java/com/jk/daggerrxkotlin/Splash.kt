@@ -4,9 +4,11 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.preference.Preference
 import android.support.annotation.NonNull
 import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.app.AppCompatActivity
@@ -195,6 +197,8 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
                         if (!task.isSuccessful()) {
                             task.getException()?.printStackTrace()
                         } else {
+                            val preference=baseContext.getSharedPreferences("AccessToken",Context.MODE_PRIVATE)
+                            preference.edit().putString("AccessToken",token).apply()
                             val user = task.result.user
                             redirectToHome(user)
                         }

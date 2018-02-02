@@ -1,13 +1,20 @@
 package com.jk.daggerrxkotlin
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
+import android.support.annotation.NonNull
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GetTokenResult
 import com.jk.daggerrxkotlin.api.IApi
 import com.jk.daggerrxkotlin.api.LoggedInUser
 import com.jk.daggerrxkotlin.application.MyApplication
@@ -19,6 +26,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_user_profile.*
 import org.jetbrains.anko.Android
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.debug
 import javax.inject.Inject
 import kotlin.jk.com.dagger.R
 
@@ -59,24 +67,41 @@ class UserProfileFragment : Fragment(), AnkoLogger {
         getRepository()
 
 
+
+
     }
 
     fun getRepository() {
         val curentUser=   FirebaseAuth.getInstance().currentUser
-        curentUser?.uid?.let {
-            val subs =    api.getAllRepository(it,"all")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ data ->
-                    run {
-                        print(data)
-                    }
-                },
-                        { e ->
-                            print(e.message)
-                        })
-            subscriptions.add(subs)
-        }
+        curentUser?.getIdToken(true)?.addOnCompleteListener(activity as Activity, object : OnCompleteListener<GetTokenResult> {
+            override fun onComplete(@NonNull task: Task<GetTokenResult>) {
+                debug("TokenRequest:onComplete:" + task.isSuccessful())
+                if (!task.isSuccessful()) {
+                    task.getException()?.printStackTrace()
+                } else {
+
+                   val preference= context?.getSharedPreferences("AccessToken", Context.MODE_PRIVATE)
+                    val token=    preference?.getString("AccessToken","")
+                print( "Token ==="+ token)
+
+
+                        val subs =    api.getAllRepository("all")
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe({ data ->
+                                    run {
+                                        print(data)
+                                    }
+                                },
+                                        { e ->
+                                            print(e.message)
+                                        })
+                        subscriptions.add(subs)
+
+
+                }
+            }
+        })
 
     }
 

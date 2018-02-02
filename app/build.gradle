@@ -48,10 +48,10 @@ dependencies {
     // Dagger 2
     implementation 'com.google.dagger:dagger:2.11'
     kapt 'com.google.dagger:dagger-compiler:2.11'
-    provided 'org.glassfish:javax.annotation:10.0-b28'
+    compileOnly 'org.glassfish:javax.annotation:10.0-b28'
     //Firebase
     implementation 'com.google.firebase:firebase-core:11.8.0'
-    compile 'com.google.firebase:firebase-auth:11.8.0'
+    implementation 'com.google.firebase:firebase-auth:11.8.0'
     // Room
     implementation 'android.arch.persistence.room:runtime:1.0.0'
     implementation 'android.arch.persistence.room:rxjava2:1.0.0'

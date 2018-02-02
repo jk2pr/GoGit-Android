@@ -2,9 +2,8 @@ package com.jk.daggerrxkotlin
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
-import android.R.menu
 import android.view.Menu
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.jk.com.dagger.R
 
 
