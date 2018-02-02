@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.annotation.NonNull
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,8 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GetTokenResult
+import com.jk.daggerrxkotlin.adapters.DataAdapter
+import com.jk.daggerrxkotlin.adapters.RepoAdapter
 import com.jk.daggerrxkotlin.api.IApi
 import com.jk.daggerrxkotlin.api.LoggedInUser
 import com.jk.daggerrxkotlin.application.MyApplication
@@ -23,6 +26,7 @@ import com.jk.daggerrxkotlin.extensions.loading
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_data.*
 import kotlinx.android.synthetic.main.fragment_user_profile.*
 import org.jetbrains.anko.Android
 import org.jetbrains.anko.AnkoLogger
@@ -64,44 +68,42 @@ class UserProfileFragment : Fragment(), AnkoLogger {
         txt_displayname.text = loggedInUser.displayName
         txt_email.text = loggedInUser.email
         user_image.loading(loggedInUser.photoUrl)
+        recyclerView_repo.apply {
+            setHasFixedSize(true)
+//            isNestedScrollingEnabled=false
+            layoutManager = LinearLayoutManager(context)
+            adapter = RepoAdapter(null)
+
+        }
+
         getRepository()
-
-
 
 
     }
 
-    fun getRepository() {
-        val curentUser=   FirebaseAuth.getInstance().currentUser
-        curentUser?.getIdToken(true)?.addOnCompleteListener(activity as Activity, object : OnCompleteListener<GetTokenResult> {
-            override fun onComplete(@NonNull task: Task<GetTokenResult>) {
-                debug("TokenRequest:onComplete:" + task.isSuccessful())
-                if (!task.isSuccessful()) {
-                    task.getException()?.printStackTrace()
-                } else {
+   private fun getRepository() {
+        val subs = api.getAllRepository("all")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ data ->
+                    run {
+                        if (recyclerView_repo?.adapter != null) {
+                            val adapter = recyclerView_repo?.adapter as RepoAdapter
+                            with(adapter) {
+                                clearItems()
+                                addItems(data)
+                                notifyItemRangeInserted(0,data.size)
+                            }
 
-                   val preference= context?.getSharedPreferences("AccessToken", Context.MODE_PRIVATE)
-                    val token=    preference?.getString("AccessToken","")
-                print( "Token ==="+ token)
+                        }
 
+                    }
+                },
+                        { e ->
+                            print(e.message)
+                        })
+        subscriptions.add(subs)
 
-                        val subs =    api.getAllRepository("all")
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe({ data ->
-                                    run {
-                                        print(data)
-                                    }
-                                },
-                                        { e ->
-                                            print(e.message)
-                                        })
-                        subscriptions.add(subs)
-
-
-                }
-            }
-        })
 
     }
 

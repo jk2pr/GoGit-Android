@@ -8,9 +8,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.preference.Preference
 import android.support.annotation.NonNull
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.View.OnClickListener
@@ -36,7 +34,6 @@ import java.math.BigInteger
 import java.security.SecureRandom
 import javax.inject.Inject
 import kotlin.jk.com.dagger.R
-import kotlin.jk.com.dagger.R.id.*
 
 
 class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
