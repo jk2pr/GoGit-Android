@@ -1,5 +1,6 @@
 package com.jk.daggerrxkotlin.api
 
+import com.jk.daggerrxkotlin.model.Repo
 import io.reactivex.Observable
 import retrofit2.http.*
 
@@ -29,6 +30,6 @@ interface IApi {
 
 
     @GET("/user/repos")
-    fun getAllRepository(@Query("visibility") visibility:String) : Observable<String>
+    fun getAllRepository(@Query("visibility") visibility:String) : Observable<List<Repo>>
 
 }
