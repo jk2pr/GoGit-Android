@@ -26,6 +26,7 @@ import com.jk.daggerrxkotlin.extensions.loading
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_data.*
 import kotlinx.android.synthetic.main.fragment_user_profile.*
 import org.jetbrains.anko.Android
@@ -67,7 +68,7 @@ class UserProfileFragment : Fragment(), AnkoLogger {
         val loggedInUser = arguments?.getSerializable("user") as LoggedInUser
         txt_displayname.text = loggedInUser.displayName
         txt_email.text = loggedInUser.email
-        user_image.loading(loggedInUser.photoUrl)
+        activity?.image?.loading(loggedInUser.photoUrl)
         recyclerView_repo.apply {
             setHasFixedSize(true)
 //            isNestedScrollingEnabled=false
@@ -92,7 +93,6 @@ class UserProfileFragment : Fragment(), AnkoLogger {
                             with(adapter) {
                                 clearItems()
                                 addItems(data)
-                                notifyItemRangeInserted(0,data.size)
                             }
 
                         }
