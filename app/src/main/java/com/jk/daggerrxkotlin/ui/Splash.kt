@@ -20,8 +20,8 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GithubAuthProvider
-import com.jk.daggerrxkotlin.api.IApi
-import com.jk.daggerrxkotlin.api.LoggedInUser
+import com.jk.daggerrxkotlin.network.api.IApi
+import com.jk.daggerrxkotlin.network.api.LoggedInUser
 import com.jk.daggerrxkotlin.application.MyApplication
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

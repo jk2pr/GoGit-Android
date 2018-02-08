@@ -1,4 +1,4 @@
-package com.jk.daggerrxkotlin.api
+package com.jk.daggerrxkotlin.network.api
 
 import com.jk.daggerrxkotlin.model.Repo
 import io.reactivex.Observable

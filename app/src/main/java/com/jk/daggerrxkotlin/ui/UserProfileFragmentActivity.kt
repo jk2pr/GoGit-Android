@@ -3,9 +3,9 @@ package com.jk.daggerrxkotlin
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.jk.daggerrxkotlin.adapters.RepoAdapter
-import com.jk.daggerrxkotlin.api.IApi
-import com.jk.daggerrxkotlin.api.LoggedInUser
+import com.jk.daggerrxkotlin.ui.adapters.RepoAdapter
+import com.jk.daggerrxkotlin.network.api.IApi
+import com.jk.daggerrxkotlin.network.api.LoggedInUser
 import com.jk.daggerrxkotlin.application.MyApplication
 import com.jk.daggerrxkotlin.db.AppDatabase
 import com.jk.daggerrxkotlin.extensions.loading
@@ -17,10 +17,6 @@ import kotlinx.android.synthetic.main.fragment_user_profile.*
 import org.jetbrains.anko.AnkoLogger
 import javax.inject.Inject
 import kotlin.jk.com.dagger.R
-import android.widget.TextView
-import android.support.design.widget.CollapsingToolbarLayout
-import android.view.View
-import kotlinx.android.synthetic.main.toolbar.*
 
 
 class UserProfileActivity : BaseActivity(), AnkoLogger {

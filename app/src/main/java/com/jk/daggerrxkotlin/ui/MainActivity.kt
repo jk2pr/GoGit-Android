@@ -3,13 +3,9 @@ package com.jk.daggerrxkotlin
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.SearchView
-import com.google.firebase.auth.FirebaseUser
-import com.jk.daggerrxkotlin.api.LoggedInUser
 import com.jk.daggerrxkotlin.application.MyApplication
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 import kotlin.jk.com.dagger.R
-import kotlin.jk.com.dagger.R.id.search
 
 
 class MainActivity : BaseActivity(), DataFragment.OnFragmentInteractionListener {

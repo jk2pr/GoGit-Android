@@ -2,7 +2,7 @@ package com.jk.daggerrxkotlin.db
 
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
-import com.jk.daggerrxkotlin.api.User
+import com.jk.daggerrxkotlin.network.api.User
 
 /**
  * Created by Jitendra on 08/11/2017.

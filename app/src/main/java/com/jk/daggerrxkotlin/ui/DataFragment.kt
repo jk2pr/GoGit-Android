@@ -11,12 +11,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.jk.daggerrxkotlin.adapters.DataAdapter
-import com.jk.daggerrxkotlin.api.IApi
-import com.jk.daggerrxkotlin.api.User
+import com.jk.daggerrxkotlin.ui.adapters.DataAdapter
+import com.jk.daggerrxkotlin.network.api.IApi
+import com.jk.daggerrxkotlin.network.api.User
 import com.jk.daggerrxkotlin.application.MyApplication
 import com.jk.daggerrxkotlin.db.AppDatabase
-import com.jk.daggerrxkotlin.networkutils.NetworkUtils
+import com.jk.daggerrxkotlin.network.networkutils.NetworkUtils
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

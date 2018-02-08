@@ -2,19 +2,15 @@ package com.jk.daggerrxkotlin.di.modules
 
 import android.app.Application
 import android.content.Context
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.internal.FirebaseAppHelper.getToken
-import com.jk.daggerrxkotlin.api.IApi
+import com.jk.daggerrxkotlin.network.api.IApi
 import dagger.Module
 import dagger.Provides
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
-import com.google.firebase.internal.FirebaseAppHelper.getToken
 import com.jk.daggerrxkotlin.application.MyApplication
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package com.jk.daggerrxkotlin.networkutils
+package com.jk.daggerrxkotlin.network.networkutils
 
 import android.content.Context
 import android.net.ConnectivityManager

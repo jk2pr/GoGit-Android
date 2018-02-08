@@ -1,9 +1,9 @@
-package com.jk.daggerrxkotlin.adapters
+package com.jk.daggerrxkotlin.ui.adapters
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.jk.daggerrxkotlin.api.User
+import com.jk.daggerrxkotlin.network.api.User
 import com.jk.daggerrxkotlin.extensions.loading
 import kotlinx.android.synthetic.main.news_item.view.*
 import kotlin.jk.com.dagger.R
