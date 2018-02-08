@@ -44,7 +44,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone">
-
             <TextView
                 android:id="@+id/txt_displayname"
                 android:layout_width="wrap_content"
@@ -55,6 +54,7 @@
                 android:fontFamily="@font/bebasnue_bold"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
+                tools:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
