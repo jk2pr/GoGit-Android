@@ -33,12 +33,12 @@ import kotlin.jk.com.dagger.R
 class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener {
 
     @Inject
-    lateinit var api: IApi;
+    lateinit var api: IApi
     @Inject
-    lateinit var appDatabase: AppDatabase;
+    lateinit var appDatabase: AppDatabase
     @Inject
     lateinit var mFirebaseAnalytics: FirebaseAnalytics
-    lateinit var holdingActivity: MainActivity
+    private lateinit var holdingActivity: MainActivity
     var subscriptions = CompositeDisposable()
     override fun onItemSelected(url: String?) {
         if (url.isNullOrEmpty()) {
@@ -69,7 +69,7 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
 
 
-        return view;
+        return view
 
     }
 
@@ -77,7 +77,7 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
         val layoutParams = android.support.v7.widget.Toolbar.LayoutParams(Gravity.END)
         // layoutParams.width=ViewGroup.LayoutParams.MATCH_PARENT
         holdingActivity.searchView.layoutParams = layoutParams
-        holdingActivity.searchView.setIconifiedByDefault(true);
+        holdingActivity.searchView.setIconifiedByDefault(true)
         holdingActivity.searchView.queryHint = "Type to search"
         holdingActivity.searchView.setOnQueryTextListener(object : android.support.v7.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -88,8 +88,8 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
                     val subscribeOn = appDatabase.userDao().getUserList(searchText).subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe { listOfPeople ->
-                                updateAdapter(listOfPeople);
-                                debug(listOfPeople.toList().toString());
+                                updateAdapter(listOfPeople)
+                                debug(listOfPeople.toList().toString())
                             }
                     subscriptions.add(subscribeOn)
                     return false
@@ -120,14 +120,14 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
         holdingActivity.searchView.setOnCloseListener {
             holdingActivity.searchView.clearFocus()
             holdingActivity.searchView.setQuery(null, false)
-            holdingActivity.searchView.onActionViewCollapsed();
+            holdingActivity.searchView.onActionViewCollapsed()
 
 
             showAllFromLocalDb()
             true
         }
 
-        print(holdingActivity.searchView.getTag())
+        print(holdingActivity.searchView.tag)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -239,7 +239,7 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
 
     }
 
-    fun showEmptyView() {
+    private fun showEmptyView() {
         emptyview.visibility = View.VISIBLE
         recyclerView.visibility = View.GONE
 

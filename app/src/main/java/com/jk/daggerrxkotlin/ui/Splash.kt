@@ -8,21 +8,17 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.support.annotation.NonNull
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.View.OnClickListener
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GithubAuthProvider
+import com.jk.daggerrxkotlin.application.MyApplication
 import com.jk.daggerrxkotlin.network.api.IApi
 import com.jk.daggerrxkotlin.network.api.LoggedInUser
-import com.jk.daggerrxkotlin.application.MyApplication
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_splash.*
@@ -132,7 +128,7 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    fun openDialog(url: String) {
+    private fun openDialog(url: String) {
         val builder = Dialog(this, R.style.Dialog_Alert)
         val dialoglayout = layoutInflater.inflate(R.layout.web_dialog, null)
         builder.apply {
@@ -140,7 +136,7 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
             setTitle(getString(R.string.app_name))
         }
         dialoglayout.findViewById<WebView>(R.id.webview).run {
-            getSettings().javaScriptEnabled = true;
+            settings.javaScriptEnabled = true
             loadUrl(url)
             webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
@@ -153,7 +149,7 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
                         //https://github.com/login/oauth/access_token
 
 
-                        var subs = api.getAccessToken(
+                        api.getAccessToken(
                                 accessTokenUrl,
                                 getString(R.string.client_id),
                                 getString(R.string.client_secret),
@@ -179,7 +175,7 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
             }
         }
 
-        builder.show();
+        builder.show()
 
 
     }
@@ -187,20 +183,18 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
     fun signInWithToken(token: String) {
         val credential = GithubAuthProvider.getCredential(token)
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, object : OnCompleteListener<AuthResult> {
-                    override fun onComplete(@NonNull task: Task<AuthResult>) {
-                        debug("signInWithCredential:onComplete:" + task.isSuccessful())
+                .addOnCompleteListener(this) { task ->
+                    debug("signInWithCredential:onComplete:" + task.isSuccessful)
 
-                        if (!task.isSuccessful()) {
-                            task.getException()?.printStackTrace()
-                        } else {
-                            val preference=baseContext.getSharedPreferences("AccessToken",Context.MODE_PRIVATE)
-                            preference.edit().putString("AccessToken",token).apply()
-                            val user = task.result.user
-                            redirectToHome(user)
-                        }
+                    if (!task.isSuccessful) {
+                        task.exception?.printStackTrace()
+                    } else {
+                        val preference = baseContext.getSharedPreferences("AccessToken", Context.MODE_PRIVATE)
+                        preference.edit().putString("AccessToken", token).apply()
+                        val user = task.result.user
+                        redirectToHome(user)
                     }
-                })
+                }
     }
 
     private fun getRandomString(): String {
@@ -218,7 +212,7 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
     override fun onResume() {
         super.onResume()
         mAuth.addAuthStateListener {
-            val user = it.getCurrentUser()
+            val user = it.currentUser
             signed = user != null
         }
         mDelayHandler.postDelayed(mRunnable, SPLASH_DELAY)

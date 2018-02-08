@@ -22,9 +22,9 @@ import kotlin.jk.com.dagger.R
 class UserProfileActivity : BaseActivity(), AnkoLogger {
 
     @Inject
-    lateinit var api: IApi;
+    lateinit var api: IApi
     @Inject
-    lateinit var appDatabase: AppDatabase;
+    lateinit var appDatabase: AppDatabase
     @Inject
     lateinit var mFirebaseAnalytics: FirebaseAnalytics
     lateinit var holdingActivity: MainActivity

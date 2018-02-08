@@ -10,14 +10,14 @@ import kotlin.jk.com.dagger.R
 
 class MainActivity : BaseActivity(), DataFragment.OnFragmentInteractionListener {
 
-   lateinit var searchView:SearchView;
+   lateinit var searchView:SearchView
     override fun onFragmentInteraction(uri: Uri) {
-        println("uri = [${uri}]")
+        println("uri = [$uri]")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MyApplication.appComponent.inject(this);
+        MyApplication.appComponent.inject(this)
         searchView=search
        // val profileFragment=UserProfileFragment()
         //val arg =Bundle()

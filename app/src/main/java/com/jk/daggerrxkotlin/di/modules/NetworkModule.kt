@@ -20,12 +20,12 @@ import javax.inject.Inject
  */
 
 @Module
-public class NetworkModule() {
+class NetworkModule {
 
 
 
     @Inject
-    lateinit var app: Application;
+    lateinit var app: Application
 
 
     @Provides

@@ -10,7 +10,7 @@ import javax.inject.Scope
 import javax.inject.Singleton
 
 @Module
-public class AppModule(val app: MyApplication) {
+class AppModule(val app: MyApplication) {
 
     @Provides
     @Singleton
@@ -24,6 +24,6 @@ public class AppModule(val app: MyApplication) {
 
     @Provides
     @Singleton
-    fun provideFirebaseAnalytics(): FirebaseAnalytics = FirebaseAnalytics.getInstance(app);
+    fun provideFirebaseAnalytics(): FirebaseAnalytics = FirebaseAnalytics.getInstance(app)
 
 }
