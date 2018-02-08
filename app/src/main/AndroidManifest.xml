@@ -30,7 +30,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.jk.daggerrxkotlin.WebActivity"></activity>
+        <activity android:name="com.jk.daggerrxkotlin.WebActivity" />
+        <activity
+            android:name="com.jk.daggerrxkotlin.UserProfileActivity"
+            android:label="@string/title_activity_user_profile"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

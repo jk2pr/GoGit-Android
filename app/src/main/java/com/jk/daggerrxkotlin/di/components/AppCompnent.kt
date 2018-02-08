@@ -1,9 +1,6 @@
 package com.jk.daggerrxkotlin.di.components
 
-import com.jk.daggerrxkotlin.DataFragment
-import com.jk.daggerrxkotlin.MainActivity
-import com.jk.daggerrxkotlin.Splash
-import com.jk.daggerrxkotlin.UserProfileFragment
+import com.jk.daggerrxkotlin.*
 import com.jk.daggerrxkotlin.di.modules.AppModule
 import com.jk.daggerrxkotlin.di.modules.DBModule
 import com.jk.daggerrxkotlin.di.modules.NetworkModule
@@ -19,6 +16,6 @@ interface AppComponent {
     fun inject(app: MainActivity)
     fun inject(app: Splash)
     fun inject(dataFragment: DataFragment)
-    fun inject(dataFragment: UserProfileFragment)
+    fun inject(dataFragment: UserProfileActivity)
     fun inject(networkModule: NetworkModule)
 }

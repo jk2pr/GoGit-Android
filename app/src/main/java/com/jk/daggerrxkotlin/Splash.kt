@@ -210,7 +210,7 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
     private fun redirectToHome(user: FirebaseUser?) {
         if (user != null) {
             val loggedInUser = LoggedInUser(user.phoneNumber, user.displayName, user.email, user.photoUrl.toString())
-            startActivity(intentFor<MainActivity>(("user" to loggedInUser)))
+            startActivity(intentFor<UserProfileActivity>(("user" to loggedInUser)))
         }
         finish()
     }

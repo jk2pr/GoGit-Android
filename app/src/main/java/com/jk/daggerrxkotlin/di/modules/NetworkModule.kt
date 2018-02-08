@@ -45,7 +45,7 @@ public class NetworkModule() {
                     val ongoing = chain.request().newBuilder()
                     ongoing.addHeader("Accept", "application/json;versions=1")
 
-                    val preference= app?.getSharedPreferences("AccessToken", Context.MODE_PRIVATE)
+                    val preference= app.getSharedPreferences("AccessToken", Context.MODE_PRIVATE)
                     val token= preference?.getString("AccessToken","")
                     if (token!=null)
                         ongoing.addHeader("Authorization", "token "+token)

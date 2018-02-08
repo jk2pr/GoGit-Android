@@ -23,14 +23,14 @@ class MainActivity : BaseActivity(), DataFragment.OnFragmentInteractionListener 
         super.onCreate(savedInstanceState)
         MyApplication.appComponent.inject(this);
         searchView=search
-        val profileFragment=UserProfileFragment()
-        val arg =Bundle()
-        arg.putSerializable("user",intent.extras.getSerializable("user"))
-        profileFragment.arguments=arg
+       // val profileFragment=UserProfileFragment()
+        //val arg =Bundle()
+        //arg.putSerializable("user",intent.extras.getSerializable("user"))
+       // profileFragment.arguments=arg
 
-        val fragmentTransaction=supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.contentView,profileFragment)
-        fragmentTransaction.commit()
+       // val fragmentTransaction=supportFragmentManager.beginTransaction()
+       // fragmentTransaction.replace(R.id.contentView,profileFragment)
+       // fragmentTransaction.commit()
     }
 
     override fun getLayoutResourceId(): Int {

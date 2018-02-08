@@ -1,22 +1,8 @@
 package com.jk.daggerrxkotlin
 
-import android.app.Activity
-import android.content.Context
 import android.os.Bundle
-import android.support.annotation.NonNull
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GetTokenResult
-import com.jk.daggerrxkotlin.adapters.DataAdapter
 import com.jk.daggerrxkotlin.adapters.RepoAdapter
 import com.jk.daggerrxkotlin.api.IApi
 import com.jk.daggerrxkotlin.api.LoggedInUser
@@ -27,16 +13,17 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_data.*
 import kotlinx.android.synthetic.main.fragment_user_profile.*
-import org.jetbrains.anko.Android
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.debug
 import javax.inject.Inject
 import kotlin.jk.com.dagger.R
+import android.widget.TextView
+import android.support.design.widget.CollapsingToolbarLayout
+import android.view.View
+import kotlinx.android.synthetic.main.toolbar.*
 
 
-class UserProfileFragment : Fragment(), AnkoLogger {
+class UserProfileActivity : BaseActivity(), AnkoLogger {
 
     @Inject
     lateinit var api: IApi;
@@ -47,28 +34,22 @@ class UserProfileFragment : Fragment(), AnkoLogger {
     lateinit var holdingActivity: MainActivity
     var subscriptions = CompositeDisposable()
 
+    override fun getLayoutResourceId(): Int {
+        return R.layout.activity_user_profile
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        holdingActivity = activity as MainActivity
         MyApplication.appComponent.inject(this)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        val view = inflater.inflate(R.layout.fragment_user_profile, container, false)
-        retainInstance = true
-        return view
-
+        val loggedInUser = intent.getSerializableExtra("user") as LoggedInUser
+        init(loggedInUser)
     }
 
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        val loggedInUser = arguments?.getSerializable("user") as LoggedInUser
+    fun init(loggedInUser: LoggedInUser) {
         txt_displayname.text = loggedInUser.displayName
         txt_email.text = loggedInUser.email
-        activity?.image?.loading(loggedInUser.photoUrl)
+        image?.loading(loggedInUser.photoUrl)
         recyclerView_repo.apply {
             setHasFixedSize(true)
 //            isNestedScrollingEnabled=false
@@ -77,12 +58,14 @@ class UserProfileFragment : Fragment(), AnkoLogger {
 
         }
 
+        collapsing_toolbar.title = txt_displayname.text.toString()
+
         getRepository()
 
 
     }
 
-   private fun getRepository() {
+    private fun getRepository() {
         val subs = api.getAllRepository("all")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

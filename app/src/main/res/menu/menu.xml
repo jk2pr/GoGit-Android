@@ -4,17 +4,16 @@
     tools:context=".MainActivity">
     <item
         android:id="@+id/action_settings"
+        android:icon="@drawable/ic_settings_black_24dp"
         android:orderInCategory="100"
         android:title="Test1"
-        android:icon="@drawable/ic_settings_black_24dp"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_search"
+        android:icon="@drawable/ic_logout_variant"
         android:orderInCategory="200"
         android:title="Logout"
         android:tooltipText="Logout"
-        android:icon="@drawable/ic_logout_variant"
-        app:showAsAction="never"
-        />
+        app:showAsAction="never" />
 
 </menu>
