@@ -12,12 +12,12 @@ import javax.inject.Singleton
  */
 
 @Module
-public class DBModule(val app: MyApplication){
+class DBModule(val app: MyApplication){
     @Provides
     @Singleton
     fun getAppDB(): AppDatabase  {
         return Room.databaseBuilder(app,
-                AppDatabase::class.java, "database-name").build();
+                AppDatabase::class.java, "database-name").build()
 
     }
 }

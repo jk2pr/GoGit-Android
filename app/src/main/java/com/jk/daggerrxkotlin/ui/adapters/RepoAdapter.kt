@@ -1,4 +1,4 @@
-package com.jk.daggerrxkotlin.adapters
+package com.jk.daggerrxkotlin.ui.adapters
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View

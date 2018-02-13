@@ -1,4 +1,4 @@
-package com.jk.daggerrxkotlin.api
+package com.jk.daggerrxkotlin.network.api
 
 import java.io.Serializable
 
