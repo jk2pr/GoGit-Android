@@ -19,8 +19,12 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug{
+            minifyEnabled false
+            debuggable=true
         }
     }
 
@@ -30,6 +34,7 @@ android {
 }
 
 dependencies {
+    //Design Support
     //Design Support
     implementation "com.android.support:support-v4:$support_version"
     implementation "com.android.support:appcompat-v7:$support_version"
