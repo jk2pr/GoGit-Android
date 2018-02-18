@@ -1,10 +1,11 @@
-package com.jk.daggerrxkotlin
+package com.jk.daggerrxkotlin.ui.view
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -20,12 +21,10 @@ import com.jk.daggerrxkotlin.application.MyApplication
 import com.jk.daggerrxkotlin.network.api.IApi
 import com.jk.daggerrxkotlin.network.api.LoggedInUser
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_splash.*
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.debug
-import org.jetbrains.anko.displayMetrics
-import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.*
 import java.math.BigInteger
 import java.security.SecureRandom
 import javax.inject.Inject
@@ -39,10 +38,10 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
     private val SPLASH_DELAY: Long = 8000 //8 seconds
     private val REDIRECT_URL_CALLBACK = "https://gogit-5a346.firebaseapp.com/__/auth/handler"
     val mDelayHandler = Handler()
-    lateinit var mAuth: FirebaseAuth
+    private lateinit var mAuth: FirebaseAuth
     var signed = false
     private val random = SecureRandom()
-
+    var subscriptions = CompositeDisposable()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MyApplication.appComponent.inject(this)
@@ -149,7 +148,7 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
                         //https://github.com/login/oauth/access_token
 
 
-                        api.getAccessToken(
+                     val subscrib=api.getAccessToken(
                                 accessTokenUrl,
                                 getString(R.string.client_id),
                                 getString(R.string.client_secret),
@@ -165,6 +164,7 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
                                     e.printStackTrace()
 
                                 })
+                        subscriptions.add(subscrib)
 
 
                         builder.dismiss()
@@ -204,7 +204,11 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
     private fun redirectToHome(user: FirebaseUser?) {
         if (user != null) {
             val loggedInUser = LoggedInUser(user.phoneNumber, user.displayName, user.email, user.photoUrl.toString())
-            startActivity(intentFor<UserProfileActivity>(("user" to loggedInUser)))
+            //startActivity(intentFor<UserProfileActivity>(("user" to loggedInUser)))
+            //startActivity(intentFor<UserProfileActivity>())
+            val intent = Intent(this, UserProfileActivity::class.java)
+            intent.putExtra("user" , loggedInUser)
+            startActivity(intent)
         }
         finish()
     }
@@ -221,6 +225,7 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
     override fun onPause() {
         super.onPause()
         mDelayHandler.removeCallbacks(mRunnable)
+        subscriptions.clear()
     }
 
 }

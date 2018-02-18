@@ -1,4 +1,4 @@
-package com.jk.daggerrxkotlin
+package com.jk.daggerrxkotlin.ui.view
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -12,8 +12,8 @@ import com.jk.daggerrxkotlin.extensions.loading
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_user_profile.*
+import kotlinx.android.synthetic.main.activity_user_profile.*
+
 import org.jetbrains.anko.AnkoLogger
 import javax.inject.Inject
 import kotlin.jk.com.dagger.R
@@ -45,7 +45,7 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
     fun init(loggedInUser: LoggedInUser) {
         txt_displayname.text = loggedInUser.displayName
         txt_email.text = loggedInUser.email
-        image?.loading(loggedInUser.photoUrl)
+        profile?.loading(loggedInUser.photoUrl)
         recyclerView_repo.apply {
             setHasFixedSize(true)
 //            isNestedScrollingEnabled=false
@@ -54,7 +54,7 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
 
         }
 
-        collapsing_toolbar.title = txt_displayname.text.toString()
+      //  collapsing_toolbar.title = txt_displayname.text.toString()
 
         getRepository()
 

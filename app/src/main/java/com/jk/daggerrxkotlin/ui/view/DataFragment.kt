@@ -1,4 +1,4 @@
-package com.jk.daggerrxkotlin
+package com.jk.daggerrxkotlin.ui.view
 
 import android.content.Context
 import android.content.Intent

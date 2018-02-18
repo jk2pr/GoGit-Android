@@ -1,9 +1,12 @@
 package com.jk.daggerrxkotlin.di.components
 
-import com.jk.daggerrxkotlin.*
 import com.jk.daggerrxkotlin.di.modules.AppModule
 import com.jk.daggerrxkotlin.di.modules.DBModule
 import com.jk.daggerrxkotlin.di.modules.NetworkModule
+import com.jk.daggerrxkotlin.ui.view.DataFragment
+import com.jk.daggerrxkotlin.ui.view.MainActivity
+import com.jk.daggerrxkotlin.ui.view.Splash
+import com.jk.daggerrxkotlin.ui.view.UserProfileActivity
 import dagger.Component
 import javax.inject.Singleton
 

@@ -1,12 +1,11 @@
-package com.jk.daggerrxkotlin
+package com.jk.daggerrxkotlin.ui.view
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.android.synthetic.main.activity_user_profile.*
 import kotlin.jk.com.dagger.R
-import kotlin.jk.com.dagger.R.layout.toolbar
+
 
 
 abstract class BaseActivity :AppCompatActivity() {

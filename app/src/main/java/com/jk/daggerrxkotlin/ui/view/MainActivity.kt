@@ -1,9 +1,11 @@
-package com.jk.daggerrxkotlin
+package com.jk.daggerrxkotlin.ui.view
 
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.SearchView
 import com.jk.daggerrxkotlin.application.MyApplication
+import com.jk.daggerrxkotlin.ui.view.BaseActivity
+import com.jk.daggerrxkotlin.ui.view.DataFragment
 import kotlinx.android.synthetic.main.toolbar.*
 import kotlin.jk.com.dagger.R
 
