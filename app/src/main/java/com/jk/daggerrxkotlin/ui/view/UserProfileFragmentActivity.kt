@@ -1,6 +1,5 @@
 package com.jk.daggerrxkotlin.ui.view
 
-import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -10,18 +9,14 @@ import com.jk.daggerrxkotlin.db.AppDatabase
 import com.jk.daggerrxkotlin.extensions.loading
 import com.jk.daggerrxkotlin.model.Repo
 import com.jk.daggerrxkotlin.model.UserProfile
-import com.jk.daggerrxkotlin.network.api.IApi
 import com.jk.daggerrxkotlin.ui.adapters.RepoAdapter
 import com.jk.daggerrxkotlin.ui.viewmodel.UserViewModel
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.BiFunction
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import org.jetbrains.anko.AnkoLogger
 import javax.inject.Inject
 import kotlin.jk.com.dagger.R
+import android.arch.lifecycle.ViewModelProviders
 
 
 class UserProfileActivity : BaseActivity(), AnkoLogger {
@@ -47,7 +42,7 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
             adapter = RepoAdapter(null)
 
         }
-        val model = ViewModelProvider.NewInstanceFactory().create(UserViewModel::class.java)
+        val model = ViewModelProviders.of(this).get(UserViewModel::class.java)
         subscriptions.add(model.getUser().subscribe({
             updateUI(it)
         }, { e ->
@@ -65,6 +60,9 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
             txt_displayname.text = key.name
             txt_email.text = key.email
             profile?.loading(key.avatarUrl)
+            followers_count.text= "Following ${key.followers.toString()}"
+            followering_count.text= "Followers ${key.following.toString()}"
+            repo_count.text= "Repositories ${key.publicRepos.toString()}"
             if (recyclerView_repo?.adapter != null) {
                 val adapter = recyclerView_repo?.adapter as RepoAdapter
                 with(adapter) {

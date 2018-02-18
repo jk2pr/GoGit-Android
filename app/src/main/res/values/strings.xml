@@ -4,5 +4,7 @@
     <string name="no_data_available">No Data Available</string>
     <string name="login_with_git_hub">Login with Git hub</string>
     <string name="skip">Continue without Login</string>
-    <string name="title_activity_user_profile">UserProfileActivity</string>
+    <string name="following">Following</string>
+    <string name="followers">Followers</string>
+    <string name="repo_count">Repositories</string>
 </resources>
