@@ -19,7 +19,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GithubAuthProvider
 import com.jk.daggerrxkotlin.application.MyApplication
 import com.jk.daggerrxkotlin.network.api.IApi
-import com.jk.daggerrxkotlin.network.api.LoggedInUser
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -143,12 +142,8 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
                         val uri = Uri.parse(url)
                         val code = uri.getQueryParameter("code")
                         val state = uri.getQueryParameter("state")
-
                         val accessTokenUrl = "https://github.com/login/oauth/access_token"
-                        //https://github.com/login/oauth/access_token
-
-
-                     val subscrib=api.getAccessToken(
+                    val subscrib=api.getAccessToken(
                                 accessTokenUrl,
                                 getString(R.string.client_id),
                                 getString(R.string.client_secret),
@@ -203,11 +198,11 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
 
     private fun redirectToHome(user: FirebaseUser?) {
         if (user != null) {
-            val loggedInUser = LoggedInUser(user.phoneNumber, user.displayName, user.email, user.photoUrl.toString())
+           // val loggedInUser = LoggedInUser(user.phoneNumber, user.displayName, user.email, user.photoUrl.toString())
             //startActivity(intentFor<UserProfileActivity>(("user" to loggedInUser)))
             //startActivity(intentFor<UserProfileActivity>())
             val intent = Intent(this, UserProfileActivity::class.java)
-            intent.putExtra("user" , loggedInUser)
+           // intent.putExtra("user" , loggedInUser)
             startActivity(intent)
         }
         finish()

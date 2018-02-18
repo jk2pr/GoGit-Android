@@ -1,5 +1,6 @@
 package com.jk.daggerrxkotlin.ui.view
 
+import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -11,6 +12,7 @@ import com.jk.daggerrxkotlin.model.Repo
 import com.jk.daggerrxkotlin.model.UserProfile
 import com.jk.daggerrxkotlin.network.api.IApi
 import com.jk.daggerrxkotlin.ui.adapters.RepoAdapter
+import com.jk.daggerrxkotlin.ui.viewmodel.UserViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -24,13 +26,11 @@ import kotlin.jk.com.dagger.R
 
 class UserProfileActivity : BaseActivity(), AnkoLogger {
 
-    @Inject
-    lateinit var api: IApi
+
     @Inject
     lateinit var appDatabase: AppDatabase
     @Inject
     lateinit var mFirebaseAnalytics: FirebaseAnalytics
-    lateinit var holdingActivity: MainActivity
     var subscriptions = CompositeDisposable()
 
     override fun getLayoutResourceId(): Int {
@@ -43,27 +43,20 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
         showLoader(true)
         recyclerView_repo.apply {
             setHasFixedSize(true)
-//            isNestedScrollingEnabled=false
             layoutManager = LinearLayoutManager(context)
             adapter = RepoAdapter(null)
 
         }
-        val sub = Observable.zip<UserProfile, List<Repo>, MutableMap<UserProfile, List<Repo>>>(api.getUserProfile(),
-                api.getAllRepository("all"),
-                BiFunction<UserProfile, List<Repo>, MutableMap<UserProfile, List<Repo>>>
-                { k, f ->
-                    merge(k, f)
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    updateUI(it)
-                }, { e ->
-                    e.printStackTrace()
-                }, {
-                    print("ONComplete")
-                })
-        subscriptions.add(sub)
+        val model = ViewModelProvider.NewInstanceFactory().create(UserViewModel::class.java)
+        subscriptions.add(model.getUser().subscribe({
+            updateUI(it)
+        }, { e ->
+            e.printStackTrace()
+        }, {
+            print("ONComplete")
+        })
+        )
+
     }
 
     fun updateUI(data: MutableMap<UserProfile, List<Repo>>) {
@@ -81,12 +74,6 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
                 }
             }
         }
-    }
-
-    fun merge(loggedInUser: UserProfile, repo: List<Repo>): MutableMap<UserProfile, List<Repo>> {
-        val data: MutableMap<UserProfile, List<Repo>> = mutableMapOf()
-        data.put(loggedInUser, repo)
-        return data
     }
 
 
@@ -107,5 +94,6 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
     override fun onPause() {
         super.onPause()
         subscriptions.clear()
+        subscriptions.dispose()
     }
 }
