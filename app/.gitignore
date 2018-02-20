@@ -2,3 +2,5 @@
 /.idea/
 /local.properties
 /src/main/res/values/config.xml
+/src/main/res/values/configuration.xml
+/google-services.json

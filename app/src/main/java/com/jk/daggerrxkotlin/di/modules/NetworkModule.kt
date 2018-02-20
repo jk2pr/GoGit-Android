@@ -21,12 +21,8 @@ import javax.inject.Inject
 
 @Module
 class NetworkModule {
-
-
-
     @Inject
     lateinit var app: Application
-
 
     @Provides
     @Singleton
@@ -37,7 +33,7 @@ class NetworkModule {
 
         val client = OkHttpClient.Builder()
                 .addInterceptor(logging)
-                
+
                 .addInterceptor { chain ->
                     val ongoing = chain.request().newBuilder()
                     ongoing.addHeader("Accept", "application/json;versions=1")
@@ -49,10 +45,6 @@ class NetworkModule {
 
                     chain.proceed(ongoing.build())
                 }.build()
-
-
-
-
 
         return Retrofit.Builder()
                 //http://ip.jsontest.com/?mime=6

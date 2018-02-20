@@ -30,23 +30,21 @@ import javax.inject.Inject
 import kotlin.jk.com.dagger.R
 
 
-class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
+class Splash : BaseActivity(), OnClickListener, AnkoLogger {
 
     @Inject
     lateinit var api: IApi
     private val SPLASH_DELAY: Long = 8000 //8 seconds
     private val REDIRECT_URL_CALLBACK = "https://gogit-5a346.firebaseapp.com/__/auth/handler"
     val mDelayHandler = Handler()
-    private lateinit var mAuth: FirebaseAuth
+
     var signed = false
     private val random = SecureRandom()
     var subscriptions = CompositeDisposable()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MyApplication.appComponent.inject(this)
-        setContentView(R.layout.activity_splash)
+      //  MyApplication.appComponent.inject(this)
 
-        mAuth = FirebaseAuth.getInstance()
         if (mAuth.currentUser == null)
             animateLogoImage()
         else {
@@ -54,6 +52,9 @@ class Splash : AppCompatActivity(), OnClickListener, AnkoLogger {
         }
     }
 
+    override fun getLayoutResourceId(): Int {
+      return R.layout.activity_splash
+    }
     private fun animateLogoImage() {
         imageView.animate().apply {
             alpha(1.0f)

@@ -18,20 +18,19 @@ class UserViewModel : ViewModel() {
 
     @Inject
     lateinit var api: IApi
-    lateinit var userProfile: UserProfile
+   // lateinit var userProfile: UserProfile
     lateinit var list: List<Repo>
-    fun getUser(): Observable<MutableMap<UserProfile, List<Repo>>> = Observable.zip<UserProfile, List<Repo>, MutableMap<UserProfile, List<Repo>>>(api.getUserProfile(),
-            api.getAllRepository("all"),
-            BiFunction<UserProfile, List<Repo>, MutableMap<UserProfile, List<Repo>>>
-            { k, f ->
-                merge(k, f)
-            })
+    fun getUser(): Observable<MutableMap<UserProfile, List<Repo>>> = Observable
+            .zip<UserProfile, List<Repo>, MutableMap<UserProfile, List<Repo>>>(api.getUserProfile(),
+                    api.getAllRepository("all"),
+                    BiFunction<UserProfile, List<Repo>, MutableMap<UserProfile, List<Repo>>>
+                    { k, f ->
+                        merge(k, f)
+                    })
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-    // return sub
 
-
-    private fun merge(loggedInUser: UserProfile, repo: List<Repo>): MutableMap<UserProfile, List<Repo>> {
+     private fun merge(loggedInUser: UserProfile, repo: List<Repo>): MutableMap<UserProfile, List<Repo>> {
         val data: MutableMap<UserProfile, List<Repo>> = mutableMapOf()
         data.put(loggedInUser, repo)
         return data

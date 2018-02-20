@@ -9,7 +9,7 @@
         android:title="Test1"
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_search"
+        android:id="@+id/action_logout"
         android:icon="@drawable/ic_logout_variant"
         android:orderInCategory="200"
         android:title="Logout"

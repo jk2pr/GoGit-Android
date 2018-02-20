@@ -21,11 +21,6 @@ import android.arch.lifecycle.ViewModelProviders
 
 class UserProfileActivity : BaseActivity(), AnkoLogger {
 
-
-    @Inject
-    lateinit var appDatabase: AppDatabase
-    @Inject
-    lateinit var mFirebaseAnalytics: FirebaseAnalytics
     var subscriptions = CompositeDisposable()
 
     override fun getLayoutResourceId(): Int {
@@ -75,10 +70,12 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
     }
 
 
-    fun showLoader(isLoading: Boolean) {
+  private  fun showLoader(isLoading: Boolean) {
 
         progressbar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        parentConstraintUsrProfile.visibility = if (!isLoading) View.GONE else View.VISIBLE
+        parentConstraintUsrProfile.visibility = if (isLoading) View.GONE else View.VISIBLE
+        print("SHowingloader       -------------" + isLoading)
+
 
     }
 

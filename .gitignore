@@ -10,3 +10,4 @@ app/libs/
 app/src/androidTest/
 /app/local.properties
 /app/src/main/res/values/configuraion.xml
+/app/src/main/res/values/configuration.xml
