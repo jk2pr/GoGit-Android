@@ -37,6 +37,7 @@ class NetworkModule {
 
         val client = OkHttpClient.Builder()
                 .addInterceptor(logging)
+                
                 .addInterceptor { chain ->
                     val ongoing = chain.request().newBuilder()
                     ongoing.addHeader("Accept", "application/json;versions=1")
