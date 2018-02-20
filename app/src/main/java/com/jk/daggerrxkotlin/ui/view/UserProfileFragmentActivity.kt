@@ -60,9 +60,9 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
             txt_displayname.text = key.name
             txt_email.text = key.email
             profile?.loading(key.avatarUrl)
-            followers_count.text= "Following ${key.followers.toString()}"
-            followering_count.text= "Followers ${key.following.toString()}"
-            repo_count.text= "Repositories ${key.publicRepos.toString()}"
+            followers_count.text = "Following ${key.followers.toString()}"
+            followering_count.text = "Followers ${key.following.toString()}"
+            repo_count.text = "Repositories ${key.publicRepos.toString()}"
             if (recyclerView_repo?.adapter != null) {
                 val adapter = recyclerView_repo?.adapter as RepoAdapter
                 with(adapter) {
@@ -76,16 +76,9 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
 
 
     fun showLoader(isLoading: Boolean) {
-        when (isLoading) {
-            true -> {
-                progressbar.visibility = View.VISIBLE
-                parentConstraintUsrProfile.visibility = View.GONE
-            }
-            false -> {
-                progressbar.visibility = View.GONE
-                parentConstraintUsrProfile.visibility = View.VISIBLE
-            }
-        }
+
+        progressbar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        parentConstraintUsrProfile.visibility = if (!isLoading) View.GONE else View.VISIBLE
 
     }
 
