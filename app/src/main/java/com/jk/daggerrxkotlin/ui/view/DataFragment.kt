@@ -74,9 +74,9 @@ class DataFragment : Fragment(), AnkoLogger, DataAdapter.onViewSelectedListener 
     }
 
     private fun initSearchView() {
-        val layoutParams = android.support.v7.widget.Toolbar.LayoutParams(Gravity.END)
+        //val layoutParams = android.support.v7.widget.Toolbar.LayoutParams(Gravity.END)
         // layoutParams.width=ViewGroup.LayoutParams.MATCH_PARENT
-        holdingActivity.searchView.layoutParams = layoutParams
+      //  holdingActivity.searchView.layoutParams = layoutParams
         holdingActivity.searchView.setIconifiedByDefault(true)
         holdingActivity.searchView.queryHint = "Type to search"
         holdingActivity.searchView.setOnQueryTextListener(object : android.support.v7.widget.SearchView.OnQueryTextListener {

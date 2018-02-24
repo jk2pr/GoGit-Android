@@ -8,6 +8,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.jk.daggerrxkotlin.application.MyApplication
 import com.jk.daggerrxkotlin.db.AppDatabase
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import javax.inject.Inject
 import kotlin.jk.com.dagger.R
@@ -20,6 +21,8 @@ abstract class BaseActivity : AppCompatActivity() {
     protected lateinit var appDatabase: AppDatabase
     @Inject
     protected lateinit var mFirebaseAnalytics: FirebaseAnalytics
+
+    var subscriptions = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

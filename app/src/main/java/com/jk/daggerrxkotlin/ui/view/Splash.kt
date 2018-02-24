@@ -40,7 +40,6 @@ class Splash : BaseActivity(), OnClickListener, AnkoLogger {
 
     var signed = false
     private val random = SecureRandom()
-    var subscriptions = CompositeDisposable()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
       //  MyApplication.appComponent.inject(this)

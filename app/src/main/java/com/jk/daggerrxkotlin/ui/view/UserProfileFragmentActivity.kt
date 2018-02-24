@@ -1,27 +1,22 @@
 package com.jk.daggerrxkotlin.ui.view
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.jk.daggerrxkotlin.application.MyApplication
-import com.jk.daggerrxkotlin.db.AppDatabase
 import com.jk.daggerrxkotlin.extensions.loading
 import com.jk.daggerrxkotlin.model.Repo
 import com.jk.daggerrxkotlin.model.UserProfile
 import com.jk.daggerrxkotlin.ui.adapters.RepoAdapter
 import com.jk.daggerrxkotlin.ui.viewmodel.UserViewModel
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import org.jetbrains.anko.AnkoLogger
-import javax.inject.Inject
 import kotlin.jk.com.dagger.R
-import android.arch.lifecycle.ViewModelProviders
 
 
 class UserProfileActivity : BaseActivity(), AnkoLogger {
 
-    var subscriptions = CompositeDisposable()
 
     override fun getLayoutResourceId(): Int {
         return R.layout.activity_user_profile
