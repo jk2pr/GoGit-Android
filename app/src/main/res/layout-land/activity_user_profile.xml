@@ -3,13 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-
     android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/parentConstraintUsrProfile"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+       >
 
         <include
             android:id="@+id/toolbar"
@@ -18,11 +19,12 @@
 
         <TextView
             android:id="@+id/txt_email"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
+            android:textAlignment="center"
             android:textColor="@android:color/black"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/repo_count"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_displayname"
             tools:text="Email" />
@@ -32,23 +34,22 @@
             android:id="@+id/recyclerView_repo"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginStart="32dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/followers_count" />
+            app:layout_constraintStart_toEndOf="@+id/profile"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
         <TextView
             android:id="@+id/txt_displayname"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/bebasnue_bold"
             android:textAlignment="center"
             android:textColor="@android:color/black"
             android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toEndOf="@+id/repo_count"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profile"
             tools:text="Display Name"
@@ -58,55 +59,58 @@
             android:id="@+id/profile"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
             app:civ_border_color="@android:color/black"
             app:civ_border_width="2dp"
+            android:src="@drawable/button"
             app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            app:srcCompat="?android:attr/colorPressedHighlight" />
-
-        <TextView
-            android:id="@+id/followering_count"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            tools:text="TextView"
-            android:textAlignment="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/followers_count" />
+             />
 
         <TextView
             android:id="@+id/repo_count"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            tools:text="TextView"
+            android:layout_marginTop="24dp"
             android:textAlignment="center"
+            app:layout_constraintEnd_toStartOf="@+id/recyclerView_repo"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/followers_count" />
+            app:layout_constraintTop_toBottomOf="@+id/txt_email"
+            tools:text="TextView" />
 
         <TextView
             android:id="@+id/followers_count"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="24dp"
             android:textAlignment="center"
-            app:layout_constraintBottom_toTopOf="@+id/recyclerView_repo"
-            app:layout_constraintEnd_toStartOf="@+id/followering_count"
-            app:layout_constraintStart_toEndOf="@+id/repo_count"
-            app:layout_constraintTop_toBottomOf="@+id/txt_email"
+            app:layout_constraintEnd_toStartOf="@+id/recyclerView_repo"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/repo_count"
+            tools:text="TextView" />
+
+        <TextView
+            android:id="@+id/followering_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toStartOf="@+id/recyclerView_repo"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/followers_count"
             tools:text="TextView" />
 
 
     </android.support.constraint.ConstraintLayout>
+
     <ProgressBar
         android:id="@+id/progressbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center" />
 </FrameLayout>

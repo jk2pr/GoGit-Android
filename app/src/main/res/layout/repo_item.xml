@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     card_view:cardCornerRadius="1dp"
-    android:layout_margin="5dp"
+    android:layout_margin="1dp"
     app:cardElevation="1dp">
 
 
