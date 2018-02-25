@@ -7,8 +7,9 @@
     android:layout_height="?android:attr/actionBarSize"
     android:minHeight="?android:attr/actionBarSize"
     app:layout_collapseMode="pin"
-    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    app:popupTheme="@style/AppTheme.PopupOverlay"
     android:background="@color/colorStatubar"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
     tools:showIn="@layout/activity_main">
 
     <ImageView
