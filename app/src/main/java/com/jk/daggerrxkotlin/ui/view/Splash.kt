@@ -9,31 +9,26 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.View.OnClickListener
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GithubAuthProvider
-import com.jk.daggerrxkotlin.application.MyApplication
-import com.jk.daggerrxkotlin.network.api.IApi
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_splash.*
-import org.jetbrains.anko.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.debug
+import org.jetbrains.anko.displayMetrics
 import java.math.BigInteger
 import java.security.SecureRandom
-import javax.inject.Inject
 import kotlin.jk.com.dagger.R
 
 
 class Splash : BaseActivity(), OnClickListener, AnkoLogger {
 
-    @Inject
-    lateinit var api: IApi
+
     private val SPLASH_DELAY: Long = 8000 //8 seconds
     private val REDIRECT_URL_CALLBACK = "https://gogit-5a346.firebaseapp.com/__/auth/handler"
     val mDelayHandler = Handler()
@@ -133,7 +128,21 @@ class Splash : BaseActivity(), OnClickListener, AnkoLogger {
             setContentView(dialoglayout)
             setTitle(getString(R.string.app_name))
         }
-        dialoglayout.findViewById<WebView>(R.id.webview).run {
+        val web=dialoglayout.findViewById<WebView>(R.id.webview)
+        builder.setOnDismissListener({
+            val cookieManager = android.webkit.CookieManager.getInstance()
+            cookieManager.removeAllCookies(null)
+          web.apply {
+              clearCache(true)
+              clearFormData()
+              clearHistory()
+              clearMatches()
+
+
+
+          }
+        })
+       web.run {
             settings.javaScriptEnabled = true
             loadUrl(url)
             webViewClient = object : WebViewClient() {

@@ -2,6 +2,7 @@ package com.jk.daggerrxkotlin.di.modules
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.jk.daggerrxkotlin.application.MyApplication
@@ -17,6 +18,12 @@ class AppModule(val app: MyApplication) {
     @Singleton
     fun provideContext(): Context {
         return app
+    }
+
+    @Provides
+    @Singleton
+    fun providePreference(): SharedPreferences {
+       return app.getSharedPreferences("AccessToken", Context.MODE_PRIVATE)
     }
 
     @Provides

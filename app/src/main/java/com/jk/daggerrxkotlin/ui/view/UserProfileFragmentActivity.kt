@@ -4,7 +4,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import com.jk.daggerrxkotlin.application.MyApplication
 import com.jk.daggerrxkotlin.extensions.loading
 import com.jk.daggerrxkotlin.model.Repo
 import com.jk.daggerrxkotlin.model.UserProfile
@@ -24,7 +23,7 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MyApplication.appComponent.inject(this)
+
         showLoader(true)
         recyclerView_repo.apply {
             setHasFixedSize(true)

@@ -1,5 +1,6 @@
 package com.jk.daggerrxkotlin.ui.view
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -8,6 +9,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.jk.daggerrxkotlin.application.MyApplication
 import com.jk.daggerrxkotlin.db.AppDatabase
+import com.jk.daggerrxkotlin.network.api.IApi
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import javax.inject.Inject
@@ -16,7 +18,11 @@ import kotlin.jk.com.dagger.R
 
 abstract class BaseActivity : AppCompatActivity() {
     @Inject
+    lateinit var api: IApi
+    @Inject
     protected lateinit var mAuth: FirebaseAuth
+    @Inject
+    protected lateinit var pref:SharedPreferences
     @Inject
     protected lateinit var appDatabase: AppDatabase
     @Inject
@@ -56,6 +62,7 @@ abstract class BaseActivity : AppCompatActivity() {
         return when (item?.itemId) {
             R.id.action_logout -> {
                 mAuth.signOut()
+                pref.edit().clear().apply()
                 finish()
                 true
             }

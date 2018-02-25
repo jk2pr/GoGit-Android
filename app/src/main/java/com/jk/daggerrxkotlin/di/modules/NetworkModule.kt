@@ -2,6 +2,7 @@ package com.jk.daggerrxkotlin.di.modules
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import com.jk.daggerrxkotlin.network.api.IApi
 import dagger.Module
 import dagger.Provides
@@ -22,7 +23,7 @@ import javax.inject.Inject
 @Module
 class NetworkModule {
     @Inject
-    lateinit var app: Application
+    lateinit var pref: SharedPreferences
 
     @Provides
     @Singleton
@@ -38,8 +39,8 @@ class NetworkModule {
                     val ongoing = chain.request().newBuilder()
                     ongoing.addHeader("Accept", "application/json;versions=1")
 
-                    val preference= app.getSharedPreferences("AccessToken", Context.MODE_PRIVATE)
-                    val token= preference?.getString("AccessToken","")
+//                    val preference=
+                    val token= pref.getString("AccessToken","")
                     if (token!=null)
                         ongoing.addHeader("Authorization", "token "+token)
 
