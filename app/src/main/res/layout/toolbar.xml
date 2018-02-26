@@ -2,28 +2,35 @@
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/actionBarSize"
+    android:background="@color/colorStatubar"
     android:minHeight="?android:attr/actionBarSize"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
     app:layout_collapseMode="pin"
     app:popupTheme="@style/AppTheme.PopupOverlay"
-    android:background="@color/colorStatubar"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark"
     tools:showIn="@layout/activity_main">
 
-    <ImageView
-        android:layout_width="?android:attr/actionBarSize"
-        android:layout_height="match_parent"
-        android:src="@mipmap/logo_round"
-        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/bebasnue_bold"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:text="Jitendra Prajapati"
+        android:visibility="gone"/>
 
     <android.support.v7.widget.SearchView
+        android:layout_marginLeft="100dp"
         android:id="@+id/search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:visibility="gone" />
+        android:visibility="visible"
+        app:iconifiedByDefault="false"
+        app:queryHint="@string/app_name"/>
 
 </android.support.v7.widget.Toolbar>
 

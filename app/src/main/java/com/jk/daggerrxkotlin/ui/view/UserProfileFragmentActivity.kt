@@ -11,6 +11,7 @@ import com.jk.daggerrxkotlin.model.UserProfile
 import com.jk.daggerrxkotlin.ui.adapters.RepoAdapter
 import com.jk.daggerrxkotlin.ui.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.activity_user_profile.*
+import kotlinx.android.synthetic.main.toolbar.*
 import org.jetbrains.anko.AnkoLogger
 import java.io.Serializable
 import java.util.ArrayList
@@ -74,7 +75,7 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
         showLoader(false)
         progressbar.tag = data
         for ((key, value) in data) {
-            txt_displayname.text = key.name
+            name.text = key.name
             txt_email.text = key.email
             profile?.loading(key.avatarUrl)
             //profile?.tag = key.avatarUrl
