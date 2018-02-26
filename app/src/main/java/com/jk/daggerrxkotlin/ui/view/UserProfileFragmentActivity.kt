@@ -14,7 +14,7 @@ import com.jk.daggerrxkotlin.ui.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.jetbrains.anko.AnkoLogger
-import java.util.ArrayList
+import java.util.*
 import kotlin.jk.com.dagger.R
 
 
@@ -28,30 +28,30 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-            showLoader(true)
-            recyclerView_repo.apply {
-                setHasFixedSize(true)
-                layoutManager = LinearLayoutManager(context)
-                adapter = RepoAdapter(null)
+        showLoader(true)
+        recyclerView_repo.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context)
+            adapter = RepoAdapter(null)
 
-            }
-            val model = ViewModelProviders.of(this).get(UserViewModel::class.java)
-            subscriptions.add(model.getUser().subscribe({
-              // data=it
-                updateUI(it)
-            }, { e ->
-                e.printStackTrace()
-            }, {
-                print("ONComplete")
-            })
-            )
+        }
+        val model = ViewModelProviders.of(this).get(UserViewModel::class.java)
+        subscriptions.add(model.getUser().subscribe({
+            // data=it
+            updateUI(it)
+        }, { e ->
+            e.printStackTrace()
+        }, {
+            print("ONComplete")
+        })
+        )
 
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         val gson = Gson()
-        val data = progressbar.tag as MutableMap<UserProfile, List<Repo>>
+        val data = progressbar.tag as MutableMap<*, *>
         for ((key, value) in data) {
             outState?.putSerializable("List", value as ArrayList<Repo>)
             outState?.putString("Profile", gson.toJson(key))
@@ -63,16 +63,17 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
         val value = savedInstanceState?.getSerializable("List") as List<Repo>
         val profile = savedInstanceState.getString("Profile")
         val userProfile = Gson().fromJson(profile, UserProfile::class.java)
-        data.put(userProfile, value)
+        data[userProfile] = value
     }
 
     override fun onResume() {
         super.onResume()
-        if (data.size>0)
-        updateUI(data)
+        if (data.isNotEmpty())
+            updateUI(data)
     }
+
     @SuppressLint("SetTextI18n")
-    fun updateUI(data: MutableMap<UserProfile, List<Repo>>) {
+    private fun updateUI(data: MutableMap<UserProfile, List<Repo>>) {
         showLoader(false)
         progressbar.tag = data
         for ((key, value) in data) {
@@ -83,14 +84,14 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
             followers_count.text = "Following ${key.followers}"
             followering_count.text = "Followers ${key.following}"
             repo_count.text = "Repositories ${key.publicRepos}"
-            if (recyclerView_repo?.adapter==null)
-                recyclerView_repo.adapter=RepoAdapter(null)
-                val adapter = recyclerView_repo?.adapter as RepoAdapter
-                with(adapter) {
-                    clearItems()
-                    addItems(value)
-                    showLoader(false)
-                }
+            if (recyclerView_repo?.adapter == null)
+                recyclerView_repo.adapter = RepoAdapter(null)
+            val adapter = recyclerView_repo?.adapter as RepoAdapter
+            with(adapter) {
+                clearItems()
+                addItems(value)
+                showLoader(false)
+            }
 
         }
     }
