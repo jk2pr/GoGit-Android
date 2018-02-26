@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.jk.daggerrxkotlin.application.MyApplication
@@ -12,6 +13,7 @@ import com.jk.daggerrxkotlin.db.AppDatabase
 import com.jk.daggerrxkotlin.network.api.IApi
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_user_profile.*
+import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
 import kotlin.jk.com.dagger.R
 
@@ -28,7 +30,7 @@ abstract class BaseActivity : AppCompatActivity() {
     @Inject
     protected lateinit var mFirebaseAnalytics: FirebaseAnalytics
 
-    var subscriptions = CompositeDisposable()
+    protected var subscriptions = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +66,14 @@ abstract class BaseActivity : AppCompatActivity() {
                 mAuth.signOut()
                 pref.edit().clear().apply()
                 finish()
+                true
+            }
+            R.id.search -> {
+                search.setOnClickListener {
+                    name.visibility= View.GONE
+                }
+
+                //search.onActionViewExpanded()
                 true
             }
             else -> super.onOptionsItemSelected(item)

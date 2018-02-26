@@ -10,6 +10,7 @@ import com.jk.daggerrxkotlin.model.UserProfile
 import com.jk.daggerrxkotlin.ui.adapters.RepoAdapter
 import com.jk.daggerrxkotlin.ui.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.activity_user_profile.*
+import kotlinx.android.synthetic.main.toolbar.*
 import org.jetbrains.anko.AnkoLogger
 import kotlin.jk.com.dagger.R
 
@@ -46,7 +47,7 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
     fun updateUI(data: MutableMap<UserProfile, List<Repo>>) {
         showLoader(false)
         for ((key, value) in data) {
-            txt_displayname.text = key.name
+            name.text = key.name
             txt_email.text = key.email
             profile?.loading(key.avatarUrl)
             followers_count.text = "Following ${key.followers.toString()}"
