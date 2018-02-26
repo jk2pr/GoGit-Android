@@ -12,7 +12,7 @@ import kotlin.jk.com.dagger.R
 
 class MainActivity : BaseActivity(), DataFragment.OnFragmentInteractionListener {
 
-   lateinit var searchView:SearchView
+    lateinit var searchView: SearchView
     override fun onFragmentInteraction(uri: Uri) {
         println("uri = [$uri]")
     }
@@ -20,15 +20,15 @@ class MainActivity : BaseActivity(), DataFragment.OnFragmentInteractionListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MyApplication.appComponent.inject(this)
-        searchView=search
-       // val profileFragment=UserProfileFragment()
+        searchView = search
+        // val profileFragment=UserProfileFragment()
         //val arg =Bundle()
         //arg.putSerializable("user",intent.extras.getSerializable("user"))
-       // profileFragment.arguments=arg
+        // profileFragment.arguments=arg
 
-       // val fragmentTransaction=supportFragmentManager.beginTransaction()
-       // fragmentTransaction.replace(R.id.contentView,profileFragment)
-       // fragmentTransaction.commit()
+        // val fragmentTransaction=supportFragmentManager.beginTransaction()
+        // fragmentTransaction.replace(R.id.contentView,profileFragment)
+        // fragmentTransaction.commit()
     }
 
     override fun getLayoutResourceId(): Int {
