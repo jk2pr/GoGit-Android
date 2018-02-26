@@ -2,15 +2,13 @@ package com.jk.daggerrxkotlin.application
 
 
 import android.app.Application
+import com.crashlytics.android.Crashlytics
 import com.jk.daggerrxkotlin.di.components.AppComponent
 import com.jk.daggerrxkotlin.di.components.DaggerAppComponent
 import com.jk.daggerrxkotlin.di.modules.AppModule
 import com.jk.daggerrxkotlin.di.modules.DBModule
 import com.jk.daggerrxkotlin.di.modules.NetworkModule
-import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
-
-
 
 
 /**
