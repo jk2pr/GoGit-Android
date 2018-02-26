@@ -50,6 +50,7 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         val gson = Gson()
+        val data = progressbar.tag as MutableMap<*, *>
        // val data = progressbar.tag  as MutableMap<UserProfile, List<Repo>>
         for ((key, value) in data) {
             outState?.putSerializable("List", value as ArrayList<Repo>)
@@ -62,15 +63,17 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
         val value = savedInstanceState?.getSerializable("List") as List<Repo>
         val profile = savedInstanceState.getString("Profile")
         val userProfile = Gson().fromJson(profile, UserProfile::class.java)
-        data.put(userProfile, value)
+        data[userProfile] = value
     }
 
     override fun onResume() {
         super.onResume()
-        if (data.size>0)
-        updateUI(data)
+        if (data.isNotEmpty())
+            updateUI(data)
     }
-    fun updateUI(data: MutableMap<UserProfile, List<Repo>>) {
+
+
+    private fun updateUI(data: MutableMap<UserProfile, List<Repo>>) {
         showLoader(false)
         //progressbar.tag = data
        this.data=data
@@ -78,17 +81,18 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
             name.text = key.name
             txt_email.text = key.email
             profile?.loading(key.avatarUrl)
-            followers_count.text = "Following ${key.followers.toString()}"
-            followering_count.text = "Followers ${key.following.toString()}"
-            repo_count.text = "Repositories ${key.publicRepos.toString()}"
-            if (recyclerView_repo?.adapter==null)
-                recyclerView_repo.adapter=RepoAdapter(null)
-                val adapter = recyclerView_repo?.adapter as RepoAdapter
-                with(adapter) {
-                    clearItems()
-                    addItems(value)
-                    showLoader(false)
-                }
+            //profile?.tag = key.avatarUrl
+            followers_count.text = "Following ${key.followers}"
+            followering_count.text = "Followers ${key.following}"
+            repo_count.text = "Repositories ${key.publicRepos}"
+            if (recyclerView_repo?.adapter == null)
+                recyclerView_repo.adapter = RepoAdapter(null)
+            val adapter = recyclerView_repo?.adapter as RepoAdapter
+            with(adapter) {
+                clearItems()
+                addItems(value)
+                showLoader(false)
+            }
 
         }
     }
