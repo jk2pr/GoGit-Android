@@ -28,6 +28,9 @@ class RepoAdapter(val viewActions: onViewSelectedListener?) : RecyclerView.Adapt
         holder?.bind(datas[position])
     }
 
+    fun getAllItems():List<Repo>{
+        return datas
+    }
 
     fun addItems(items: List<Repo>){
         datas.addAll(items)
