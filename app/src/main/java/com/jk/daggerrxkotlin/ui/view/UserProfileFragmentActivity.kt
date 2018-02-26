@@ -13,7 +13,6 @@ import com.jk.daggerrxkotlin.ui.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.jetbrains.anko.AnkoLogger
-import java.io.Serializable
 import java.util.ArrayList
 import kotlin.jk.com.dagger.R
 
