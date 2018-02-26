@@ -50,7 +50,7 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         val gson = Gson()
-        val data = progressbar.tag as MutableMap<UserProfile, List<Repo>>
+       // val data = progressbar.tag  as MutableMap<UserProfile, List<Repo>>
         for ((key, value) in data) {
             outState?.putSerializable("List", value as ArrayList<Repo>)
             outState?.putString("Profile", gson.toJson(key))
@@ -72,12 +72,12 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
     }
     fun updateUI(data: MutableMap<UserProfile, List<Repo>>) {
         showLoader(false)
-        progressbar.tag = data
+        //progressbar.tag = data
+       this.data=data
         for ((key, value) in data) {
             name.text = key.name
             txt_email.text = key.email
             profile?.loading(key.avatarUrl)
-            //profile?.tag = key.avatarUrl
             followers_count.text = "Following ${key.followers.toString()}"
             followering_count.text = "Followers ${key.following.toString()}"
             repo_count.text = "Repositories ${key.publicRepos.toString()}"
