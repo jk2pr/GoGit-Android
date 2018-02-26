@@ -1,5 +1,6 @@
 package com.jk.daggerrxkotlin.ui.view
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -70,6 +71,7 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
         if (data.size>0)
         updateUI(data)
     }
+    @SuppressLint("SetTextI18n")
     fun updateUI(data: MutableMap<UserProfile, List<Repo>>) {
         showLoader(false)
         progressbar.tag = data
@@ -78,9 +80,9 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
             txt_email.text = key.email
             profile?.loading(key.avatarUrl)
             //profile?.tag = key.avatarUrl
-            followers_count.text = "Following ${key.followers.toString()}"
-            followering_count.text = "Followers ${key.following.toString()}"
-            repo_count.text = "Repositories ${key.publicRepos.toString()}"
+            followers_count.text = "Following ${key.followers}"
+            followering_count.text = "Followers ${key.following}"
+            repo_count.text = "Repositories ${key.publicRepos}"
             if (recyclerView_repo?.adapter==null)
                 recyclerView_repo.adapter=RepoAdapter(null)
                 val adapter = recyclerView_repo?.adapter as RepoAdapter
