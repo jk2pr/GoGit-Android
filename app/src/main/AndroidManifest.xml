@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="kotlin.jk.com.dagger">
+    package="com.jk.gogit">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name="com.jk.daggerrxkotlin.application.MyApplication"
+        android:name="com.jk.gogit.application.MyApplication"
         android:allowBackup="false"
         android:icon="@mipmap/logo"
         android:label="@string/app_short_name"
@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.jk.daggerrxkotlin.ui.view.MainActivity"
+            android:name="com.jk.gogit.ui.view.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
@@ -22,7 +22,7 @@
             android:value="52815f589bd2a0305629f6f8d292a6c0c2a85d99" />
 
         <activity
-            android:name="com.jk.daggerrxkotlin.ui.view.Splash"
+            android:name="com.jk.gogit.ui.view.Splash"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.jk.daggerrxkotlin.ui.view.UserProfileActivity"
+            android:name="com.jk.gogit.ui.view.UserProfileActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 

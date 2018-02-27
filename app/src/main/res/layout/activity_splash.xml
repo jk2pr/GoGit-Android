@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0088a3"
-    tools:context="com.jk.daggerrxkotlin.ui.view.Splash">
+    tools:context="com.jk.gogit.ui.view.Splash">
 
     <ImageView
         android:id="@+id/imageView"
