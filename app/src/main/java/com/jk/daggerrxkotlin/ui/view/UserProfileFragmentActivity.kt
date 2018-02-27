@@ -50,8 +50,6 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         val gson = Gson()
-        val data = progressbar.tag as MutableMap<*, *>
-       // val data = progressbar.tag  as MutableMap<UserProfile, List<Repo>>
         for ((key, value) in data) {
             outState?.putSerializable("List", value as ArrayList<Repo>)
             outState?.putString("Profile", gson.toJson(key))
