@@ -2,6 +2,7 @@ package com.jk.gogit.network.api
 
 import com.jk.gogit.model.Repo
 import com.jk.gogit.model.UserProfile
+import com.jk.gogit.model.Users
 import io.reactivex.Observable
 import retrofit2.http.*
 
@@ -30,10 +31,19 @@ interface IApi {
     //@Path
 
 
-    @GET("/user/repos")
-    fun getAllRepository(@Query("visibility") visibility: String): Observable<List<Repo>>
 
     @GET("/user")
     fun getUserProfile(): Observable<UserProfile>
+
+
+    @GET("/user/repos")
+    fun getAllRepository(@Query("visibility") visibility: String): Observable<List<Repo>>
+
+
+    @GET("/user/followers")
+    fun getFollowers(): Observable<List<Users>>
+
+    @GET("/user/following")
+    fun getFollowing(): Observable<List<Users>>
 
 }

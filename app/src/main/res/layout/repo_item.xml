@@ -15,7 +15,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/txt_repoName"
+        android:id="@+id/txt_display_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -26,7 +26,7 @@
         android:fontFamily="@font/bebasnue_bold"/>
 
     <TextView
-        android:id="@+id/txt_repoLanguage"
+        android:id="@+id/txt_bio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -34,7 +34,7 @@
         android:layout_marginTop="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_repoName"
+        app:layout_constraintTop_toBottomOf="@+id/txt_display_name"
         tools:text="Language"
         android:fontFamily="@font/bebasneue_light"/>
 
@@ -43,9 +43,9 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/txt_repoLanguage"
-        app:layout_constraintStart_toEndOf="@+id/txt_repoLanguage"
-        app:layout_constraintTop_toTopOf="@+id/txt_repoLanguage"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_bio"
+        app:layout_constraintStart_toEndOf="@+id/txt_bio"
+        app:layout_constraintTop_toTopOf="@+id/txt_bio"
         tools:text="Stars"
         android:fontFamily="@font/bebasneue_thin"/>
 

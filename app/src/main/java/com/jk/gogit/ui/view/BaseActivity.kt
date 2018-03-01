@@ -9,6 +9,7 @@ import android.view.View
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.jk.gogit.R
+import com.jk.gogit.R.id.action_search
 import com.jk.gogit.application.MyApplication
 import com.jk.gogit.db.AppDatabase
 import com.jk.gogit.network.api.AccessToken
@@ -69,10 +70,8 @@ abstract class BaseActivity : AppCompatActivity() {
                 finish()
                 true
             }
-            R.id.search -> {
-                search.setOnClickListener {
-                    name.visibility= View.GONE
-                }
+            R.id.action_search -> {
+
 
                 //search.onActionViewExpanded()
                 true

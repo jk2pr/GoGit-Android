@@ -18,7 +18,7 @@ class MainActivity : BaseActivity(), DataFragment.OnFragmentInteractionListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MyApplication.appComponent.inject(this)
-        searchView = search
+       // searchView = search
         // val profileFragment=UserProfileFragment()
         //val arg =Bundle()
         //arg.putSerializable("user",intent.extras.getSerializable("user"))

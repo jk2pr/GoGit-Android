@@ -48,8 +48,8 @@ class RepoAdapter(val viewActions: onViewSelectedListener?) : RecyclerView.Adapt
     inner class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
         fun bind(item: Repo) = with(itemView) {
 
-            txt_repoName.text = item.fullName
-            txt_repoLanguage.text = item.language
+            txt_display_name.text = item.fullName
+            txt_bio.text = item.language
             //comments.text = """${12} comments"""
             txt_repoStars.text = item.stargazersCount.toString()
             txt_repoForks.text=item.forksCount.toString()
