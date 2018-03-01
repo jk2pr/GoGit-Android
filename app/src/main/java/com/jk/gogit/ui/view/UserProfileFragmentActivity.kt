@@ -42,7 +42,6 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
 
     }
     private fun updateProfile(userProfile: UserProfile) {
-
         profile?.loading(userProfile.avatarUrl)
         txt_displayname.text = userProfile.name
         txt_loginame?.text = userProfile.login
@@ -51,7 +50,6 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
         txt_location?.text = userProfile.location
         txt_email?.text = userProfile.email
         txt_blog?.text = userProfile.blog
-
 
     }
 
