@@ -46,13 +46,22 @@ interface IApi {
 
 
     @GET("/user/repos")
-    fun getAllRepository(@Query("visibility") visibility: String): Observable<List<Repo>>
+    fun getMyRepository(@Query("visibility") visibility: String): Observable<List<Repo>>
+
+    @GET("/users/{user}/repos")
+    fun getUserAllRepository(@Path("user") user: String,@Query("visibility") visibility: String): Observable<List<Repo>>
 
 
     @GET("/user/followers")
-    fun getFollowers(): Observable<List<Users>>
+    fun getMyFollowers(): Observable<List<Users>>
+
+    @GET("/users/{user}/followers")
+    fun getUserFollowers(@Path("user") user: String): Observable<List<Users>>
 
     @GET("/user/following")
-    fun getFollowing(): Observable<List<Users>>
+    fun getMyFollowing(): Observable<List<Users>>
+
+    @GET("/users/{user}/following")
+    fun getUserFollowing(@Path("user") user: String): Observable<List<Users>>
 
 }

@@ -34,4 +34,5 @@ class MainActivity : BaseActivity() {
         return R.layout.activity_main
     }
 
+
 }

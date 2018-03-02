@@ -9,6 +9,11 @@
         android:title="Test1"
         app:showAsAction="always" />
     <item
+        android:id="@+id/action_your_profile"
+        android:orderInCategory="200"
+        android:title="Your Profile"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_logout"
         android:icon="@drawable/ic_logout_variant"
         android:orderInCategory="200"

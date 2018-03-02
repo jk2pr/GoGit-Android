@@ -14,6 +14,7 @@ import com.jk.gogit.model.UserProfile
 import com.jk.gogit.network.api.IApi
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.toolbar.*
+import org.jetbrains.anko.intentFor
 import javax.inject.Inject
 
 
@@ -31,8 +32,10 @@ abstract class BaseActivity : AppCompatActivity() {
 
     public var subscriptions = CompositeDisposable()
 
+    companion object {
+        lateinit var userData: UserProfile
+    }
 
-    lateinit var userData: UserProfile
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +45,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     fun save(userData: UserProfile) {
-        this.userData = userData
+        BaseActivity.userData = userData
     }
 
     abstract fun getLayoutResourceId(): Int
@@ -69,6 +72,17 @@ abstract class BaseActivity : AppCompatActivity() {
 
     }
 
+    fun makeToolbarForUserProfile() {
+        supportActionBar?.apply {
+            setDisplayUseLogoEnabled(false)
+            setHomeButtonEnabled(true)
+            setDisplayHomeAsUpEnabled(true)
+            title = getString(R.string.app_name)
+
+        }
+
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu, menu)
@@ -86,6 +100,12 @@ abstract class BaseActivity : AppCompatActivity() {
             }
             R.id.action_search -> {
                 //search.onActionViewExpanded()
+                true
+            }
+            R.id.action_your_profile -> {
+                //search.onActionViewExpanded()
+                if (item.isVisible)
+                startActivity(intentFor<UserProfileActivity>(("id" to userData.login)))
                 true
             }
             else -> super.onOptionsItemSelected(item)

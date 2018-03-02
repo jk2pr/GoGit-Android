@@ -1,5 +1,6 @@
 package com.jk.gogit.ui.view
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.util.SparseArray
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 
@@ -18,28 +20,33 @@ import com.jk.gogit.ui.view.fragments.FollowersFragment
 import com.jk.gogit.ui.view.fragments.FollowingFragment
 import com.jk.gogit.ui.view.fragments.RepoFragment
 import com.jk.gogit.ui.viewmodel.UserViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import org.jetbrains.anko.AnkoLogger
-
 
 
 class UserProfileActivity : BaseActivity(), AnkoLogger {
 
     var data: MutableMap<UserProfile, List<Repo>> = mutableMapOf()
-    var loginUser:String="No Value"
+    var selectedUser: String = "No Value"
+    var model: UserViewModel? = null
     override fun getLayoutResourceId(): Int {
         return R.layout.activity_user_profile
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        loginUser=intent.getStringExtra("id")
+        selectedUser = intent.getStringExtra("id")
+        makeToolbarForUserProfile()
         showLoader(true)
         container?.adapter = PageAdapter(supportFragmentManager, this)
-        container?.offscreenPageLimit=3
+        container?.offscreenPageLimit = 3
         tabs?.setupWithViewPager(container)
+        model = ViewModelProviders.of(this).get(UserViewModel::class.java)
+        print("MOdel" + model)
 
     }
+
     private fun updateProfile(userProfile: UserProfile) {
         profile?.loading(userProfile.avatarUrl)
         txt_displayname.text = userProfile.name
@@ -52,29 +59,32 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
 
     }
 
-   /* override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        val gson = Gson()
-        for ((key, value) in data) {
-            outState?.putSerializable("List", value as ArrayList<Repo>)
-            outState?.putString("Profile", gson.toJson(key))
-        }
-    }
+    /* override fun onSaveInstanceState(outState: Bundle?) {
+         super.onSaveInstanceState(outState)
+         val gson = Gson()
+         for ((key, value) in data) {
+             outState?.putSerializable("List", value as ArrayList<Repo>)
+             outState?.putString("Profile", gson.toJson(key))
+         }
+     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        super.onRestoreInstanceState(savedInstanceState)
-        //  val value = savedInstanceState?.getSerializable("List") as List<Repo>
-        //  val profile = savedInstanceState.getString("Profile")
-        //  val userProfile = Gson().fromJson(profile, UserProfile::class.java)
-        //  data[userProfile] = value
-    }*/
+     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+         super.onRestoreInstanceState(savedInstanceState)
+         //  val value = savedInstanceState?.getSerializable("List") as List<Repo>
+         //  val profile = savedInstanceState.getString("Profile")
+         //  val userProfile = Gson().fromJson(profile, UserProfile::class.java)
+         //  data[userProfile] = value
+     }*/
 
     override fun onResume() {
         super.onResume()
-        val model = ViewModelProviders.of(this).get(UserViewModel::class.java)
-        subscriptions.add(model.getUser(loginUser).subscribe({
-            // data=it
 
+        var id = "N/A"
+        if (!selectedUser.contentEquals(userData.login))
+        //it means it is not login user
+            id = selectedUser
+        val obs = model!!.getCurrentObserable(id).subscribe({
+            // data=it
             updateProfile(it.userData)
             val adapter = container?.adapter as PageAdapter
             val f0 = adapter.registeredFragments[0] as RepoFragment
@@ -88,12 +98,9 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
             e.printStackTrace()
         }, {
             print("ONComplete")
-        }))
-        if (data.isNotEmpty()) {
-            // updateUI(data)
-        }
+        })
+        subscriptions.add(obs)
     }
-
 
     /*private fun updateUI(data: MutableMap<UserProfile, List<Repo>>) {
         showLoader(false)
@@ -122,9 +129,9 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
 
 
     private fun showLoader(isLoading: Boolean) {
-          progressbar.visibility = if (isLoading) View.VISIBLE else View.GONE
-          parentConstraintUsrProfile?.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
-           print("SHowingloader       -------------" + isLoading)
+        progressbar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        parentConstraintUsrProfile?.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
+        print("SHowingloader       -------------" + isLoading)
 
 
     }
@@ -133,6 +140,11 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
         super.onPause()
         subscriptions.clear()
         subscriptions.dispose()
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.findItem(R.id.action_your_profile)?.setVisible(false)
+        return super.onPrepareOptionsMenu(menu)
     }
 
     class PageAdapter(fm: FragmentManager, private val context: Context) : FragmentStatePagerAdapter(fm) {
