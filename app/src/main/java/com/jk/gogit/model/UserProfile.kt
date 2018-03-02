@@ -63,5 +63,3 @@ data class UserProfile(@SerializedName("gists_url")
                       val name: String ,
                       @SerializedName("location")
                       val location: String)
-
-

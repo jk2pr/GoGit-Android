@@ -1,5 +1,6 @@
 package com.jk.gogit.network.api
 
+import com.jk.gogit.model.Feed
 import com.jk.gogit.model.Repo
 import com.jk.gogit.model.UserProfile
 import com.jk.gogit.model.Users
@@ -27,13 +28,21 @@ interface IApi {
     fun searchUsers(@Query("q") query: String, @Query("page") page: Int, @Query("per_page") perPage: Int): Observable<Result>
 
 
+
+    @GET("users/{user}/received_events")
+    fun getFeed(@Path("user") user: String,@Query("page") page: Int, @Query("per_page") perPage: Int): Observable<List<Feed>>
+
+
 //    @GET("users/{user}/repos")
     //@Path
 
-
-
     @GET("/user")
-    fun getUserProfile(): Observable<UserProfile>
+    fun getMyProfile(): Observable<UserProfile>
+
+
+
+    @GET("/users/{user}")
+    fun getUserProfile(@Path("user") user: String): Observable<UserProfile>
 
 
     @GET("/user/repos")

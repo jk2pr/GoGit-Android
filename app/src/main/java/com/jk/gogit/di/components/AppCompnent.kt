@@ -5,6 +5,7 @@ import com.jk.gogit.di.modules.DBModule
 import com.jk.gogit.di.modules.NetworkModule
 import com.jk.gogit.model.UserProfile
 import com.jk.gogit.ui.view.*
+import com.jk.gogit.ui.viewmodel.FeedModel
 import com.jk.gogit.ui.viewmodel.UserViewModel
 import dagger.Component
 import javax.inject.Singleton
@@ -22,5 +23,6 @@ interface AppComponent {
   //  fun inject(dataFragment: UserProfileActivity)
     fun inject(networkModule: NetworkModule)
     fun inject(userViewModel: UserViewModel)
+    fun inject(feedModel: FeedModel)
 
 }

@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.activity_splash.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
 import org.jetbrains.anko.displayMetrics
+import org.jetbrains.anko.intentFor
 import java.math.BigInteger
 import java.security.SecureRandom
 
@@ -208,9 +209,8 @@ class Splash : BaseActivity(), OnClickListener, AnkoLogger {
     private fun redirectToHome(user: FirebaseUser?) {
         if (user != null) {
            // val loggedInUser = LoggedInUser(user.phoneNumber, user.displayName, user.email, user.photoUrl.toString())
-            //startActivity(intentFor<UserProfileActivity>(("user" to loggedInUser)))
-            //startActivity(intentFor<UserProfileActivity>())
-            val intent = Intent(this, UserProfileActivity::class.java)
+            startActivity(intentFor<MainActivity>())
+         //   val intent = Intent(this, UserProfileActivity::class.java)
            // intent.putExtra("user" , loggedInUser)
             startActivity(intent)
         }

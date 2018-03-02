@@ -20,12 +20,12 @@ class UserViewModel : ViewModel() {
 
     @Inject
     lateinit var api: IApi
-    fun getUser(): Observable<FinalData> = Observable
+    fun getUser(userId: String): Observable<FinalData> = Observable
             .zip<UserProfile,
                     List<Repo>,
                     List<Users>,
                     List<Users>,
-                    FinalData>(api.getUserProfile(),
+                    FinalData>(api.getUserProfile(userId),
                     api.getAllRepository("all"),
                     api.getFollowing(),
                     api.getFollowers(), Function4<UserProfile, List<Repo>, List<Users>, List<Users>, FinalData>
@@ -50,22 +50,6 @@ class UserViewModel : ViewModel() {
     }
 
 
-  /*  fun getUser1(): Observable<MutableMap<UserProfile, List<Repo>>> = Observable
-            .zip<UserProfile, List<Repo>, MutableMap<UserProfile, List<Repo>>>(api.getUserProfile(),
-                    api.getAllRepository("all"),
-                    BiFunction<UserProfile, List<Repo>, MutableMap<UserProfile, List<Repo>>>
-                    { k, f ->
-                        merge(k, f)
-                    })
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-
-    private fun merge(loggedInUser: UserProfile, repo: List<Repo>): MutableMap<UserProfile, List<Repo>> {
-        val data: MutableMap<UserProfile, List<Repo>> = mutableMapOf()
-        data.put(loggedInUser, repo)
-        return data
-    }
-*/
     class FinalData {
         lateinit var userData: UserProfile
         lateinit var repo: List<Repo>

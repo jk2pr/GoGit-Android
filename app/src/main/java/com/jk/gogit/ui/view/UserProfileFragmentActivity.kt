@@ -26,13 +26,14 @@ import org.jetbrains.anko.AnkoLogger
 class UserProfileActivity : BaseActivity(), AnkoLogger {
 
     var data: MutableMap<UserProfile, List<Repo>> = mutableMapOf()
+    var loginUser:String="No Value"
     override fun getLayoutResourceId(): Int {
         return R.layout.activity_user_profile
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        loginUser=intent.getStringExtra("id")
         showLoader(true)
         container?.adapter = PageAdapter(supportFragmentManager, this)
         container?.offscreenPageLimit=3
@@ -71,7 +72,7 @@ class UserProfileActivity : BaseActivity(), AnkoLogger {
     override fun onResume() {
         super.onResume()
         val model = ViewModelProviders.of(this).get(UserViewModel::class.java)
-        subscriptions.add(model.getUser().subscribe({
+        subscriptions.add(model.getUser(loginUser).subscribe({
             // data=it
 
             updateProfile(it.userData)
