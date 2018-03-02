@@ -25,7 +25,10 @@ class FeedFragment : Fragment(),FeedAdapter.onViewSelectedListener {
         startActivity(activity?.intentFor<UserProfileActivity>(("id" to id)))
     }
 
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance=true
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -40,9 +43,10 @@ class FeedFragment : Fragment(),FeedAdapter.onViewSelectedListener {
             layoutManager = LinearLayoutManager(context)
 
         }
+        showLoader(true)
         val activity: MainActivity = activity as MainActivity
         feed_adapter.adapter=FeedAdapter(this)
-        activity.api.getMyProfile()
+        activity.subscriptions.add(activity.api.getMyProfile()
                 .flatMap {
                     activity.save(it)
                     activity.api.getFeed(it.login, 1, 100)
@@ -50,12 +54,19 @@ class FeedFragment : Fragment(),FeedAdapter.onViewSelectedListener {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     run {
-
+                        showLoader(false)
                         (feed_adapter.adapter as FeedAdapter).addItems(it)
                     }
                 }, {
                     it.printStackTrace()
-                })
+                }))
+    }
+    private fun showLoader(isLoading: Boolean) {
+        progressbar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        feed_adapter?.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
+        print("SHowingloader       -------------" + isLoading)
+
+
     }
 
 }

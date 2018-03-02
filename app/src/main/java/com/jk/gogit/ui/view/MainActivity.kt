@@ -20,7 +20,13 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         makeDefaultToolbar()
-        supportFragmentManager.beginTransaction().add(R.id.contentView,FeedFragment(),FeedFragment::class.java.simpleName).commit()
+        if (savedInstanceState == null) {
+            var feedFragment = supportFragmentManager.findFragmentByTag(FeedFragment::class.java.simpleName)
+            if (feedFragment == null) {
+                feedFragment = FeedFragment()
+                supportFragmentManager.beginTransaction().add(R.id.contentView, feedFragment, FeedFragment::class.java.simpleName).commit()
+            }
+        }
     }
 
 

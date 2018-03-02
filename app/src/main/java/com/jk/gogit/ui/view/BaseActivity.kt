@@ -29,7 +29,7 @@ abstract class BaseActivity : AppCompatActivity() {
     @Inject
     protected lateinit var mFirebaseAnalytics: FirebaseAnalytics
 
-    protected var subscriptions = CompositeDisposable()
+    public var subscriptions = CompositeDisposable()
 
 
     lateinit var userData: UserProfile
