@@ -1,0 +1,8 @@
+*.iml
+.gradle
+/local.properties
+/build
+/.idea/
+/_config.yml
+/keystore.Properties
+/secret.Properties

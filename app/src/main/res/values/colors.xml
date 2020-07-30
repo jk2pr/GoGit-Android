@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<color name="colorPrimary">#546e7a</color>
+    <color name="colorPrimaryLight">#819ca9</color>
+    <color name="colorPrimaryDark">#29434e</color> -->
+    <color name="colorPrimary">#24292e</color>
+    <color name="colorPrimaryLight">#819ca9</color>
+    <color name="colorPrimaryDark">@android:color/black</color>
+    <color name="colorAccent">@color/githubLoginColor</color>
+    <color name="colorTextDark">@color/cardview_dark_background</color>
+    <color name="black_overlay">#66000000</color>
+    <color name="githubLightTextColor">#a7aaac</color>
+    <color name="githubToolbarColor">#2b3137</color>
+    <color name="githubLightBackGroundColor">#f9f9f9</color>
+    <color name="githubLoginColor">#333333</color>
+
+    <color name="splashbg1">#00005b</color>
+    <color name="splashbg2">#0552a4</color>
+    <color name="splashbg3">#fb0587a7</color>
+    <color name="tab_selected_color">#ffee00</color>
+    <color name="white">@android:color/white</color>
+    <color name="drkred">#920000</color>
+    <color name="drkgreen">#009913</color>
+    <color name="lightgreen">#b301610d</color>
+    <color name="notification_template_icon_bg">#33c4e6f2</color>
+
+</resources>

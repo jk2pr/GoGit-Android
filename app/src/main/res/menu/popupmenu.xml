@@ -1,0 +1,40 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_item_all"
+        android:icon="@drawable/ic_filter"
+        android:title="@string/all"
+        app:actionLayout="@layout/filter_repo"
+        app:showAsAction="always" />
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_item_public"
+            android:checkable="true"
+            android:icon="@drawable/ic_filter"
+            android:title="@string/repo_public" />
+        <item
+            android:id="@+id/menu_item_private"
+            android:checkable="true"
+            android:icon="@drawable/ic_filter"
+            android:title="@string/repo_private" />
+        <item
+            android:id="@+id/menu_item_owner"
+            android:checkable="true"
+            android:title="@string/owner" />
+        <item
+            android:id="@+id/menu_item_member"
+            android:checkable="true"
+            android:title="@string/member" />
+    </group>
+    <!--  <item
+          android:id="@+id/menu_item_archived"
+          android:title="Archived"
+          android:visible="true" />
+      <item
+          android:id="@+id/menu_item_mirrors"
+          android:title="@string/mirrors"
+          android:visible="true" />
+  -->
+
+</menu>
