@@ -17,6 +17,10 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+    - name: create keystore.properties
+      env:
+        KEYSTORE: ${{ secrets.KEYSTORE }}
+      run: echo "$KEYSTORE" > ./keystore.properties  
     - name: Change wrapper permissions
       run: chmod +x ./gradlew
     - name: Build with Gradle
