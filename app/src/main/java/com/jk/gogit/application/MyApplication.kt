@@ -21,7 +21,7 @@ class MyApplication : Application() {
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
-        MyApplication.appComponent = DaggerAppComponent.builder()
+        appComponent = DaggerAppComponent.builder()
                 .networkModule(NetworkModule())
                 .appModule(AppModule(base))
                 .dBModule(DBModule(base))
@@ -30,20 +30,4 @@ class MyApplication : Application() {
 
     }
 
-    override fun onCreate() {
-        super.onCreate()
-
-        /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-             val shortcutManager = getSystemService(ShortcutManager::class.java)
-             val webShortcut = ShortcutInfo.Builder(this, "shortcut_web")
-                     .setShortLabel("catinean.com")
-                     .setLongLabel("Open catinean.com web site")
-                     .setIcon(Icon.createWithResource(this, R.drawable.ic_delete))
-                     .setIntent(Intent(Intent.ACTION_VIEW, Uri.parse("https://catinean.com")))
-                     .build()
-             shortcutManager!!.dynamicShortcuts = Collections.singletonList(webShortcut)
-
-
-         }*/
-    }
 }
