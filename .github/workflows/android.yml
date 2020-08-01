@@ -19,11 +19,11 @@ jobs:
         java-version: 1.8
     - name: create keystore.properties
       env:
-        KEYSTORE: ${secrets.KEYSTORE}
+        KEYSTORE: ${{ secrets.KEYSTORE }}
       run: echo "$KEYSTORE" > ./keystore.properties
     - name: create secret.properties
       env:
-        SECRET: ${secrets.SECRET}
+        SECRET: ${{ secrets.SECRET }}
       run: echo "$SECRET" > ./secret.properties
     - name: Change wrapper permissions
       run: chmod +x ./gradlew
