@@ -1,118 +1,135 @@
 package com.jk.gogit.ui.view
 
+import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.crashlytics.android.answers.CustomEvent
+import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.auth.FirebaseAuth
+import com.google.gson.Gson
 import com.jk.gogit.R
-import com.jk.gogit.ui.adapters.FeedAdapter
-import com.jk.gogit.utils.NavUtils.redirectToProfile
-import com.jk.gogit.utils.NavUtils.redirectToRepoDetails
+import com.jk.gogit.db.AppDatabase
+import com.jk.gogit.model.UserProfile
+import com.jk.gogit.network.api.IApi
+import com.jk.gogit.network.api.ILogin
+import com.jk.gogit.ui.viewmodel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.plugins.RxJavaPlugins.onError
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.toolbar.*
+import okhttp3.Headers
+import javax.inject.Inject
 
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
 
-class MainActivity : BaseActivity(), FeedAdapter.OnViewSelectedListener {
+    @Inject
+    lateinit var api: IApi
 
-    var lastPage: Int = 1
-    var lastVisibleItem: Int = 0
-    var totalItemCount: Int = 0
-    var loading = false
-    var pageNumber = 1
+    @Inject
+    lateinit var loginApi: ILogin
+
+    @Inject
+    protected lateinit var mAuth: FirebaseAuth
+
+    @Inject
+    protected lateinit var pref: SharedPreferences
+
+    @Inject
+    lateinit var appDatabase: AppDatabase
+
+    @Inject
+    lateinit var analytics: FirebaseAnalytics
+
+    @Inject
+    lateinit var firebaseAnalytics
+            : FirebaseAnalytics
+
+    var subscriptions = CompositeDisposable()
+    val model: UserViewModel by lazy { ViewModelProvider(this).get(UserViewModel::class.java) }
+
+    companion object {
+
+        private var sUser: UserProfile? = null
+
+        // The minimum amount of items to have below your current scroll position
+        // before loading more.
+        const val VISIBLE_THRESHOLD = 1 //5
+        var sMaxRecord = 50
+        var isNotificationAvailable = false
+
+    }
+
+    private fun setUpToolbar() {
+        if (toolbar != null) {
+            val toolbar = toolbar as androidx.appcompat.widget.Toolbar
+            toolbar.elevation = 0.0f
+            //findOptional<AppBarLayout>(R.id.app_bar_layout)?.setPadding(0, getStatusBarHeight(), 0, 0)
+            //toolbar.visibility = View.VISIBLE
+            toolbar.overflowIcon = ContextCompat.getDrawable(this, R.drawable.ic_overflow_white)
+            //toolbar_title.text = getText(R.string.app_name)
+            setSupportActionBar(toolbar)
+        }
+    }
+
+    fun getLoginData(): UserProfile? {
+        if (sUser == null)
+            sUser = Gson().fromJson(pref.getString("UserData", null), UserProfile::class.java)
+        return sUser
+    }
+
+    fun save(user: UserProfile) {
+        sUser = null
+        pref.edit().putString("UserData", Gson().toJson(user)).apply()
+
+    }
+
+    fun handlePagination(headers: Headers?): Int {
+
+        try {
+            if (headers == null)
+                return 1
+            val list = headers.get("Link")?.split(",")
+            val map = list?.associateBy(
+                    {
+                        it.split(";")[1].split("=")[1].replace("\"", "")
+
+                    }, {
+                it.split(";")[0]
+            })
+            val url = map?.get("last")?.trim()?.removeSurrounding("<", ">")
+            //return url?.substring(url.lastIndexOf("=") + 1, url.length - 1)?.toInt() ?: 0
+
+            url?.let {
+                val uri = Uri.parse(it)
+                return uri.getQueryParameter("page")!!.toInt()
+            }
+            return 1
+
+        } catch (e: Exception) {
+            return 1
+        }
+    }
+
+    fun enableHomeInToolBar(title: String?, isUpEnable: Boolean) {
+        supportActionBar?.apply {
+            setHomeButtonEnabled(isUpEnable)
+            setDisplayHomeAsUpEnabled(isUpEnable)
+            toolbar_title.text = title
+            setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp)
+
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
         enableHomeInToolBar(resources.getString(R.string.app_name), false)
-        answers.logCustom(CustomEvent("MainActivity"))
-
-        swipeRefresh?.setColorSchemeColors(ContextCompat.getColor(this, android.R.color.holo_blue_bright),
-                ContextCompat.getColor(this, android.R.color.holo_green_light),
-                ContextCompat.getColor(this, android.R.color.holo_orange_light),
-                ContextCompat.getColor(this, android.R.color.holo_red_light))
-
-        swipeRefresh?.setOnRefreshListener {
-            resetPages()
-            loadPage()
-        }
-
-        feed_recyclerView.apply {
-            setHasFixedSize(true)
-            val lManager = androidx.recyclerview.widget.LinearLayoutManager(context)
-            layoutManager = lManager
-            feed_recyclerView.adapter = FeedAdapter(this@MainActivity)
-            addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView,
-                                        dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    totalItemCount = feed_recyclerView.layoutManager!!.itemCount
-                    lastVisibleItem = (feed_recyclerView.layoutManager as androidx.recyclerview.widget.LinearLayoutManager).findLastVisibleItemPosition()
-                    if (!loading && totalItemCount <= lastVisibleItem + VISIBLE_THRESHOLD) {
-                        pageNumber++
-                        loading = true
-                        loadPage()
-                    }
-                }
-            })
-
-        }
-        txt_internet.setOnClickListener {
-            doLoadingInit()
-        }
-
-        doLoadingInit()
-        // loadPage()
-    }
-
-
-    private fun doLoadingInit() {
-        showLoader(true, false)
-        subscriptions.add(api.getMyProfile()
-                .flatMap {
-                    save(it)
-                    // loadPage()
-                    api.getFeed(it.login, pageNumber, sMaxRecord)
-                }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    lastPage = handlePagination(it.headers())
-                    loading = false
-                    showLoader(false, false)
-                    if (it.body()!!.isEmpty())
-                        showEmptyView()
-                    else
-                        (feed_recyclerView.adapter as FeedAdapter).addItems(it.body()!!)
-                }, {
-                    showLoader(false, true)
-                }))
-    }
-
-    private fun loadPage() {
-        if (pageNumber in 1..lastPage) {
-            subscriptions.add(
-                    api.getFeed(getLoginData()!!.login, pageNumber, sMaxRecord)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({
-                                //lastPage = handlePagination(it.headers())
-                                loading = false
-                                showLoader(false, false)
-                                if (it.body()!!.isEmpty())
-                                    showEmptyView()
-                                else
-                                    if (pageNumber == 1)
-                                        (feed_recyclerView.adapter as FeedAdapter).clearItems()
-                                (feed_recyclerView.adapter as FeedAdapter).addItems(it.body()!!)
-
-                            }, {
-                                onError(it)
-                                showLoader(false, true)
-                            }))
-
-        }
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
@@ -131,50 +148,11 @@ class MainActivity : BaseActivity(), FeedAdapter.OnViewSelectedListener {
     }
 
 
-    override fun getLayoutResourceId(): Int {
-        return R.layout.activity_main
-    }
-
-    override fun onRepNameClicked(textView: TextView, owner: String) {
-        redirectToRepoDetails(this, owner)
-    }
-
-    override fun onActorNameClicked(imageView: ImageView, loginId: String) {
-        redirectToProfile(this, loginId)
-    }
-
-    private fun showEmptyView() {
-        txt_internet.visibility = View.INVISIBLE
-        progressbar?.visibility = View.INVISIBLE
-        txt_empty.visibility = View.VISIBLE
-    }
-
-    fun showLoader(isLoading: Boolean, isError: Boolean) {
-        txt_empty.visibility = View.INVISIBLE
-        if (isError) {
-            txt_internet.visibility = View.VISIBLE
-            main_content?.visibility = View.INVISIBLE
-            progressbar?.visibility = View.INVISIBLE
-            return
-        } else
-            txt_internet.visibility = View.GONE
-        if (isLoading) {
-            main_content?.visibility = View.INVISIBLE
-            progressbar?.visibility = View.VISIBLE
-
-        } else {
-            swipeRefresh.isRefreshing = false
-            main_content?.visibility = View.VISIBLE
-            progressbar?.visibility = View.INVISIBLE
-        }
-
-    }
-
-    private fun resetPages() {
+    /*private fun resetPages() {
         lastPage = 1 //Will updated after first hit
         lastVisibleItem = 0
         totalItemCount = 0
         loading = false
         pageNumber = 1
-    }
+    }*/
 }

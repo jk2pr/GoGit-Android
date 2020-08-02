@@ -7,46 +7,14 @@
     android:background="@color/githubLightBackGroundColor"
     tools:context="com.jk.gogit.ui.view.SplashActivity">
 
-    <!--<ImageView
-        android:visibility="gone"
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:src="@mipmap/ic_launcher"
-        app:layout_constraintBottom_toTopOf="@+id/app_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />-->
-
-    <TextView
-        android:id="@+id/app_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawablePadding="@dimen/dp20"
-        android:drawableTop="@mipmap/ic_launcher_round"
-        android:fontFamily="@font/bebasnue_bold"
-        android:gravity="center"
-        android:text="@string/app_name"
-        android:textColor="@color/githubToolbarColor"
-        android:textSize="40sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tagline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/bebasneue_book"
-        android:text="@string/tagline"
-        android:textAllCaps="false"
-        android:textColor="@color/githubLoginColor"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_name" />
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/my_nav_host_fragment"
+        android:name="com.jk.gogit.ui.main.MainNavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

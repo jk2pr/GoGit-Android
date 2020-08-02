@@ -1,8 +1,9 @@
-package com.jk.gogit
+package com.jk.gogit.ui.main
 
+import LoginViewModel
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.PorterDuff
+import android.content.SharedPreferences
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Spannable
@@ -13,43 +14,49 @@ import android.text.style.ClickableSpan
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.BlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.navigation.navGraphViewModels
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GithubAuthProvider
-import com.jk.gogit.model.login.AuthRequestModel
-import com.jk.gogit.ui.view.BaseActivity
+import com.jk.gogit.R
+import com.jk.gogit.extensions.hide
+import com.jk.gogit.extensions.show
+import com.jk.gogit.ui.main.login.data.response.Resource
 import com.jk.gogit.utils.NavUtils
-import com.jk.gogit.utils.NavUtils.redirectToHome
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.Credentials
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.debug
+import javax.inject.Inject
+
+@AndroidEntryPoint
+class LoginFragment : Fragment(R.layout.fragment_login) {
+
+    private val loginViewModel: LoginViewModel by navGraphViewModels(R.id.nav) { defaultViewModelProviderFactory }
+
+    @Inject
+    lateinit var pref: SharedPreferences
+
+    @Inject
+    lateinit var mAuth: FirebaseAuth
 
 
-class LoginActivity : BaseActivity(), AnkoLogger {
-    override fun getLayoutResourceId(): Int {
-        return R.layout.activity_login
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        progressbar.indeterminateDrawable.setColorFilter(ContextCompat.getColor(this, android.R.color.white), PorterDuff.Mode.SRC_IN);
-        btn_login.setOnClickListener {
-            readInputDoLogin()
-
-        }
+    @ExperimentalCoroutinesApi
+    fun setUpUI() {
+        val colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(ContextCompat.getColor(requireContext(), android.R.color.white), BlendModeCompat.SRC_IN)
+        progressbar.indeterminateDrawable.colorFilter = colorFilter
+        btn_login.setOnClickListener { readInputDoLogin() }
         handlePrivacyPolicy()
-
-        //btn_skip.paintFlags = btn_skip.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-        btn_skip.setOnClickListener {
-            onBackPressed()
-        }
-
+        btn_skip.setOnClickListener { activity?.onBackPressed() }
         input_password.setOnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 readInputDoLogin()
-                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(v.windowToken, 0)
             }
             true
@@ -58,7 +65,7 @@ class LoginActivity : BaseActivity(), AnkoLogger {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun showDialog() {
-        NavUtils.redirectToPrivacyPolicy(this)
+        NavUtils.redirectToPrivacyPolicy(requireActivity())
     }
 
     private fun handlePrivacyPolicy() {
@@ -81,14 +88,26 @@ class LoginActivity : BaseActivity(), AnkoLogger {
         txt_terms.movementMethod = LinkMovementMethod.getInstance()
     }
 
+    @ExperimentalCoroutinesApi
     private fun readInputDoLogin() {
         val userName = input_email.text.toString()
         val password = input_password.text.toString()
         if (validate(userName, password)) {
             showLoader(true)
             val token = Credentials.basic(userName, password)
-            doLogin(token)
+            pref.edit().putString("initToken", token).apply()
+            setupObserver()
+            loginViewModel.setState(LoginViewModel.MainState.LoginEvent)
+
         }
+    }
+
+    @ExperimentalCoroutinesApi
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setUpUI()
+
+
     }
 
     private fun validate(userName: String, password: String): Boolean {
@@ -97,62 +116,67 @@ class LoginActivity : BaseActivity(), AnkoLogger {
         if (userName.isEmpty()) {
             input_layout_username.error = "Enter a valid github user name"
             valid = false
-        } else {
+        } else
             input_layout_username.error = null
-        }
 
         if (password.isEmpty()) {
             input_layout_password.error = "Password should not be empty"
             valid = false
-        } else {
+        } else
             input_layout_password.error = null
-        }
+
 
         return valid
     }
 
     fun showLoader(isLoading: Boolean) {
         if (isLoading) {
-            login_layout_group?.visibility = View.GONE
-            progressbar?.visibility = View.VISIBLE
+            login_layout_group?.hide()
+            progressbar?.show()
 
         } else {
-            login_layout_group?.visibility = View.VISIBLE
-            progressbar?.visibility = View.GONE
+            login_layout_group?.show()
+            progressbar?.hide()
         }
 
     }
 
-    private fun doLogin(token: String) {
-        pref.edit().putString("initToken", token).apply()
-        subscriptions.add(loginApi.authorizations(AuthRequestModel().generate())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { accessToken ->
-                            signInWithToken(accessToken.body()!!.token)
-                        }, { e ->
-                    onError(e)
+    private fun setupObserver() {
+
+        loginViewModel.finalDataLiveData.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is Resource.Success -> {
+                    signInWithToken(it.data.token)
                     showLoader(false)
-                }))
+                }
+                is Resource.Loading -> {
+                    showLoader(true)
+                }
+                is Resource.Error -> {
+                    showLoader(false)
+                    Toast.makeText(activity, it.exception.localizedMessage, Toast.LENGTH_LONG).show()
+                }
+            }
+        })
+
     }
 
     private fun signInWithToken(token: String) {
         val credential = GithubAuthProvider.getCredential(token)
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this) { task ->
-                    debug("signInWithCredential:onComplete:" + task.isSuccessful)
+                .addOnCompleteListener { task ->
+                    /// debug("signInWithCredential:onComplete:" + task.isSuccessful)
                     if (!task.isSuccessful) {
                         task.exception?.printStackTrace()
                         showLoader(false)
                     } else {
                         pref.edit().putString("AccessToken", token).apply()
                         val user = task.result?.user
-                        redirectToHome(this, user)
+                        NavUtils.redirectToHome(requireActivity(), user)
 
                     }
                 }
     }
-
-
 }
+
+

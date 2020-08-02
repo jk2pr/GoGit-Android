@@ -4,13 +4,14 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.GsonBuilder
 import com.jk.gogit.R
-import com.jk.gogit.application.MyApplication.Companion.appComponent
 import com.jk.gogit.exception.UserUnAuthorizedException
 import com.jk.gogit.network.api.IApi
 import com.jk.gogit.network.api.ILogin
 import com.jk.gogit.utils.HeaderHandler
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
@@ -23,6 +24,7 @@ import javax.inject.Singleton
 
 
 @Module
+@InstallIn(ApplicationComponent::class)
 class NetworkModule {
     @Inject
     lateinit var pref: SharedPreferences
@@ -34,7 +36,6 @@ class NetworkModule {
     @Provides
     @Singleton
     fun getLoginRetrofit(): ILogin {
-        appComponent.inject(this)
         val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.NONE
         val gSon = GsonBuilder()
@@ -76,7 +77,6 @@ class NetworkModule {
     @Provides
     @Singleton
     fun getRetrofit(): IApi {
-        appComponent.inject(this)
         val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.BODY
 

@@ -3,7 +3,6 @@ package com.jk.gogit.ui.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jk.gogit.EditProfileActivity
-import com.jk.gogit.application.MyApplication.Companion.appComponent
 import com.jk.gogit.model.*
 import com.jk.gogit.model.commits.CommitData
 import com.jk.gogit.network.api.IApi
@@ -19,9 +18,6 @@ class UserViewModel : ViewModel() {
     @Inject
     lateinit var api: IApi
 
-    init {
-        appComponent.inject(this)
-    }
 
 
     fun getUserProfile(userId: String): Observable<UserProfile> {

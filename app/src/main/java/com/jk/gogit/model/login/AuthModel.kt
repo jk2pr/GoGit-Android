@@ -1,4 +1,4 @@
-package com.jk.gogit.model.Login
+package com.jk.gogit.model.login
 
 import com.google.gson.annotations.SerializedName
 import com.jk.gogit.BuildConfig
