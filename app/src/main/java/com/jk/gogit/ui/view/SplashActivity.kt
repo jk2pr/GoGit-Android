@@ -15,6 +15,7 @@ import com.jk.gogit.utils.NavUtils.redirectToProfile
 import com.jk.gogit.utils.NavUtils.redirectToRepoDetails
 import com.jk.gogit.utils.Utils
 import org.jetbrains.anko.toast
+import java.util.*
 import javax.inject.Inject
 
 
@@ -39,18 +40,12 @@ class SplashActivity : AppCompatActivity() {
 
     private val mRunnable = Runnable {
         if (!isFinishing) {
-            /* appComponent = DaggerAppComponent.builder()
-                     .networkModule(NetworkModule())
-                     .appModule(AppModule(this))
-                     .dBModule(DBModule(this))
-                     .cacheModule(CacheModule(this))
-                     .build()*/
             appComponent.inject(this)
 
             when {
                 intent.dataString != null -> {
                     //Handle
-                    val dataString = intent?.dataString?.removeSuffix("/")?.toLowerCase()
+                    val dataString = intent?.dataString?.removeSuffix("/")?.toLowerCase(Locale.getDefault())
                     val baseUrl = arrayOf(
                             "github.com/",
                             "http://github.com/",

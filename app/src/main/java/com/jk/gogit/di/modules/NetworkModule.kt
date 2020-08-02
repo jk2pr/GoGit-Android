@@ -22,10 +22,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
-/**
- * Created by M2353204 on 07/08/2017.
- */
-
 @Module
 class NetworkModule {
     @Inject

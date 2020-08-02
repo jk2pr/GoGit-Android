@@ -9,7 +9,7 @@ import com.bumptech.glide.request.RequestListener
 import com.jk.gogit.R
 
 /**
- * Created by M2353204 on 02/08/2017.
+ *  on 02/08/2017.
  */
 fun ImageView.loading(imageUrl: String) {
     if (TextUtils.isEmpty(imageUrl)) {

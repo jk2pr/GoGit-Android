@@ -13,9 +13,7 @@ import com.jk.gogit.ui.viewmodel.UserViewModel
 import dagger.Component
 import javax.inject.Singleton
 
-/**
- * Created by M2353204 on 07/08/2017.
- */
+
 @Singleton
 @Component(modules = [(AppModule::class), (NetworkModule::class),(CacheModule::class), (DBModule::class)])
 interface AppComponent {
