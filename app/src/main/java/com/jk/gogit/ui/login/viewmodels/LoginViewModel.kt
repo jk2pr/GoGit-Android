@@ -1,19 +1,16 @@
-package com.jk.gogit.ui.main
+package com.jk.gogit.ui.login.viewmodels
 
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.jk.gogit.model.login.AccessToken
-import com.jk.gogit.ui.main.login.data.response.Resource
-import com.jk.gogit.ui.main.login.services.LoginExecutor
-import kotlinx.coroutines.CoroutineExceptionHandler
+import com.jk.gogit.ui.login.data.response.AccessToken
+import com.jk.gogit.ui.login.data.response.Resource
+import com.jk.gogit.ui.login.services.LoginExecutor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 
 class LoginViewModel @ViewModelInject constructor(

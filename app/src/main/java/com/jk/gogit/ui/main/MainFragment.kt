@@ -68,20 +68,20 @@ class MainFragment : Fragment(R.layout.fragment_main), FeedAdapter.OnViewSelecte
 
     }
 
-    val baseActivity by lazy { activity as MainActivity }
+   private val mainActivity by lazy { activity as MainActivity }
     private fun doLoadingInit() {
         showLoader(true, false)
 
-        baseActivity.subscriptions.add(baseActivity.api.getMyProfile()
+        mainActivity.subscriptions.add(mainActivity.api.getMyProfile()
                 .flatMap {
-                    baseActivity.save(it)
+                    mainActivity.save(it)
                     // loadPage()
-                    baseActivity.api.getFeed(it.login, pageNumber, sMaxRecord)
+                    mainActivity.api.getFeed(it.login, pageNumber, sMaxRecord)
                 }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    lastPage = baseActivity.handlePagination(it.headers())
+                    lastPage = mainActivity.handlePagination(it.headers())
                     loading = false
                     showLoader(false, false)
                     if (it.body()!!.isEmpty())
@@ -95,8 +95,8 @@ class MainFragment : Fragment(R.layout.fragment_main), FeedAdapter.OnViewSelecte
 
     private fun loadPage() {
         if (pageNumber in 1..lastPage) {
-            baseActivity.subscriptions.add(
-                    baseActivity.api.getFeed(baseActivity.getLoginData()!!.login, pageNumber, sMaxRecord)
+            mainActivity.subscriptions.add(
+                    mainActivity.api.getFeed(mainActivity.getLoginData()!!.login, pageNumber, sMaxRecord)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({

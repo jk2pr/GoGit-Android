@@ -1,4 +1,4 @@
-package com.jk.gogit.ui.main
+package com.jk.gogit.ui.login.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -19,13 +19,15 @@ import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GithubAuthProvider
 import com.jk.gogit.R
 import com.jk.gogit.extensions.hide
 import com.jk.gogit.extensions.show
-import com.jk.gogit.ui.main.login.data.response.Resource
+import com.jk.gogit.ui.login.viewmodels.LoginViewModel
+import com.jk.gogit.ui.login.data.response.Resource
 import com.jk.gogit.utils.NavUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_login.*
@@ -171,7 +173,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     } else {
                         pref.edit().putString("AccessToken", token).apply()
                         val user = task.result?.user
-                        NavUtils.redirectToHome(requireActivity(), user)
+                        findNavController().navigate(R.id.fragment_main)
+                       // NavUtils.redirectToHome(requireActivity(), user)
 
                     }
                 }

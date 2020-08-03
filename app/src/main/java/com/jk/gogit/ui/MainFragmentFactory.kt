@@ -1,7 +1,9 @@
-package com.jk.gogit.ui.main
+package com.jk.gogit.ui
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
+import com.jk.gogit.ui.main.MainFragment
+import com.jk.gogit.ui.splash.fragments.SplashFragment
 import javax.inject.Inject
 
 class MainFragmentFactory

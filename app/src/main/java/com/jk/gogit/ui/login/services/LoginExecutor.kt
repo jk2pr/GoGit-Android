@@ -1,14 +1,13 @@
-package com.jk.gogit.ui.main.login.services
+package com.jk.gogit.ui.login.services
 
 import com.jk.gogit.exception.UserUnAuthorizedException
-import com.jk.gogit.model.login.AccessToken
-import com.jk.gogit.model.login.AuthRequestModel
+import com.jk.gogit.ui.login.data.response.AccessToken
+import com.jk.gogit.ui.login.data.request.AuthRequestModel
 import com.jk.gogit.network.api.ILogin
-import com.jk.gogit.ui.main.login.data.response.Resource
+import com.jk.gogit.ui.login.data.response.Resource
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.handleCoroutineException
 import javax.inject.Inject
 
 class LoginExecutor

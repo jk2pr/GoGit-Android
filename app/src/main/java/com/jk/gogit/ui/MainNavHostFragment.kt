@@ -1,7 +1,8 @@
-package com.jk.gogit.ui.main
+package com.jk.gogit.ui
 
 import android.content.Context
 import androidx.navigation.fragment.NavHostFragment
+import com.jk.gogit.ui.MainFragmentFactory
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

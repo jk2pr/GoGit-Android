@@ -1,4 +1,4 @@
-package com.jk.gogit.ui.main.login.data.response
+package com.jk.gogit.ui.login.data.response
 
 sealed class Resource<out R> {
 

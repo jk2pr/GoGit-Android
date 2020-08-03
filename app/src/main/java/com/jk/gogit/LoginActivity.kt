@@ -15,12 +15,9 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.GithubAuthProvider
-import com.jk.gogit.model.login.AuthRequestModel
 import com.jk.gogit.ui.view.BaseActivity
 import com.jk.gogit.utils.NavUtils
 import com.jk.gogit.utils.NavUtils.redirectToHome
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.Credentials
 import org.jetbrains.anko.AnkoLogger

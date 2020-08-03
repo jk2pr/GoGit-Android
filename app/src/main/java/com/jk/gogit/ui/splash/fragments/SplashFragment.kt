@@ -1,4 +1,4 @@
-package com.jk.gogit.ui.main
+package com.jk.gogit.ui.splash.fragments
 
 import android.os.Handler
 import androidx.fragment.app.Fragment

@@ -8,12 +8,12 @@
 
     <fragment
         android:id="@+id/fragment_splash"
-        android:name="com.jk.gogit.ui.main.SplashFragment"
+        android:name="com.jk.gogit.ui.splash.fragments.SplashFragment"
         tools:layout="@layout/fragment_splash" />
 
     <fragment
         android:id="@+id/fragment_login"
-        android:name="com.jk.gogit.ui.main.LoginFragment"
+        android:name="com.jk.gogit.ui.login.fragments.LoginFragment"
         tools:layout="@layout/fragment_login" />
     <fragment
         android:id="@+id/fragment_main"
