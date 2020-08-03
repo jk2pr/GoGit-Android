@@ -9,7 +9,7 @@ import retrofit2.http.POST
 interface ILogin {
     @POST("authorizations")
     @Headers("Accept: application/json")
-    fun authorizations(
+    suspend fun authorizations(
             @Body authRequestModel: AuthRequestModel
     ): AccessToken
 }

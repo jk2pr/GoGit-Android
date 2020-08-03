@@ -3,6 +3,7 @@ package com.jk.gogit.di.modules
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.GsonBuilder
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.jk.gogit.R
 import com.jk.gogit.exception.UserUnAuthorizedException
 import com.jk.gogit.network.api.IApi
@@ -12,6 +13,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
@@ -26,18 +28,14 @@ import javax.inject.Singleton
 @Module
 @InstallIn(ApplicationComponent::class)
 class NetworkModule {
-    @Inject
-    lateinit var pref: SharedPreferences
-    @Inject
-    lateinit var app: Context
-    @Inject
-    lateinit var cache: Cache
+
 
     @Provides
     @Singleton
-    fun getLoginRetrofit(): ILogin {
+    fun getLoginRetrofit(pref: SharedPreferences,
+                         @ApplicationContext app: Context): ILogin {
         val logging = HttpLoggingInterceptor()
-        logging.level = HttpLoggingInterceptor.Level.NONE
+        logging.level = HttpLoggingInterceptor.Level.BODY
         val gSon = GsonBuilder()
                 .setLenient()
                 .create()
@@ -66,7 +64,7 @@ class NetworkModule {
                 .build()
         return Retrofit.Builder()
                 .baseUrl("https://api.github.com/")
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .addConverterFactory(GsonConverterFactory.create(gSon))
                 .client(client)
                 .build()
@@ -76,7 +74,8 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun getRetrofit(): IApi {
+    fun getRetrofit(pref: SharedPreferences,
+                    @ApplicationContext app: Context, cache: Cache): IApi {
         val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.BODY
 

@@ -1,6 +1,5 @@
 package com.jk.gogit.ui.main
 
-import LoginViewModel
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
@@ -96,7 +95,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             showLoader(true)
             val token = Credentials.basic(userName, password)
             pref.edit().putString("initToken", token).apply()
-            setupObserver()
             loginViewModel.setState(LoginViewModel.MainState.LoginEvent)
 
         }
@@ -106,6 +104,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpUI()
+        setupObserver()
 
 
     }
@@ -154,7 +153,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 }
                 is Resource.Error -> {
                     showLoader(false)
-                    Toast.makeText(activity, it.exception.localizedMessage, Toast.LENGTH_LONG).show()
+                    Toast.makeText(activity, it.exception?.localizedMessage, Toast.LENGTH_LONG).show()
                 }
             }
         })

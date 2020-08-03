@@ -87,7 +87,7 @@ class LoginActivity : BaseActivity(), AnkoLogger {
         if (validate(userName, password)) {
             showLoader(true)
             val token = Credentials.basic(userName, password)
-            doLogin(token)
+            //doLogin(token)
         }
     }
 
@@ -123,7 +123,7 @@ class LoginActivity : BaseActivity(), AnkoLogger {
 
     }
 
-    private fun doLogin(token: String) {
+   /* private fun doLogin(token: String) {
         pref.edit().putString("initToken", token).apply()
         subscriptions.add(loginApi.authorizations(AuthRequestModel().generate())
                 .subscribeOn(Schedulers.io())
@@ -135,7 +135,7 @@ class LoginActivity : BaseActivity(), AnkoLogger {
                     onError(e)
                     showLoader(false)
                 }))
-    }
+    }*/
 
     private fun signInWithToken(token: String) {
         val credential = GithubAuthProvider.getCredential(token)
