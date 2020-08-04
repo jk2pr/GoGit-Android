@@ -2,8 +2,7 @@ package com.jk.gogit.ui
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
-import com.jk.gogit.ui.main.MainFragment
-import com.jk.gogit.ui.splash.fragments.SplashFragment
+import com.jk.gogit.ui.feed.FeedFragment
 import javax.inject.Inject
 
 class MainFragmentFactory
@@ -11,12 +10,8 @@ class MainFragmentFactory
     override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
         return when (className) {
 
-            MainFragment::class.java.name -> {
-                val fragment = MainFragment()
-                fragment
-            }
-            SplashFragment::class.java.name -> {
-                val fragment = SplashFragment()
+            FeedFragment::class.java.name -> {
+                val fragment = FeedFragment()
                 fragment
             }
             else -> super.instantiate(classLoader, className)

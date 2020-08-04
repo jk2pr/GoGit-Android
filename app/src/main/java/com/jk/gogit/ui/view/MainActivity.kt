@@ -6,57 +6,30 @@ import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.analytics.FirebaseAnalytics
+import androidx.navigation.NavOptions
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import com.google.firebase.auth.FirebaseAuth
-import com.google.gson.Gson
 import com.jk.gogit.R
-import com.jk.gogit.db.AppDatabase
-import com.jk.gogit.model.UserProfile
-import com.jk.gogit.network.api.IApi
-import com.jk.gogit.network.api.ILogin
-import com.jk.gogit.ui.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.plugins.RxJavaPlugins.onError
-import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 import okhttp3.Headers
 import javax.inject.Inject
 
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var api: IApi
 
     @Inject
-    lateinit var loginApi: ILogin
+    lateinit var pref: SharedPreferences
 
     @Inject
-    protected lateinit var mAuth: FirebaseAuth
+    lateinit var mAuth: FirebaseAuth
 
-    @Inject
-    protected lateinit var pref: SharedPreferences
-
-    @Inject
-    lateinit var appDatabase: AppDatabase
-
-    @Inject
-    lateinit var analytics: FirebaseAnalytics
-
-    @Inject
-    lateinit var firebaseAnalytics
-            : FirebaseAnalytics
-
-    var subscriptions = CompositeDisposable()
-    val model: UserViewModel by lazy { ViewModelProvider(this).get(UserViewModel::class.java) }
 
     companion object {
-
-        private var sUser: UserProfile? = null
-
         // The minimum amount of items to have below your current scroll position
         // before loading more.
         const val VISIBLE_THRESHOLD = 1 //5
@@ -77,17 +50,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun getLoginData(): UserProfile? {
-        if (sUser == null)
-            sUser = Gson().fromJson(pref.getString("UserData", null), UserProfile::class.java)
-        return sUser
-    }
-
-    fun save(user: UserProfile) {
-        sUser = null
-        pref.edit().putString("UserData", Gson().toJson(user)).apply()
-
-    }
 
     fun handlePagination(headers: Headers?): Int {
 
@@ -129,30 +91,34 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        my_nav_host_fragment.post {
+
+            val navController = Navigation.findNavController(this, R.id.my_nav_host_fragment)
+            val navGraph = navController.navInflater.inflate(R.navigation.nav)
+
+            val startDestination = if (mAuth.currentUser == null) R.id.fragment_login else R.id.fragment_feed
+
+            navGraph.startDestination = startDestination
+            navController.graph = navGraph
+        }
+        setUpToolbar()
         enableHomeInToolBar(resources.getString(R.string.app_name), false)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        subscriptions.add(model.getNotifications(false, 0, sMaxRecord)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    isNotificationAvailable = it.body()!!.isEmpty() == false
-                    super.onPrepareOptionsMenu(menu)
-                }, {
-                    onError(it)
-                    it.printStackTrace()
-                }))
+        /*   subscriptions.add(model.getNotifications(false, 0, sMaxRecord)
+                   .subscribeOn(Schedulers.io())
+                   .observeOn(AndroidSchedulers.mainThread())
+                   .subscribe({
+                       isNotificationAvailable = it.body()!!.isEmpty() == false
+                       super.onPrepareOptionsMenu(menu)
+                   }, {
+                       onError(it)
+                       it.printStackTrace()
+                   }))*/
 
         return true
     }
 
-
-    /*private fun resetPages() {
-        lastPage = 1 //Will updated after first hit
-        lastVisibleItem = 0
-        totalItemCount = 0
-        loading = false
-        pageNumber = 1
-    }*/
 }

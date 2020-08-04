@@ -360,7 +360,7 @@ class UserProfileActivity : BaseActivity(), AnkoLogger, AppBarLayout.OnOffsetCha
     private fun updateUser() {
         invalidateOptionsMenu()
         resetDialog()
-        val u = model.getUserProfile(selectedUser).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()) .subscribe({
+     /*   val u = model.getUserProfile(selectedUser).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()) .subscribe({
             model.liveData.value = it
             // updateProfile(it)
 
@@ -371,7 +371,7 @@ class UserProfileActivity : BaseActivity(), AnkoLogger, AppBarLayout.OnOffsetCha
         }, {
 
         })
-        subscriptions.add(u)
+        subscriptions.add(u)*/
 
         if (getLoginData()?.login.isNullOrEmpty()) {
             //Not a logged in user

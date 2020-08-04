@@ -20,13 +20,13 @@ class UserViewModel : ViewModel() {
 
 
 
-    fun getUserProfile(userId: String): Observable<UserProfile> {
+    /*fun getUserProfile(userId: String): Observable<UserProfile> {
         return if (userId.contentEquals("N/A")) {
             api.getMyProfile()
         } else {
             api.getUserProfile(userId)
         }
-    }
+    }*/
 
     fun saveProfile(userProfile: EditProfileActivity.EditData/*name: String, email: String, blog: String, company: String, location: String, hireable: String, bio: String*/): Observable<UserProfile> {
         return api.saveProfile(userProfile/*name, email, blog, company, location, hireable, bio*/)

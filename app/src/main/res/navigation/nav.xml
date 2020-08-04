@@ -4,19 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav"
 
-    app:startDestination="@+id/fragment_splash">
-
-    <fragment
-        android:id="@+id/fragment_splash"
-        android:name="com.jk.gogit.ui.splash.fragments.SplashFragment"
-        tools:layout="@layout/fragment_splash" />
+    app:startDestination="@id/fragment_login">
 
     <fragment
         android:id="@+id/fragment_login"
         android:name="com.jk.gogit.ui.login.fragments.LoginFragment"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_fragment_login_to_fragment_feed"
+            app:destination="@id/fragment_feed"
+            app:popUpTo="@id/fragment_login"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
-        android:id="@+id/fragment_main"
-        android:name="com.jk.gogit.ui.main.MainFragment"
-        tools:layout="@layout/fragment_main" />
+        android:id="@+id/fragment_feed"
+        android:name="com.jk.gogit.ui.feed.FeedFragment"
+        tools:layout="@layout/fragment_feed" />
 </navigation>

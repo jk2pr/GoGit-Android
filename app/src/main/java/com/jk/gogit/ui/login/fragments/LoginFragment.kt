@@ -1,6 +1,7 @@
 package com.jk.gogit.ui.login.fragments
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Typeface
@@ -28,6 +29,7 @@ import com.jk.gogit.extensions.hide
 import com.jk.gogit.extensions.show
 import com.jk.gogit.ui.login.viewmodels.LoginViewModel
 import com.jk.gogit.ui.login.data.response.Resource
+import com.jk.gogit.ui.view.MainActivity
 import com.jk.gogit.utils.NavUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_login.*
@@ -39,12 +41,20 @@ import javax.inject.Inject
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
     private val loginViewModel: LoginViewModel by navGraphViewModels(R.id.nav) { defaultViewModelProviderFactory }
+    private lateinit var activity: MainActivity
 
-    @Inject
-    lateinit var pref: SharedPreferences
 
-    @Inject
-    lateinit var mAuth: FirebaseAuth
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        activity = context as MainActivity
+    }
+
+    @ExperimentalCoroutinesApi
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setUpUI()
+        setupObserver()
+    }
 
 
     @ExperimentalCoroutinesApi
@@ -53,7 +63,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         progressbar.indeterminateDrawable.colorFilter = colorFilter
         btn_login.setOnClickListener { readInputDoLogin() }
         handlePrivacyPolicy()
-        btn_skip.setOnClickListener { activity?.onBackPressed() }
+        btn_skip.setOnClickListener { activity.onBackPressed() }
         input_password.setOnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 readInputDoLogin()
@@ -95,21 +105,14 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         val password = input_password.text.toString()
         if (validate(userName, password)) {
             showLoader(true)
-            val token = Credentials.basic(userName, password)
-            pref.edit().putString("initToken", token).apply()
+            val authCredential = Credentials.basic(userName, password)
+            activity.pref.edit().putString("initToken", authCredential).apply()
             loginViewModel.setState(LoginViewModel.MainState.LoginEvent)
+
 
         }
     }
 
-    @ExperimentalCoroutinesApi
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setUpUI()
-        setupObserver()
-
-
-    }
 
     private fun validate(userName: String, password: String): Boolean {
         var valid = true
@@ -147,7 +150,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         loginViewModel.finalDataLiveData.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is Resource.Success -> {
-                    signInWithToken(it.data.token)
+                    activity.pref.edit().putString("AccessToken", it.data.token).apply()
+                    // signInWithToken(it.data.token)
+                    findNavController().navigate(R.id.action_fragment_login_to_fragment_feed)
                     showLoader(false)
                 }
                 is Resource.Loading -> {
@@ -160,24 +165,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             }
         })
 
-    }
-
-    private fun signInWithToken(token: String) {
-        val credential = GithubAuthProvider.getCredential(token)
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener { task ->
-                    /// debug("signInWithCredential:onComplete:" + task.isSuccessful)
-                    if (!task.isSuccessful) {
-                        task.exception?.printStackTrace()
-                        showLoader(false)
-                    } else {
-                        pref.edit().putString("AccessToken", token).apply()
-                        val user = task.result?.user
-                        findNavController().navigate(R.id.fragment_main)
-                       // NavUtils.redirectToHome(requireActivity(), user)
-
-                    }
-                }
     }
 }
 

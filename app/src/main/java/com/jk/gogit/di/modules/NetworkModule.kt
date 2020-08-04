@@ -101,7 +101,7 @@ class NetworkModule {
 
         return Retrofit.Builder()
                 .baseUrl("https://api.github.com/")
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .addConverterFactory(ToStringConverterFactory())
                 .addConverterFactory(GsonConverterFactory.create(gSon))
                 .client(client)
