@@ -20,9 +20,9 @@ object DateUtil {
         val now = System.currentTimeMillis()
         val charSequence = DateUtils.getRelativeTimeSpanString(createdDate.time, now, DAY_IN_MILLIS).toString()
 
-        return if (!charSequence.toLowerCase().contains("days ago")
-                || !charSequence.toLowerCase().contains("Today")
-                || !charSequence.toLowerCase().contains("Yesterday"))
+        return if (!charSequence.lowercase(Locale.ROOT).contains("days ago")
+                || !charSequence.lowercase(Locale.ROOT).contains("Today")
+                || !charSequence.lowercase(Locale.ROOT).contains("Yesterday"))
             charSequence
         else
             "on $charSequence"

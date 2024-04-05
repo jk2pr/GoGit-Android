@@ -1,0 +1,14 @@
+query GetStarredRepos($username: String!, $cursor: String) {
+    user(login: $username) {
+        repositories(first: 6, orderBy: {field: STARGAZERS, direction: DESC}, after: $cursor) {
+            totalCount
+            nodes {
+                ... Repos
+            }
+            pageInfo {
+                endCursor
+                hasNextPage
+            }
+        }
+    }
+}
