@@ -1,0 +1,69 @@
+query getRepoDetails($owner_name: String!, $repoName: String!,$path:String!) {
+    repository(owner: $owner_name, name: $repoName) {
+        defaultBranchRef {
+            name
+        }
+        name
+        description
+        url
+        createdAt
+        updatedAt
+        collaborators {
+            totalCount
+        }
+        watchers {
+            totalCount
+        }
+        primaryLanguage {
+            name
+        }
+        stargazerCount
+        forkCount
+        issues(states: [OPEN]) {
+            totalCount
+        }
+        pullRequests(states: [OPEN,CLOSED,MERGED], first: 100) {
+            nodes {
+                body
+                number
+                title
+                state
+                createdAt
+                updatedAt
+                author {
+                    login
+                }
+                merged
+                mergedAt
+                mergedBy {
+                    login
+                }
+                baseRefName
+                headRefName
+                commits(last: 10) {
+                    nodes {
+                        commit {
+                            oid
+                        }
+                    }
+                }
+            }
+        }
+        releases {
+            totalCount
+        }
+        licenseInfo {
+            name
+        }
+        owner {
+            login
+            avatarUrl
+        }
+
+        readme: object(expression: $path) {
+            ... on Blob {
+                text
+            }
+        }
+    }
+}

@@ -1,0 +1,34 @@
+query GetUser($username: String!) {
+    user(login: $username) {
+        login
+        name
+        bio
+        status {
+            message
+        }
+        avatarUrl
+        websiteUrl
+        anyPinnableItems
+        company
+        email
+        pronouns
+        twitterUsername
+        location
+        url
+        followers {
+            totalCount
+        }
+        following {
+            totalCount
+        }
+        organizations {
+            totalCount
+        }
+        starredRepositories{
+            totalCount
+        }
+        repositories {
+            totalCount
+        }
+    }
+}
