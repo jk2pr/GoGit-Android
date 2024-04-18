@@ -6,6 +6,7 @@ import com.jk.gogit.feed.services.FeedExecutor
 import com.jk.gogit.feed.viewmodel.FeedViewModel
 import com.hoppers.networkmodule.network.apolloClient
 import com.hoppers.networkmodule.network.ktorHttpClient
+import com.jk.gogit.login.AuthViewModel
 import com.jk.gogit.profile.UserProfileViewModel
 import com.jk.gogit.profile.services.UserProfileExecutor
 import com.jk.gogit.repos.RepoListViewModel
@@ -28,6 +29,7 @@ val appModule = module {
     single<UserListExecutor> { UserListExecutor(get()) }
     single<RepoDetailExecutor> { RepoDetailExecutor(get()) }
     viewModel { params -> FeedViewModel(feedExecutor = get(), dispatchers = get(), login = params.get()) }
+    viewModel { params -> AuthViewModel() }
     viewModel { params -> UserProfileViewModel(userProfileExecutor = get(), dispatchers = get(), login = params.get()) }
     viewModel { params -> RepoListViewModel(repoExecutor = get(), dispatchers = get(), login = params.get()) }
    // viewModel { params -> OverViewModel(overViewExecutor = get(), dispatchers = get(), login = params.get()) }

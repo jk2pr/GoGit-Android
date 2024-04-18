@@ -24,6 +24,20 @@ query getRepoDetails($owner_name: String!, $repoName: String!,$path:String!) {
         }
         pullRequests(states: [OPEN,CLOSED,MERGED], first: 100) {
             nodes {
+                labels{
+                    nodes {
+                        color
+                        name
+                    }
+                }
+                comments{
+                    nodes {
+                        author {
+                            __typename
+                        }
+                        bodyHTML
+                    }
+                }
                 body
                 number
                 title

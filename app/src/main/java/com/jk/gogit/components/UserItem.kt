@@ -33,7 +33,7 @@ fun UserItem(node: UserFields) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            .padding(vertical = 8.dp)
             .clickable {
                 navController.currentBackStackEntry
                     ?.savedStateHandle
@@ -62,7 +62,7 @@ fun UserItem(node: UserFields) {
                 Text(
                     text = node.login,
                     maxLines = 1,
-                    style = MaterialTheme.typography.labelMedium.merge(Color.Gray),
+                    style = MaterialTheme.typography.labelMedium,
                 )
             }
             if (!node.bio.isNullOrBlank())
@@ -70,7 +70,7 @@ fun UserItem(node: UserFields) {
                     text = node.bio,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
-                    style = MaterialTheme.typography.bodySmall.merge(Color.Gray),
+                    style = MaterialTheme.typography.bodySmall,
                 )
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -82,14 +82,13 @@ fun UserItem(node: UserFields) {
                             ImageVector.vectorResource(id = R.drawable.outline_home_work_24),
                             contentDescription = "",
                             modifier = Modifier.size(16.dp),
-                            tint = Color.Gray
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = node.company,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.bodySmall.merge(Color.Gray),
+                            style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier
                                 .widthIn(max = 150.dp)
                         )
@@ -102,14 +101,13 @@ fun UserItem(node: UserFields) {
                             ImageVector.vectorResource(id = R.drawable.outline_location_on_24),
                             contentDescription = "",
                             modifier = Modifier.size(16.dp),
-                            tint = Color.Gray
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = node.location,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.bodySmall.merge(Color.Gray)
+                            style = MaterialTheme.typography.bodySmall
                         )
                     }
                 }

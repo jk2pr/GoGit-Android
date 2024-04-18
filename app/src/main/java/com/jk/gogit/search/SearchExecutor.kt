@@ -2,9 +2,9 @@ package com.jk.gogit.search
 
 import com.apollographql.apollo3.ApolloClient
 import com.hoppers.SearchThingsQuery
-import com.hoppers.fragment.Repos
-import com.hoppers.fragment.UserFields
 import com.hoppers.type.SearchType
+import com.jk.gogit.extensions.formatDateRelativeToToday
+import com.jk.gogit.extensions.toDate
 import javax.inject.Inject
 
 class SearchExecutor
@@ -23,12 +23,13 @@ class SearchExecutor
         }
     }
 
-    private fun SearchThingsQuery.Node.asRepos(): Repos? {
-        return this.repos
-    }
+    private fun SearchThingsQuery.Node.asRepos() =
+        repos?.copy(
+            updatedAt = this.repos.updatedAt.toString().toDate().formatDateRelativeToToday()
+        )
 
-    private fun SearchThingsQuery.Node.asUser(): UserFields? {
-        return this.userFields
-
-    }
 }
+
+private fun SearchThingsQuery.Node.asUser() = this.userFields
+
+

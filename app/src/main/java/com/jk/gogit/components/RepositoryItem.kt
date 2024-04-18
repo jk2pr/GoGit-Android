@@ -29,7 +29,7 @@ fun RepositoryItem(repo: Repos) {
     val localNavController = LocalNavController.current
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth().padding(vertical = 8.dp)
             .clickable {
                 localNavController.currentBackStackEntry
                     ?.savedStateHandle?.let {
@@ -48,7 +48,7 @@ fun RepositoryItem(repo: Repos) {
         if (!repo.description.isNullOrBlank()) {
             Text(
                 text = repo.description,
-                style = MaterialTheme.typography.bodyMedium.merge(Color.Gray),
+                style = MaterialTheme.typography.bodyMedium,
                 maxLines = 5,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(bottom = 4.dp)
@@ -61,7 +61,7 @@ fun RepositoryItem(repo: Repos) {
             ColoredBullet(repo.primaryLanguage?.color)
             Text(
                 text = repo.primaryLanguage?.name ?: "",
-                style = MaterialTheme.typography.bodySmall.merge(Color.Gray),
+                style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 4.dp)
@@ -78,7 +78,7 @@ fun RepositoryItem(repo: Repos) {
                 )
                 Text(
                     text = repo.stargazerCount.toString(),
-                    style = MaterialTheme.typography.bodySmall.merge(Color.Gray),
+                    style = MaterialTheme.typography.bodySmall,
                     //  fontFamily = FontFamily(Font(R.font.bebasneue_light)),
                     modifier = Modifier.padding(start = 4.dp, end = 8.dp)
                 )
@@ -88,12 +88,11 @@ fun RepositoryItem(repo: Repos) {
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_fork_left_24),
                     contentDescription = null,
-                    tint = Color.Gray,
                     modifier = Modifier.size(16.dp)
                 )
                 Text(
                     text = repo.forkCount.toString(),
-                    style = MaterialTheme.typography.bodySmall.merge(Color.Gray),
+                    style = MaterialTheme.typography.bodySmall,
                     //  fontFamily = FontFamily(Font(R.font.bebasneue_light)),
                     fontSize = 14.sp,
                     modifier = Modifier.padding(start = 4.dp)
@@ -102,7 +101,7 @@ fun RepositoryItem(repo: Repos) {
         }
         Text(
             text = repo.updatedAt.toString(),
-            style = MaterialTheme.typography.bodySmall.merge(Color.Gray),
+            style = MaterialTheme.typography.bodySmall,
             //   fontFamily = FontFamily(Font(R.font.bebasneue_light)),
             textAlign = TextAlign.End
         )

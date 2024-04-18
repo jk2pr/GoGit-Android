@@ -40,11 +40,9 @@ class RepoListViewModel(
                 is MainState.FetchEvent -> {
                     flow {
                         emit(UiState.Loading)
-                        Log.d("RepoViewModel", "result:Loading")
                         val r = repoExecutor.execute(user = login)
                         result.clear()
                         result.addAll(r)
-                        Log.d("RepoViewModel", "result: $result")
                         emit(UiState.Content(result))
                         updateLanguageMap(result)
                     }.catch {

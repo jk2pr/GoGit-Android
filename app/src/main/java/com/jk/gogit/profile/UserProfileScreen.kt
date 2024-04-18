@@ -1,5 +1,9 @@
 package com.jk.gogit.profile
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import com.hoppers.networkmodule.network.AuthManager
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,13 +50,11 @@ fun UserProfileScreen() {
 
     val menuItems: List<DropdownMenuItemContent> = remember {
         listOf(DropdownMenuItemContent {
-
             Icon(
-                painter = painterResource(id = R.drawable.baseline_edit_24),
+                painter = painterResource(id = org.koin.android.R.drawable.abc_ic_menu_share_mtrl_alpha),
                 contentDescription = null,
-                tint = Color.Black,
                 modifier = Modifier
-                    .padding(horizontal = 8.dp)
+                    .padding(horizontal = 16.dp)
                     .clickable {
                         //Handle click event
                     }
@@ -60,11 +63,11 @@ fun UserProfileScreen() {
         })
     }
 
-
     val localNavController = LocalNavController.current
+    val localContext = LocalContext.current
     val login =
         (localNavController.previousBackStackEntry?.savedStateHandle?.get<String>(AppScreens.USERPROFILE.route)
-            ?: com.hoppers.networkmodule.network.AuthManager.getLogin())!!
+            ?: AuthManager.getLogin())!!
     val viewModel = koinViewModel<UserProfileViewModel>(parameters = { parametersOf(login) })
     val scrollState = rememberScrollState()
     val title = remember { mutableStateOf("") }
@@ -86,7 +89,16 @@ fun UserProfileScreen() {
 
             }
         },
-        title = { TitleText(title.value) }) {
+        title = {
+            Crossfade(targetState = title.value, label = "") { currentTitle ->
+                Text(
+                    text = currentTitle,
+                    style = MaterialTheme.typography.titleLarge
+                    // other text attributes
+                )
+            }
+
+             }) {
         when (val result = viewModel.feedStateFlow.collectAsState().value) {
             is UiState.Loading ->
                 CircularProgressIndicator(
@@ -107,15 +119,16 @@ fun UserProfileScreen() {
 
                     OverViewTab(overViewTabData = overViewTabData)
                 }
-                LaunchedEffect(Unit) {
+                title.value = overViewTabData.user.name ?: overViewTabData.user.login
+               /* LaunchedEffect(Unit) {
                     scrollState.scrollTo(0)
                     snapshotFlow { scrollState.value }
                         .collect { scrollOffset ->
                             // Change title text based on scroll offset
                             title.value = if (scrollOffset > 100) overViewTabData.user.name
-                                ?: overViewTabData.user.login else ""
+                                ?: overViewTabData.user.login else localContext.getString(R.string.app_name)
                         }
-                }
+                }*/
             }
 
             is UiState.Error -> Text(text = result.message)
