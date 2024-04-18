@@ -184,9 +184,7 @@ fun Header(data: GetUserQuery.User, modifier: Modifier = Modifier) {
                         localNavController.navigate(AppScreens.USERLIST.route)
                     }) {
                     Text(text = buildAnnotatedString {
-                        if (data.pronouns.orEmpty().isNotBlank()) {
                             append("\u2022 ${data.following.totalCount.formatNumber()} following")
-                        }
                     })
                 }
             }
