@@ -20,6 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -60,21 +61,16 @@ import org.koin.core.parameter.parametersOf
 fun RepoDetailScreen() {
 
     val localNavyController = LocalNavController.current
+    val savedStateHandle = localNavyController.previousBackStackEntry?.savedStateHandle
     val login =
-        localNavyController.previousBackStackEntry?.savedStateHandle?.get<String>(AppScreens.USERPROFILE.route)!!
+        savedStateHandle?.get<String>(AppScreens.USERPROFILE.route)!!
     val repoName =
-        localNavyController.previousBackStackEntry?.savedStateHandle?.get<String>(AppScreens.REPODETAIL.route)!!
+        savedStateHandle.get<String>(AppScreens.REPODETAIL.route)!!
     val path =
-        localNavyController.previousBackStackEntry?.savedStateHandle?.get<String>(AppScreens.REPOLIST.route)
+        savedStateHandle.get<String>(AppScreens.REPOLIST.route)
 
     val viewModel =
-        koinViewModel<RepoDetailViewModel>(parameters = {
-            parametersOf(
-                login,
-                repoName,
-                "$path:README.md"
-            )
-        })
+        koinViewModel<RepoDetailViewModel>(parameters = { parametersOf(login, repoName, "$path:README.md") })
     val scrollState = rememberScrollState()
     val titleKey = remember { mutableStateOf("") }
     val titleValue = remember { mutableStateOf("") }
@@ -106,7 +102,6 @@ fun RepoDetailScreen() {
                     RepoDetail(repo = repo)
                 }
                 LaunchedEffect(Unit) {
-                    Log.d("RepoDetailScreen", "LaunchedEffect triggered")
                     scrollState.scrollTo(0)
                     snapshotFlow { scrollState.value }
                         .collect { scrollOffset ->
@@ -132,7 +127,7 @@ fun RepoDetailScreen() {
 fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
     val localNavController = LocalNavController.current
     Card(
-        border = BorderStroke(1.dp, LocalContentColor.current),
+        border = BorderStroke(DividerDefaults.Thickness, DividerDefaults.color),
         modifier = Modifier.padding(vertical = 8.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {

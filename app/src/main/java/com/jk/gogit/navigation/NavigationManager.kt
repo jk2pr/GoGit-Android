@@ -16,7 +16,7 @@ import com.jk.gogit.users.UserListScreen
 fun Start() {
     NavHost(
         navController = LocalNavController.current,
-        startDestination = if (com.hoppers.networkmodule.network.AuthManager.getAccessToken() == null) AppScreens.LOGIN.route else AppScreens.USERPROFILE.route
+        startDestination = if (com.hoppers.networkmodule.network.AuthManager.getAccessToken() == null) AppScreens.LOGIN.route else AppScreens.LOGIN.route
     ) {
         composable(route = AppScreens.LOGIN.route) {
             LoginScreen()

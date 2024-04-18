@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -263,7 +264,7 @@ private fun GistItem(gist: GistFields, modifier: Modifier) {
 private fun InfoCard(user: GetUserQuery.User) {
     val localNavController = LocalNavController.current
     Card(
-        border = BorderStroke(1.dp, LocalContentColor.current),
+        border = BorderStroke(DividerDefaults.Thickness, DividerDefaults.color),
         modifier = Modifier.padding(vertical = 8.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
 
@@ -273,9 +274,13 @@ private fun InfoCard(user: GetUserQuery.User) {
             label = "Repositories",
             count = user.repositories.totalCount,
         ) {
-            localNavController.currentBackStackEntry
-                ?.savedStateHandle
-                ?.set(AppScreens.REPOLIST.route, user.login)
+            val savedStateHandle = localNavController.currentBackStackEntry?.savedStateHandle
+            val keys = savedStateHandle?.keys()
+            keys?.forEach { savedStateHandle.remove<Any>(it) }
+            savedStateHandle?.set(
+                AppScreens.REPOLIST.route,
+                user.login
+            )
             localNavController.navigate(AppScreens.REPOLIST.route)
         }
         InfoRow(
@@ -289,7 +294,19 @@ private fun InfoCard(user: GetUserQuery.User) {
             label = "Starred",
             count = user.starredRepositories.totalCount,
             tint = Color(android.graphics.Color.parseColor("#FFA500"))
-        )
+        ) {
+            val savedStateHandle = localNavController.currentBackStackEntry?.savedStateHandle
+            val keys = savedStateHandle?.keys()
+            keys?.forEach { savedStateHandle.remove<Any>(it) }
+                savedStateHandle?.let {
+                    it[AppScreens.REPOLIST.route] = user.login
+                    //Is Starred true
+                    it[AppScreens.USERPROFILE.route] = true
+                }
+
+
+            localNavController.navigate(AppScreens.REPOLIST.route)
+        }
 
     }
 }

@@ -1,5 +1,7 @@
 package com.jk.gogit.login.screen
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,15 +29,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.OAuthProvider
 import com.jk.gogit.MainActivity
 import com.jk.gogit.R
+import com.jk.gogit.components.ComposeLocalWrapper
 import com.jk.gogit.components.Page
 import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.login.AuthRequestModel
@@ -69,7 +77,7 @@ fun LoginScreen() {
                 ) {
                     Image(
                         modifier = Modifier
-                            .heightIn(max = 300.dp)
+                           // .heightIn(max = 300.dp)
                             .align(Alignment.CenterHorizontally),
                         contentDescription = "App Icon",
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
@@ -96,23 +104,23 @@ fun LoginScreen() {
                     }
                     Spacer(modifier = Modifier.height(100.dp))
                     val annotatedString = buildAnnotatedString {
-                        pushStyle(
-                            style = ParagraphStyle(textAlign = TextAlign.Center)
-                        )
+                        pushStyle(style = ParagraphStyle(textAlign = TextAlign.Center))
                         append("Your login indicates acceptance of our ")
                         pushStringAnnotation(
                             tag = "PrivacyPolicy",
-                            annotation = "https://www.example.com/privacy_policy"
+                            annotation = "https://jk2pr.github.io"
                         ) // Replace the URL with your actual Privacy Policy URL
                         withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
+                            append("\n")
                             append("Privacy Policy")
                         }
                         pop()
                     }
 
+
                     ClickableText(
                         modifier = Modifier
-                            .widthIn(max = 200.dp)
+                           // .widthIn(max = 250.dp)
                             .align(Alignment.CenterHorizontally),
                         text = annotatedString,
                         onClick = { offset ->
@@ -122,14 +130,12 @@ fun LoginScreen() {
                                 end = offset
                             )
                                 .firstOrNull()?.let { annotation ->
-                                    // Handle click on Privacy Policy
-                                    // You can navigate to the Privacy Policy page or open a web browser with the URL
-                                    // Example:
-                                    // val privacyPolicyUrl = annotation.item
-                                    // openPrivacyPolicyPage(privacyPolicyUrl)
-                                }
+                                    val uri = Uri.parse(annotation.item)
+                                    val intent = Intent(Intent.ACTION_VIEW, uri)
+                                    startActivity(activity,intent, null)
+                                   }
                         },
-                        style = MaterialTheme.typography.bodySmall,
+                        style = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.outline, fontSize = 14.sp),
                         maxLines = 2
                     )
 
@@ -157,5 +163,14 @@ fun LoginScreen() {
                 CircularProgressIndicator(modifier = Modifier.size(50.dp))
 
         }
+    }
+}
+
+@Preview
+@Composable
+private fun LoginScreenPreview() {
+
+    ComposeLocalWrapper {
+        LoginScreen()
     }
 }
