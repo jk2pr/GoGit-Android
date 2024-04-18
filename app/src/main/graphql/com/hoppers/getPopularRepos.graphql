@@ -1,6 +1,7 @@
-query GetStarredRepos($username: String!, $cursor: String) {
+#this is populare repo and starred repo
+query GetPopularRepos($username: String!, $cursor: String, $first: Int!) {
     user(login: $username) {
-        repositories(first: 6, orderBy: {field: STARGAZERS, direction: DESC}, after: $cursor) {
+        repositories(first: $first, orderBy: {field: STARGAZERS, direction: DESC}, after: $cursor) {
             totalCount
             nodes {
                 ... Repos

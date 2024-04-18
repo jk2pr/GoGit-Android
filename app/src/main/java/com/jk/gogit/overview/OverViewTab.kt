@@ -274,9 +274,13 @@ private fun InfoCard(user: GetUserQuery.User) {
             label = "Repositories",
             count = user.repositories.totalCount,
         ) {
-            localNavController.currentBackStackEntry
-                ?.savedStateHandle
-                ?.set(AppScreens.REPOLIST.route, user.login)
+            val savedStateHandle = localNavController.currentBackStackEntry?.savedStateHandle
+            val keys = savedStateHandle?.keys()
+            keys?.forEach { savedStateHandle.remove<Any>(it) }
+            savedStateHandle?.set(
+                AppScreens.REPOLIST.route,
+                user.login
+            )
             localNavController.navigate(AppScreens.REPOLIST.route)
         }
         InfoRow(
@@ -290,7 +294,19 @@ private fun InfoCard(user: GetUserQuery.User) {
             label = "Starred",
             count = user.starredRepositories.totalCount,
             tint = Color(android.graphics.Color.parseColor("#FFA500"))
-        )
+        ) {
+            val savedStateHandle = localNavController.currentBackStackEntry?.savedStateHandle
+            val keys = savedStateHandle?.keys()
+            keys?.forEach { savedStateHandle.remove<Any>(it) }
+                savedStateHandle?.let {
+                    it[AppScreens.REPOLIST.route] = user.login
+                    //Is Starred true
+                    it[AppScreens.USERPROFILE.route] = true
+                }
+
+
+            localNavController.navigate(AppScreens.REPOLIST.route)
+        }
 
     }
 }

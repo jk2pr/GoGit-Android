@@ -34,11 +34,15 @@ import org.koin.core.parameter.parametersOf
 fun RepositoryListScreen() {
 
     val localNavyController = LocalNavController.current
+    val savedStateHandle = (localNavyController.previousBackStackEntry?.savedStateHandle)
     val login =
-        (localNavyController.previousBackStackEntry?.savedStateHandle?.get<String>(AppScreens.REPOLIST.route)
-            ?: com.hoppers.networkmodule.network.AuthManager.getLogin())!!
+       savedStateHandle?.get<String>(AppScreens.REPOLIST.route)
+            ?: AuthManager.getLogin()!!
+    val isStarred =
+        savedStateHandle?.get<Boolean>(AppScreens.USERPROFILE.route)
+            ?: false
 
-    val viewModel = koinViewModel<RepoListViewModel>(parameters = { parametersOf(login) })
+    val viewModel = koinViewModel<RepoListViewModel>(parameters = { parametersOf(login, isStarred) })
     Page(title = { Text(text = "Repositories") }) {
         when (val result = viewModel.repoStateFlow.collectAsState().value) {
             is UiState.Loading -> Box(

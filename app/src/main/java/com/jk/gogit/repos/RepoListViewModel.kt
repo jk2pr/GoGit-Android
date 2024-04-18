@@ -20,6 +20,7 @@ class RepoListViewModel(
     private val repoExecutor: RepoExecutor,
     private val dispatchers: DispatcherProvider,
     private val login: String,
+    private val isStarred:Boolean = false
 ) : ViewModel() {
 
     private val _repoStateFlow = MutableStateFlow<UiState>(UiState.Empty)
@@ -40,7 +41,7 @@ class RepoListViewModel(
                 is MainState.FetchEvent -> {
                     flow {
                         emit(UiState.Loading)
-                        val r = repoExecutor.execute(user = login)
+                        val r = repoExecutor.execute(user = login, isStarred = isStarred)
                         result.clear()
                         result.addAll(r)
                         emit(UiState.Content(result))

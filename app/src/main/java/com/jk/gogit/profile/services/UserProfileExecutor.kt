@@ -2,7 +2,7 @@ package com.jk.gogit.profile.services
 
 import com.apollographql.apollo3.ApolloClient
 import com.hoppers.GetPinnedItemsQuery
-import com.hoppers.GetStarredReposQuery
+import com.hoppers.GetPopularReposQuery
 import com.hoppers.GetUserQuery
 import com.hoppers.ReadMeQuery
 import com.hoppers.fragment.GistFields
@@ -39,7 +39,7 @@ class UserProfileExecutor
             .execute().data?.user?.pinnedItems?.let { pinnedItems ->
                 if (pinnedItems.nodes.isNullOrEmpty()) {
                     listType = "Starred"
-                    popularRepos = client.query(GetStarredReposQuery(login))
+                    popularRepos = client.query(GetPopularReposQuery(login, first = 5))
                         .execute().data?.user?.repositories?.nodes?.mapNotNull {
                             it?.repos?.copy(
                                 updatedAt = it.repos.updatedAt.toString().toDate()

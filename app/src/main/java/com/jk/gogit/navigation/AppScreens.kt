@@ -9,6 +9,7 @@ sealed class AppScreens(val route: String) {
     data object SEARCH : AppScreens(ScreenName.SEARCH_SCREEN)
     data object REPODETAIL : AppScreens(ScreenName.REPO_DETAIL_SCREEN)
     data object  PULLREQUESTS : AppScreens(ScreenName.PULL_REQUESTS_SCREEN)
+    data object STARREDREPOLIST : AppScreens(ScreenName.STARREDREPOLIST)
 
 
     class ScreenName {
@@ -21,6 +22,7 @@ sealed class AppScreens(val route: String) {
             const val SEARCH_SCREEN: String = "search_screen"
             const val REPO_DETAIL_SCREEN: String = "repo_detail_screen"
             const val PULL_REQUESTS_SCREEN: String = "pull_requests_screen"
+            const val STARREDREPOLIST:String = "starred_repo_list_screen"
         }
     }
 
