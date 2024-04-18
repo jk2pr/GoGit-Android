@@ -1,9 +1,11 @@
 package com.jk.gogit.profile
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,10 +13,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.MailOutline
+import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material.icons.outlined.MailOutline
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -30,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -45,11 +54,12 @@ import com.jk.gogit.R
 import com.jk.gogit.components.ComposeLocalWrapper
 import com.jk.gogit.components.TitleText
 import com.jk.gogit.components.localproviders.LocalNavController
+import com.jk.gogit.extensions.formatNumber
 import com.jk.gogit.navigation.AppScreens
 import com.jk.gogit.profile.model.UserProfile
 
 @Composable
- fun Header(data: GetUserQuery.User, modifier: Modifier = Modifier) {
+fun Header(data: GetUserQuery.User, modifier: Modifier = Modifier) {
     val localNavController = LocalNavController.current
 
     Column(modifier = modifier) {
@@ -79,7 +89,7 @@ import com.jk.gogit.profile.model.UserProfile
                     .padding(start = 8.dp)
             ) {
 
-               /* if (!data.name.isNullOrBlank()) {
+                /* if (!data.name.isNullOrBlank()) {
                     Text(text = data.name)
                 }*/
                 Text(
@@ -95,9 +105,8 @@ import com.jk.gogit.profile.model.UserProfile
 
                 BulletList(
                     style = MaterialTheme.typography.bodyMedium,
-                    tint = Color.Gray,
                     items = mapOf(
-                        Icons.Filled.MailOutline to data.email,
+                        Icons.Outlined.MailOutline to data.email,
                         Icons.Outlined.LocationOn to data.location,
                         ImageVector.vectorResource(id = R.drawable.outline_home_work_24) to data.company
                     )
@@ -123,7 +132,7 @@ import com.jk.gogit.profile.model.UserProfile
                         .wrapContentWidth()
                         .weight(0.5f)
                 ) {
-                   /* BulletList(
+                    /* BulletList(
                         style = MaterialTheme.typography.bodyMedium,
                         items = mapOf(ImageVector.vectorResource(id = R.drawable.outline_home_work_24) to data.company)
                     )*/
@@ -136,7 +145,6 @@ import com.jk.gogit.profile.model.UserProfile
                 }
 
 
-
             }
             BulletList(
                 style = MaterialTheme.typography.bodyMedium,
@@ -144,32 +152,53 @@ import com.jk.gogit.profile.model.UserProfile
 
             )
         }
-        Spacer(modifier = Modifier.size(8.dp))
-        HorizontalDivider()
-        Row(horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
-            TextButton(onClick = {
-                localNavController.currentBackStackEntry
-                    ?.savedStateHandle
-                    ?.set(AppScreens.USERPROFILE.route, "${data.login}/followers")
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Row {
+                TextButton(
+                    contentPadding = PaddingValues(0.dp),
+                    onClick = {
+                        localNavController.currentBackStackEntry
+                            ?.savedStateHandle
+                            ?.set(AppScreens.USERPROFILE.route, "${data.login}/followers")
 
-                localNavController.navigate(AppScreens.USERLIST.route)
-            }) {
-                Text(text = "${data.followers.totalCount} followers")
+                        localNavController.navigate(AppScreens.USERLIST.route)
+                    }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.add_follow_following_icon),
+                        contentDescription = "",
+                    )
+                    Text(text = "${data.followers.totalCount.formatNumber()} followers")
+                }
+                TextButton(
+                    contentPadding = PaddingValues(start = 4.dp),
+                    onClick = {
+                        localNavController.currentBackStackEntry
+                            ?.savedStateHandle
+                            ?.set(AppScreens.USERPROFILE.route, "${data.login}/following")
+                        localNavController.navigate(AppScreens.USERLIST.route)
+                    }) {
+                    Text(text = buildAnnotatedString {
+                        if (data.pronouns.orEmpty().isNotBlank()) {
+                            append("\u2022 ${data.following.totalCount.formatNumber()} following")
+                        }
+                    })
+                }
             }
-            TextButton(
-                onClick = {
-                localNavController.currentBackStackEntry
-                    ?.savedStateHandle
-                    ?.set(AppScreens.USERPROFILE.route, "${data.login}/following")
-                localNavController.navigate(AppScreens.USERLIST.route)
-            }) {
-                Text(text = "${data.following.totalCount} following")
-            }
-            Button(
+            OutlinedButton(
+                contentPadding = PaddingValues(horizontal = 24.dp),
+                shape = MaterialTheme.shapes.small,
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                //colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.outline, contentColor = MaterialTheme.colorScheme.onPrimary),
                 onClick = { /* Follow Button Clicked */ },
             ) {
                 Text(
+
                     text = "Follow",
                     // style = TextStyle(color = Color.Blue),
                     //   modifier = Modifier.wrapContentWidth(),
@@ -177,11 +206,10 @@ import com.jk.gogit.profile.model.UserProfile
                 )
             }
         }
-        HorizontalDivider()
-
-
     }
+    HorizontalDivider()
 }
+
 
 @Composable
 fun BulletList(
@@ -196,7 +224,8 @@ fun BulletList(
         items.forEach {
             if (it.value.isNullOrBlank()) return@forEach
             Row(
-                verticalAlignment = if (maxLine == 1) Alignment.CenterVertically else Alignment.Top) {
+                verticalAlignment = if (maxLine == 1) Alignment.CenterVertically else Alignment.Top
+            ) {
                 Icon(
                     imageVector = it.key,
                     contentDescription = "",

@@ -1,12 +1,14 @@
 package com.jk.gogit.extensions
 
 import org.joda.time.DateTime
+import java.text.DecimalFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Date
+import kotlin.math.abs
 
 fun String.toDate():Date {
     val dateTime = DateTime.parse(replace(" ", "T"))
@@ -27,3 +29,26 @@ fun String.toDate():Date {
         else -> localDate.format(DateTimeFormatter.ofPattern("dd MMM yyyy"))
     }
 }
+fun Int.formatNumber(): String {
+    return when {
+        this >= 1_000_000_000 -> "${(this / 1_000_000_000.toFloat()).format()}B"
+        this >= 1_000_000 -> "${(this / 1_000_000.toFloat()).format()}M"
+        this >= 1_000 -> "${(this / 1_000.toFloat()).format()}K"
+        else -> this.toString()
+    }
+}
+
+fun Float.format(): String {
+    return if (this == this.toInt().toFloat()) {
+        this.toInt().toString()
+    } else {
+        "%.1f".format(this)
+    }
+}
+
+
+    /*return when {
+        this >= 1000000 -> (this / 1000000).toDouble().roundToInt().toString() + "M"
+        this >= 1000 -> (this / 1000).toDouble().roundToInt().toString() + "k"
+        else -> this.toString()
+    }*/
