@@ -45,7 +45,6 @@ import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.feed.model.Feed
 import com.jk.gogit.feed.viewmodel.FeedViewModel
 import com.jk.gogit.navigation.AppScreens
-import com.jk.gogit.utils.DateUtil
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -157,7 +156,7 @@ fun FeedItem(feed: Feed) {
     val repoName = feed.repo.name
     val eventName = feed.getEventName()
     val longText = "$actorName $eventName $repoName"
-    val time = DateUtil.getDateComparatively(feed.createdAt)
+  //  val time = DateUtil.getDateComparatively(feed.createdAt)
 
     val navController = LocalNavController.current
     Column(
@@ -216,7 +215,7 @@ fun FeedItem(feed: Feed) {
                 )
 
                 Text(
-                    text = time,
+                    text = "time",
                     modifier = Modifier.align(Alignment.End),
                     color = Color.Black,
                     textAlign = TextAlign.End

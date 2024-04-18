@@ -22,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -78,9 +79,9 @@ import com.jk.gogit.profile.model.UserProfile
                     .padding(start = 8.dp)
             ) {
 
-                if (!data.name.isNullOrBlank()) {
-                    TitleText(title = data.name)
-                }
+               /* if (!data.name.isNullOrBlank()) {
+                    Text(text = data.name)
+                }*/
                 Text(
                     softWrap = true,
                     text = buildAnnotatedString {
@@ -89,15 +90,16 @@ import com.jk.gogit.profile.model.UserProfile
                             append(" \u2022 (${data.pronouns})")
                         }
                     },
-                    style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray)
+                    style = MaterialTheme.typography.bodyMedium
                 )
 
                 BulletList(
-                    style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray),
+                    style = MaterialTheme.typography.bodyMedium,
                     tint = Color.Gray,
                     items = mapOf(
                         Icons.Filled.MailOutline to data.email,
                         Icons.Outlined.LocationOn to data.location,
+                        ImageVector.vectorResource(id = R.drawable.outline_home_work_24) to data.company
                     )
                 )
                 //Text(text = data.email, imageVector = Icons.Default.Email)
@@ -121,10 +123,10 @@ import com.jk.gogit.profile.model.UserProfile
                         .wrapContentWidth()
                         .weight(0.5f)
                 ) {
-                    BulletList(
+                   /* BulletList(
                         style = MaterialTheme.typography.bodyMedium,
                         items = mapOf(ImageVector.vectorResource(id = R.drawable.outline_home_work_24) to data.company)
-                    )
+                    )*/
                     BulletList(
                         style = MaterialTheme.typography.bodyMedium,
                         maxLine = 1,
@@ -133,16 +135,7 @@ import com.jk.gogit.profile.model.UserProfile
 
                 }
 
-                OutlinedButton(
-                    onClick = { /* Follow Button Clicked */ },
-                ) {
-                    Text(
-                        text = "Follow",
-                        // style = TextStyle(color = Color.Blue),
-                        //   modifier = Modifier.wrapContentWidth(),
-                        textAlign = TextAlign.Center
-                    )
-                }
+
 
             }
             BulletList(
@@ -153,7 +146,8 @@ import com.jk.gogit.profile.model.UserProfile
         }
         Spacer(modifier = Modifier.size(8.dp))
         HorizontalDivider()
-        Row {
+        Row(horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
             TextButton(onClick = {
                 localNavController.currentBackStackEntry
                     ?.savedStateHandle
@@ -171,6 +165,16 @@ import com.jk.gogit.profile.model.UserProfile
                 localNavController.navigate(AppScreens.USERLIST.route)
             }) {
                 Text(text = "${data.following.totalCount} following")
+            }
+            Button(
+                onClick = { /* Follow Button Clicked */ },
+            ) {
+                Text(
+                    text = "Follow",
+                    // style = TextStyle(color = Color.Blue),
+                    //   modifier = Modifier.wrapContentWidth(),
+                    textAlign = TextAlign.Center
+                )
             }
         }
         HorizontalDivider()

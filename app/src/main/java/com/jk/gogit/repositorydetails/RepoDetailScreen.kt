@@ -132,19 +132,18 @@ fun RepoDetailScreen() {
 fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
     val localNavController = LocalNavController.current
     Card(
-        border = BorderStroke(1.dp, Color.Gray),
+        border = BorderStroke(1.dp, LocalContentColor.current),
         modifier = Modifier.padding(vertical = 8.dp),
-        shape = MaterialTheme.shapes.small,
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
         InfoRow(
-            iconId = R.drawable.organization_65,
+            iconId = R.drawable.issue_opened_16,
             label = "Issue",
             count = repo.issues.totalCount
         )
 
         InfoRow(
-            iconId = R.drawable.git_pull_request_svgrepo_com,
+            iconId = R.drawable.git_pull_request_merge,
             label = "Pull Requests",
             count = repo.pullRequests.nodes?.size
         ) {
@@ -155,7 +154,7 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
                 ?.set(AppScreens.PULLREQUESTS.route, repo.pullRequests.nodes)
             localNavController.navigate(AppScreens.PULLREQUESTS.route)
         }
-        InfoRow(iconId = R.drawable.baseline_star_24, label = "Stars", count = repo.stargazerCount)
+        InfoRow(iconId = R.drawable.baseline_star_24, label = "Stars", count = repo.stargazerCount, tint = Color(android.graphics.Color.parseColor("#FFA500")),)
         InfoRow(iconId = R.drawable.baseline_fork_left_24, label = "Forks", count = repo.forkCount)
         InfoRow(
             iconId = R.drawable.organization_65,
@@ -243,6 +242,7 @@ fun RepoDetailHeader(repo: GetRepoDetailsQuery.Repository) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_star_24),
                 contentDescription = null,
+                tint = Color(android.graphics.Color.parseColor("#FFA500")),
                 modifier = Modifier.size(16.dp)
             )
             Text(text = "${repo.stargazerCount} Stars")

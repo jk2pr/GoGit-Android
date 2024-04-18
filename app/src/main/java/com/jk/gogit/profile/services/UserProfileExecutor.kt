@@ -7,7 +7,10 @@ import com.hoppers.GetUserQuery
 import com.hoppers.ReadMeQuery
 import com.hoppers.fragment.GistFields
 import com.hoppers.fragment.Repos
+import com.jk.gogit.extensions.formatDateRelativeToToday
+import com.jk.gogit.extensions.toDate
 import com.jk.gogit.overview.model.OverViewTabData
+import java.util.Date
 import javax.inject.Inject
 
 class UserProfileExecutor
@@ -34,16 +37,31 @@ class UserProfileExecutor
 
         client.query(GetPinnedItemsQuery(login))
             .execute().data?.user?.pinnedItems?.let { pinnedItems ->
-            if (pinnedItems.nodes.isNullOrEmpty()) {
-                listType = "Starred"
-                popularRepos = client.query(GetStarredReposQuery(login))
-                    .execute().data?.user?.repositories?.nodes?.mapNotNull { it?.repos }
-                    .orEmpty()
-            } else {
-                pinnedRepos = pinnedItems.nodes.mapNotNull { it?.repos }
-                pinnedGists = pinnedItems.nodes.mapNotNull { it?.gistFields }
+                if (pinnedItems.nodes.isNullOrEmpty()) {
+                    listType = "Starred"
+                    popularRepos = client.query(GetStarredReposQuery(login))
+                        .execute().data?.user?.repositories?.nodes?.mapNotNull {
+                            it?.repos?.copy(
+                                updatedAt = it.repos.updatedAt.toString().toDate()
+                                    .formatDateRelativeToToday()
+                            )
+                        }
+                        .orEmpty()
+                } else {
+                    pinnedRepos = pinnedItems.nodes.mapNotNull {
+                        it?.repos?.copy(
+                            updatedAt = it.repos.updatedAt.toString().toDate()
+                                .formatDateRelativeToToday()
+                        )
+                    }
+                    pinnedGists = pinnedItems.nodes.mapNotNull {
+                        it?.gistFields?.copy(
+                            updatedAt = it.gistFields.updatedAt.toString().toDate()
+                                .formatDateRelativeToToday()
+                        )
+                    }
+                }
             }
-        }
 
 
         return OverViewTabData(

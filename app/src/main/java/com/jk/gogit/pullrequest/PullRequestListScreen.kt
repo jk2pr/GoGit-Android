@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -46,14 +45,15 @@ fun PullRequestListScreen() {
             return@Page
         }
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
         ) {
             items(items.size) { index ->
                 if (index > 0)
                 // Add a line as a separator
                     HorizontalDivider()
-                val it = items[index]
-                if (it != null) {
+                items[index]?.let {
                     PullRequestItem(it)
                 }
             }
@@ -65,29 +65,39 @@ fun PullRequestListScreen() {
 @Composable
 fun PullRequestItem(node: GetRepoDetailsQuery.Node) {
     val navController = LocalNavController.current
+
+    val message = when(node.state){
+        PullRequestState.OPEN -> "#${node.number} opened on ${node.createdAt} by ${node.author?.login}"
+        PullRequestState.CLOSED -> "#${node.number} was closed by ${node.author?.login} on ${node.createdAt}"
+        PullRequestState.MERGED ->"#${node.number} by ${node.author?.login} was merged on ${node.createdAt}"
+        PullRequestState.UNKNOWN__ -> ""
+    }
+
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            .padding(vertical = 8.dp)
             .clickable {
-                navController.currentBackStackEntry
-                    ?.savedStateHandle
-                    ?.set(AppScreens.USERPROFILE.route, node.author)
-                navController.navigate(AppScreens.USERPROFILE.route)
+                //   navController.currentBackStackEntry
+                //    ?.savedStateHandle
+                //    ?.set(AppScreens.USERPROFILE.route, node.author)
+                // navController.navigate(AppScreens.USERPROFILE.route)
             }
 
     ) {
-        val modifier = Modifier.rotate(90f)
         Icon(
             imageVector = ImageVector.vectorResource(
                 id = if (node.state == PullRequestState.OPEN)
-                    R.drawable.baseline_fork_left_24
+                    R.drawable.git_pull_request_merge
                 else
                     R.drawable.git_pull_request_svgrepo_com
+
             ),
+            tint = if(node.state == PullRequestState.MERGED)  Color.Magenta else Color.Green,
             contentDescription = null,
             modifier = Modifier
-                .size(50.dp).then(modifier)
+                .size(16.dp)
         )
         Spacer(modifier = Modifier.width(8.dp))
         Column {
@@ -97,7 +107,7 @@ fun PullRequestItem(node: GetRepoDetailsQuery.Node) {
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.labelLarge,
-                    modifier = Modifier.widthIn(max = 200.dp)
+                    modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
@@ -106,8 +116,9 @@ fun PullRequestItem(node: GetRepoDetailsQuery.Node) {
                     style = MaterialTheme.typography.labelMedium.merge(Color.Gray),
                 )
             }
+
             Text(
-                text = node.createdAt.toString(),
+                text = message,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
                 style = MaterialTheme.typography.bodySmall.merge(Color.Gray),

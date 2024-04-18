@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.MoreVert
@@ -26,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalOf
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -78,15 +80,15 @@ private fun AppBar(menuItems: List<DropdownMenuItemContent>, title: @Composable 
         },
 
         actions = {
-            Row(horizontalArrangement = Arrangement.Start) {
-                menuItems.forEach { it.menu() }
-                Icon(
+
+                menuItems.forEach { it.menu()
+               /* Icon(
                     imageVector = Icons.Outlined.MoreVert,
                     contentDescription = "OverFlow",
                     modifier = Modifier
-                        .padding(start = 8.dp)
+                        .padding(horizontal = 16.dp)
                         .align(Alignment.CenterVertically)
-                )
+                )*/
 
             }
         }
@@ -100,7 +102,7 @@ private fun NavigationIcon(navController: NavController) {
         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
         contentDescription = "",
         modifier = Modifier
-            .padding(horizontal = 8.dp)
+            .padding(horizontal = 16.dp)
             .clickable {
                 navController.popBackStack()
             }

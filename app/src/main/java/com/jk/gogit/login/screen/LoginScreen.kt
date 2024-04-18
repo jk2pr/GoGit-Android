@@ -59,7 +59,7 @@ fun LoginScreen() {
     val authenticationState by authViewModel.authenticationState.collectAsState()
     Page {
         when (authenticationState) {
-            AuthenticationState.Initial -> {
+            AuthenticationState.Initial ->
 
                 Column(
                     verticalArrangement = Arrangement.Center,
@@ -134,7 +134,7 @@ fun LoginScreen() {
                     )
 
 
-                }
+
                 // Other UI elements
 
             }

@@ -22,6 +22,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,7 +53,6 @@ import com.jk.gogit.overview.model.OverViewTabData
 import com.jk.gogit.overview.model.OverViewTabData.OverViewScreenData.OverViewItem.PinnedGist
 import com.jk.gogit.overview.model.OverViewTabData.OverViewScreenData.OverViewItem.PinnedRepository
 import com.jk.gogit.overview.model.OverViewTabData.OverViewScreenData.OverViewItem.PopularRepository
-import com.jk.gogit.utils.DateUtil
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @Composable
@@ -81,7 +81,6 @@ fun OverViewTab(overViewTabData: OverViewTabData.OverViewScreenData) {
                 ImageVector.vectorResource(id = if (hasPinned) R.drawable.pin_26 else R.drawable.baseline_star_24),
                 contentDescription = "",
                 modifier = Modifier.size(16.dp),
-                tint = Color.Gray
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
@@ -123,13 +122,8 @@ fun OverViewTab(overViewTabData: OverViewTabData.OverViewScreenData) {
         MarkdownText(
             markdown = file,
             modifier = Modifier.padding(vertical = 8.dp),
-            style = MaterialTheme.typography.bodyLarge.merge(
-                TextStyle(
-                    fontSize = 12.sp,
-                    lineHeight = 10.sp,
-                    textAlign = TextAlign.Justify,
-                    //   background = MaterialTheme.colorScheme.background,
-                )
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = LocalContentColor.current
             )
         )
     }
@@ -142,10 +136,6 @@ fun OverViewTab(overViewTabData: OverViewTabData.OverViewScreenData) {
 fun PinnedItems(repo: Repos, modifier: Modifier) {
     Card(
         modifier = modifier,
-        border = BorderStroke(1.dp, Color.Gray),
-        shape = MaterialTheme.shapes.small,
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
-
     ) {
         Column(
             modifier = Modifier.padding(8.dp),
@@ -196,7 +186,7 @@ fun PinnedItems(repo: Repos, modifier: Modifier) {
                 repo.primaryLanguage?.name?.let {
                     Text(
                         text = repo.primaryLanguage.name,
-                        style = MaterialTheme.typography.labelLarge.merge(Color.Gray),
+                        style = MaterialTheme.typography.labelLarge,
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = 8.dp)
@@ -206,13 +196,12 @@ fun PinnedItems(repo: Repos, modifier: Modifier) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_star_24),
-                        tint = Color.Gray,
                         contentDescription = null,
                         modifier = Modifier.size(16.dp)
                     )
                     Text(
                         text = repo.stargazerCount.toString(),
-                        style = MaterialTheme.typography.labelSmall.merge(Color.Gray),
+                        style = MaterialTheme.typography.labelSmall,
                         //  fontFamily = FontFamily(Font(R.font.bebasneue_light)),
                         fontSize = 14.sp,
                         modifier = Modifier.padding(start = 4.dp, end = 8.dp)
@@ -223,12 +212,11 @@ fun PinnedItems(repo: Repos, modifier: Modifier) {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_fork_left_24),
                         contentDescription = null,
-                        tint = Color.Gray,
                         modifier = Modifier.size(16.dp)
                     )
                     Text(
                         text = repo.forkCount.toString(),
-                        style = MaterialTheme.typography.labelSmall.merge(Color.Gray),
+                        style = MaterialTheme.typography.labelSmall,
                         //  fontFamily = FontFamily(Font(R.font.bebasneue_light)),
                         modifier = Modifier.padding(start = 4.dp)
                     )
@@ -236,8 +224,8 @@ fun PinnedItems(repo: Repos, modifier: Modifier) {
             }
 
             Text(
-                text = DateUtil.getDateComparatively(repo.updatedAt.toString()),
-                style = MaterialTheme.typography.labelSmall.merge(Color.Gray),
+                text = repo.updatedAt.toString(),
+                style = MaterialTheme.typography.labelSmall,
                 //   fontFamily = FontFamily(Font(R.font.bebasneue_light)),
                 fontSize = 12.sp,
                 textAlign = TextAlign.End
@@ -251,9 +239,6 @@ fun PinnedItems(repo: Repos, modifier: Modifier) {
 private fun GistItem(gist: GistFields, modifier: Modifier) {
     Card(
         modifier = modifier,
-        border = BorderStroke(1.dp, Color.Gray),
-        shape = MaterialTheme.shapes.small,
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     )
     {
         Column(
@@ -278,16 +263,15 @@ private fun GistItem(gist: GistFields, modifier: Modifier) {
 private fun InfoCard(user: GetUserQuery.User) {
     val localNavController = LocalNavController.current
     Card(
-        border = BorderStroke(1.dp, Color.Gray),
+        border = BorderStroke(1.dp, LocalContentColor.current),
         modifier = Modifier.padding(vertical = 8.dp),
-        shape = MaterialTheme.shapes.small,
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
-    ) {
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+
+        ) {
         InfoRow(
             iconId = R.drawable.git_repository_line_1,
             label = "Repositories",
             count = user.repositories.totalCount,
-            tint = Color.Black
         ) {
             localNavController.currentBackStackEntry
                 ?.savedStateHandle

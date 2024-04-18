@@ -16,7 +16,6 @@ import androidx.compose.ui.text.font.FontWeight
         modifier = modifier,
         style = MaterialTheme.typography.headlineSmall.copy(
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
         )
     )
 }

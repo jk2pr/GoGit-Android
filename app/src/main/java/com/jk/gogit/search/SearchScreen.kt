@@ -2,29 +2,36 @@ package com.jk.gogit.search
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
@@ -34,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.hoppers.fragment.Repos
 import com.hoppers.fragment.UserFields
@@ -116,14 +124,10 @@ fun Chip(modifier: Modifier = Modifier, onTypeSelected: (SearchType) -> Unit) {
         types.forEach { type ->
             val isSelected = selectedType.value == type
             Card(
-                shape = MaterialTheme.shapes.extraLarge,
                 colors = CardDefaults.cardColors(
-                    containerColor = if (isSelected) Color.LightGray else Color.LightGray.copy(
-                        alpha = 0.2f
-                    )
+                    containerColor = if (isSelected) MaterialTheme.colorScheme.primary else LocalContentColor.current
                 ),
                 modifier = Modifier
-                    .padding(8.dp)
                     .clickable {
                         selectedType.value = type
                         onTypeSelected(type)
@@ -147,10 +151,12 @@ fun SearchComponent(
 ) {
     // Implement your search component here
     val searchText = remember { mutableStateOf("") }
+    val interactionSource = remember { MutableInteractionSource() }
 
     TextField(
         modifier = modifier
-            .wrapContentWidth(),
+            .wrapContentWidth()
+            .padding(horizontal = 16.dp),
         shape = MaterialTheme.shapes.small,
         colors = OutlinedTextFieldDefaults.colors(),
         value = searchText.value,
