@@ -61,21 +61,16 @@ import org.koin.core.parameter.parametersOf
 fun RepoDetailScreen() {
 
     val localNavyController = LocalNavController.current
+    val savedStateHandle = localNavyController.previousBackStackEntry?.savedStateHandle
     val login =
-        localNavyController.previousBackStackEntry?.savedStateHandle?.get<String>(AppScreens.USERPROFILE.route)!!
+        savedStateHandle?.get<String>(AppScreens.USERPROFILE.route)!!
     val repoName =
-        localNavyController.previousBackStackEntry?.savedStateHandle?.get<String>(AppScreens.REPODETAIL.route)!!
+        savedStateHandle.get<String>(AppScreens.REPODETAIL.route)!!
     val path =
-        localNavyController.previousBackStackEntry?.savedStateHandle?.get<String>(AppScreens.REPOLIST.route)
+        savedStateHandle.get<String>(AppScreens.REPOLIST.route)
 
     val viewModel =
-        koinViewModel<RepoDetailViewModel>(parameters = {
-            parametersOf(
-                login,
-                repoName,
-                "$path:README.md"
-            )
-        })
+        koinViewModel<RepoDetailViewModel>(parameters = { parametersOf(login, repoName, "$path:README.md") })
     val scrollState = rememberScrollState()
     val titleKey = remember { mutableStateOf("") }
     val titleValue = remember { mutableStateOf("") }
@@ -107,7 +102,6 @@ fun RepoDetailScreen() {
                     RepoDetail(repo = repo)
                 }
                 LaunchedEffect(Unit) {
-                    Log.d("RepoDetailScreen", "LaunchedEffect triggered")
                     scrollState.scrollTo(0)
                     snapshotFlow { scrollState.value }
                         .collect { scrollOffset ->

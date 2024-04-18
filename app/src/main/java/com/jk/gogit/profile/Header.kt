@@ -169,13 +169,17 @@ fun Header(data: GetUserQuery.User, modifier: Modifier = Modifier) {
 
                         localNavController.navigate(AppScreens.USERLIST.route)
                     }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.add_follow_following_icon),
-                        contentDescription = "",
-                    )
-                    Text(text = "${data.followers.totalCount.formatNumber()} followers")
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            modifier = Modifier.size(24.dp),
+                            painter = painterResource(id = R.drawable.add_follow_following_icon),
+                            contentDescription = "",
+                        )
+                        Text(text = "${data.followers.totalCount.formatNumber()} followers")
+                    }
                 }
                 TextButton(
+                    modifier = Modifier.align(Alignment.CenterVertically),
                     contentPadding = PaddingValues(start = 4.dp),
                     onClick = {
                         localNavController.currentBackStackEntry
@@ -183,9 +187,10 @@ fun Header(data: GetUserQuery.User, modifier: Modifier = Modifier) {
                             ?.set(AppScreens.USERPROFILE.route, "${data.login}/following")
                         localNavController.navigate(AppScreens.USERLIST.route)
                     }) {
-                    Text(text = buildAnnotatedString {
+                    Text(
+                        text = buildAnnotatedString {
                             append("\u2022 ${data.following.totalCount.formatNumber()} following")
-                    })
+                        })
                 }
             }
             OutlinedButton(
