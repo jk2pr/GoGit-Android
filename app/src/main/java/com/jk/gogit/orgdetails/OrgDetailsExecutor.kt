@@ -1,9 +1,9 @@
-package com.jk.gogit.profile.services
+package com.jk.gogit.orgdetails
 
 import com.apollographql.apollo3.ApolloClient
-import com.hoppers.GetUserPinnedItemsQuery
-import com.hoppers.GetUserPopularReposQuery
-import com.hoppers.GetUserQuery
+import com.hoppers.GetOrgPinnedItemsQuery
+import com.hoppers.GetOrgPopularReposQuery
+import com.hoppers.GetOrganizationDetailQuery
 import com.hoppers.ReadMeQuery
 import com.hoppers.fragment.GistFields
 import com.hoppers.fragment.Repos
@@ -12,7 +12,7 @@ import com.jk.gogit.extensions.toDate
 import com.jk.gogit.overview.model.OverViewTabData
 import javax.inject.Inject
 
-class UserProfileExecutor
+class OrgDetailsExecutor
 @Inject constructor(private val client: ApolloClient) {
 
     /**
@@ -21,9 +21,9 @@ class UserProfileExecutor
     suspend fun execute(login: String): OverViewTabData {
 
 
-        val userResponse = client.query(GetUserQuery(login)).execute()
-        val user = userResponse.data?.user ?: throw userResponse.exception ?: IllegalStateException(
-            "Sorry, the user you're looking for was not found"
+        val userResponse = client.query(GetOrganizationDetailQuery(login)).execute()
+        val org = userResponse.data?.organization ?: throw userResponse.exception ?: IllegalStateException(
+           "It seems that the organization $login has enabled OAuth App access restrictions, meaning that data access to third-parties is limited."
         )
 
         val readmeResponse = client.query(ReadMeQuery(login)).execute()
@@ -34,12 +34,12 @@ class UserProfileExecutor
         var popularRepos: List<Repos> = emptyList()
         var pinnedGists: List<GistFields> = emptyList()
 
-        client.query(GetUserPinnedItemsQuery(login))
-            .execute().data?.user?.pinnedItems?.let { pinnedItems ->
+        client.query(GetOrgPinnedItemsQuery(login))
+            .execute().data?.organization?.pinnedItems?.let { pinnedItems ->
                 if (pinnedItems.nodes.isNullOrEmpty()) {
                     listType = "Starred"
-                    popularRepos = client.query(GetUserPopularReposQuery(login, first = 5))
-                        .execute().data?.user?.repositories?.nodes?.mapNotNull {
+                    popularRepos = client.query(GetOrgPopularReposQuery(login, first = 5))
+                        .execute().data?.organization?.repositories?.nodes?.mapNotNull {
                             it?.repos?.copy(
                                 updatedAt = it.repos.updatedAt.toString().toDate()
                                     .formatDateRelativeToToday()
@@ -64,7 +64,7 @@ class UserProfileExecutor
 
 
         return OverViewTabData(
-            user = user,
+            org = org,
             pinnedRepos = pinnedRepos,
             pinnedGists = pinnedGists,
             popularRepos = popularRepos,

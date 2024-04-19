@@ -1,10 +1,6 @@
 package com.jk.gogit.profile
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import com.hoppers.networkmodule.network.AuthManager
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,24 +17,21 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.jk.gogit.R
+import com.hoppers.networkmodule.network.AuthManager
 import com.jk.gogit.UiState
 import com.jk.gogit.components.ComposeLocalWrapper
 import com.jk.gogit.components.DropdownMenuItemContent
 import com.jk.gogit.components.Page
-import com.jk.gogit.components.TitleText
 import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.navigation.AppScreens
 import com.jk.gogit.overview.OverViewTab
@@ -116,11 +109,11 @@ fun UserProfileScreen() {
                         .padding(horizontal = 16.dp),
                     verticalArrangement = Arrangement.Top,
                 ) {
-                    Header(data = overViewTabData.user)
+                    UserProfileHeader(data = overViewTabData.user!!)
 
                     OverViewTab(overViewTabData = overViewTabData)
                 }
-                title.value = overViewTabData.user.name ?: overViewTabData.user.login
+                title.value = overViewTabData.user?.name ?: overViewTabData.user?.login.orEmpty()
                /* LaunchedEffect(Unit) {
                     scrollState.scrollTo(0)
                     snapshotFlow { scrollState.value }
@@ -132,7 +125,13 @@ fun UserProfileScreen() {
                 }*/
             }
 
-            is UiState.Error -> Text(text = result.message)
+            is UiState.Error -> Text(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = result.message,
+                softWrap = true,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.error)
+            )
             is UiState.Empty -> {}
         }
 

@@ -118,8 +118,8 @@ fun OverViewTab(overViewTabData: OverViewTabData.OverViewScreenData) {
                 }
             }
         }
-        InfoCard(user = overViewTabData.user)
-        if (file == "null") return
+        InfoCard(user = overViewTabData.user!!)
+        if (file.isEmpty() and (file  == "null")) return
         MarkdownText(
             markdown = file,
             modifier = Modifier.padding(vertical = 8.dp),
@@ -237,7 +237,7 @@ fun PinnedItems(repo: Repos, modifier: Modifier) {
 }
 
 @Composable
-private fun GistItem(gist: GistFields, modifier: Modifier) {
+ fun GistItem(gist: GistFields, modifier: Modifier) {
     Card(
         modifier = modifier,
     )
@@ -288,7 +288,17 @@ private fun InfoCard(user: GetUserQuery.User) {
             label = "Organizations",
             count = user.organizations.totalCount,
             tint = Color.Red
-        )
+        ){
+            val savedStateHandle = localNavController.currentBackStackEntry?.savedStateHandle
+            val keys = savedStateHandle?.keys()
+            keys?.forEach { savedStateHandle.remove<Any>(it) }
+            savedStateHandle?.set(
+                AppScreens.ORGLIST.route,
+                user.login
+            )
+            localNavController.navigate(AppScreens.ORGLIST.route)
+
+        }
         InfoRow(
             iconId = R.drawable.baseline_star_24,
             label = "Starred",

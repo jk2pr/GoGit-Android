@@ -1,0 +1,9 @@
+query GetOrgRepos($username: String!) {
+    organization(login: $username) {
+        repositories(first: 100, orderBy: {field: UPDATED_AT, direction: DESC} ){
+            nodes {
+                ...Repos
+            }
+        }
+    }
+}
