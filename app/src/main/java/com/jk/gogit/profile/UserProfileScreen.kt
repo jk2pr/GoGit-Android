@@ -42,20 +42,6 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun UserProfileScreen() {
 
-    val menuItems: List<DropdownMenuItemContent> = remember {
-        listOf(DropdownMenuItemContent {
-            Icon(
-                painter = painterResource(id = org.koin.android.R.drawable.abc_ic_menu_share_mtrl_alpha),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .clickable {
-                        //Handle click event
-                    }
-            )
-
-        })
-    }
 
     val localNavController = LocalNavController.current
     val localContext = LocalContext.current
@@ -66,7 +52,7 @@ fun UserProfileScreen() {
     val scrollState = rememberScrollState()
     val title = remember { mutableStateOf("") }
 
-    Page(menuItems = menuItems,
+    Page(
         floatingActionButton = {
             FloatingActionButton(
                 shape = MaterialTheme.shapes.extraLarge,
