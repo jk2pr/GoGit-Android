@@ -40,14 +40,16 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.hoppers.GetUserQuery
+import com.hoppers.networkmodule.network.AuthManager
 import com.jk.gogit.R
 import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.extensions.formatNumber
 import com.jk.gogit.navigation.AppScreens
 
 @Composable
-fun UserProfileHeader(data: GetUserQuery.User, modifier: Modifier = Modifier) {
+fun UserProfileHeader(data: GetUserQuery.User, modifier: Modifier = Modifier, onFollow: (Boolean)-> Unit ) {
     val localNavController = LocalNavController.current
+    val loggedInUser = AuthManager.getLogin()
 
     Column(modifier = modifier) {
         val painter =
@@ -180,16 +182,19 @@ fun UserProfileHeader(data: GetUserQuery.User, modifier: Modifier = Modifier) {
                         })
                 }
             }
+            if (data.login != loggedInUser)
             OutlinedButton(
                 contentPadding = PaddingValues(horizontal = 24.dp),
                 shape = MaterialTheme.shapes.small,
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                 //colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.outline, contentColor = MaterialTheme.colorScheme.onPrimary),
-                onClick = { /* Follow Button Clicked */ },
+                onClick = {
+                    onFollow(data.viewerIsFollowing)
+
+                },
             ) {
                 Text(
-
-                    text = "Follow",
+                    text = if(data.viewerIsFollowing) "unfollow" else "Follow",
                     // style = TextStyle(color = Color.Blue),
                     //   modifier = Modifier.wrapContentWidth(),
                     textAlign = TextAlign.Center

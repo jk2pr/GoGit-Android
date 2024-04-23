@@ -1,10 +1,13 @@
 package com.jk.gogit.profile.services
 
+import android.util.Log
 import com.apollographql.apollo3.ApolloClient
+import com.hoppers.FollowUserMutation
 import com.hoppers.GetUserPinnedItemsQuery
 import com.hoppers.GetUserPopularReposQuery
 import com.hoppers.GetUserQuery
 import com.hoppers.ReadMeQuery
+import com.hoppers.UnfollowUserMutation
 import com.hoppers.fragment.GistFields
 import com.hoppers.fragment.Repos
 import com.jk.gogit.extensions.formatDateRelativeToToday
@@ -22,6 +25,7 @@ class UserProfileExecutor
 
 
         val userResponse = client.query(GetUserQuery(login)).execute()
+        Log.d( "execute:" ,"${userResponse.extensions.keys}")
         val user = userResponse.data?.user ?: throw userResponse.exception ?: IllegalStateException(
             "Sorry, the user you're looking for was not found"
         )
@@ -71,5 +75,17 @@ class UserProfileExecutor
             html = html,
             listType = listType
         )
+    }
+    suspend fun followUser(userId: String): FollowUserMutation.Data
+    {
+        return  client.mutation(FollowUserMutation(user = userId)).execute().dataOrThrow()
+
+
+    }
+    suspend fun unFollowUser(userId: String): UnfollowUserMutation.Data
+    {
+        return  client.mutation(UnfollowUserMutation(user = userId)).execute().dataOrThrow()
+
+
     }
 }

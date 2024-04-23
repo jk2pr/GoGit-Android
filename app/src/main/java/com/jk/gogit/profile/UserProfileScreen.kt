@@ -1,5 +1,6 @@
 package com.jk.gogit.profile
 
+import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,9 +37,11 @@ import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.navigation.AppScreens
 import com.jk.gogit.overview.OverViewTab
 import com.jk.gogit.overview.model.OverViewTabData
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun UserProfileScreen() {
 
@@ -78,7 +81,7 @@ fun UserProfileScreen() {
                 )
             }
 
-             }) {
+        }) {
         when (val result = viewModel.feedStateFlow.collectAsState().value) {
             is UiState.Loading ->
                 CircularProgressIndicator(
@@ -87,20 +90,38 @@ fun UserProfileScreen() {
                 )
 
             is UiState.Content -> {
-                val overViewTabData = result.data as OverViewTabData.OverViewScreenData
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(scrollState)
-                        .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.Top,
-                ) {
-                    UserProfileHeader(data = overViewTabData.user!!)
 
-                    OverViewTab(overViewTabData = overViewTabData)
-                }
-                title.value = overViewTabData.user?.name ?: overViewTabData.user?.login.orEmpty()
-               /* LaunchedEffect(Unit) {
+                if (result.data is OverViewTabData.OverViewScreenData) {
+                    val overViewTabData = result.data
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(scrollState)
+                            .padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.Top,
+                    ) {
+                        UserProfileHeader(data = overViewTabData.user!!, onFollow = { viewerIsFollowing ->
+                            if (viewerIsFollowing) // if following
+                            viewModel.setState(UserProfileViewModel.MainState.UnFollowEvent(overViewTabData.user.id))
+                            else //Not following
+                            viewModel.setState(UserProfileViewModel.MainState.FollowEvent(overViewTabData.user.id))
+                        })
+
+                        OverViewTab(overViewTabData = overViewTabData){ ownerName, repoName, defaultBranch ->
+                            localNavController.currentBackStackEntry
+                                ?.savedStateHandle?.let {
+                                    it[AppScreens.USERPROFILE.route] = ownerName
+                                    it[AppScreens.REPOLIST.route] = defaultBranch
+                                    it[AppScreens.REPODETAIL.route] = repoName
+                                }
+                            localNavController.navigate(AppScreens.REPODETAIL.route)
+
+                        }
+                    }
+                    title.value =
+                        overViewTabData.user?.name ?: overViewTabData.user?.login.orEmpty()
+                    /* LaunchedEffect(Unit) {
                     scrollState.scrollTo(0)
                     snapshotFlow { scrollState.value }
                         .collect { scrollOffset ->
@@ -109,6 +130,10 @@ fun UserProfileScreen() {
                                 ?: overViewTabData.user.login else localContext.getString(R.string.app_name)
                         }
                 }*/
+                } else {
+                    Log.d("UserProfileScreen", "Follow ${result.data}")
+
+                }
             }
 
             is UiState.Error -> Text(
@@ -118,6 +143,7 @@ fun UserProfileScreen() {
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.error)
             )
+
             is UiState.Empty -> {}
         }
 

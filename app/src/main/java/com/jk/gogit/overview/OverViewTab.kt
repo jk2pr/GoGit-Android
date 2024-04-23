@@ -57,7 +57,7 @@ import com.jk.gogit.overview.model.OverViewTabData.OverViewScreenData.OverViewIt
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @Composable
-fun OverViewTab(overViewTabData: OverViewTabData.OverViewScreenData) {
+fun OverViewTab(overViewTabData: OverViewTabData.OverViewScreenData, onClick: (String, String, String) -> Unit) {
 
     //val viewModel = koinViewModel<OverViewModel>(parameters = { parametersOf(login) })
 
@@ -104,15 +104,26 @@ fun OverViewTab(overViewTabData: OverViewTabData.OverViewScreenData) {
                 when (val item = items[index]) {
                     is PinnedRepository -> PinnedItems(
                         repo = item.repo, modifier = itemModifier
-                    )
+                    ){ ownerName, repoName, defaultBranch ->
+                        onClick(ownerName,repoName, defaultBranch)
+
+                    }
 
                     is PopularRepository -> PinnedItems(
                         repo = item.repo, modifier = itemModifier
-                    )
+                    ){ ownerName, repoName, defaultBranch ->
+                        onClick(ownerName,repoName, defaultBranch)
+
+                    }
+
 
                     is PinnedGist -> GistItem(
                         gist = item.gist, modifier = itemModifier
-                    )
+                    ){ ownerName, repoName, defaultBranch ->
+                        onClick(ownerName,repoName, defaultBranch)
+
+                    }
+
 
 
                 }
@@ -134,9 +145,11 @@ fun OverViewTab(overViewTabData: OverViewTabData.OverViewScreenData) {
 
 
 @Composable
-fun PinnedItems(repo: Repos, modifier: Modifier) {
+fun PinnedItems(repo: Repos, modifier: Modifier, onClick: (String, String, String) -> Unit) {
     Card(
-        modifier = modifier,
+        modifier = modifier.clickable {
+            onClick(repo.owner.login, repo.repoName, repo.defaultBranchRef?.name.orEmpty())
+        },
     ) {
         Column(
             modifier = Modifier.padding(8.dp),
@@ -237,9 +250,11 @@ fun PinnedItems(repo: Repos, modifier: Modifier) {
 }
 
 @Composable
- fun GistItem(gist: GistFields, modifier: Modifier) {
+ fun GistItem(gist: GistFields, modifier: Modifier, onClick: (String, String, String) -> Unit) {
     Card(
-        modifier = modifier,
+        modifier = modifier.clickable {
+            //onClick()
+        },
     )
     {
         Column(

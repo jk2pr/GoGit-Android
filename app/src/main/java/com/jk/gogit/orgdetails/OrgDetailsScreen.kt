@@ -149,15 +149,15 @@ fun OrgDetailsScreen() {
                                 when (val item = items[index]) {
                                     is PinnedRepository -> PinnedItems(
                                         repo = item.repo, modifier = itemModifier
-                                    )
+                                    ) { _, _, _ -> }
 
                                     is PopularRepository -> PinnedItems(
                                         repo = item.repo, modifier = itemModifier
-                                    )
+                                    ) { _, _, _ -> }
 
                                     is PinnedGist -> GistItem(
                                         gist = item.gist, modifier = itemModifier
-                                    )
+                                    ) { _, _, _ -> }
 
 
                                 }
@@ -201,8 +201,9 @@ fun OrgDetailsScreen() {
                             snapshotFlow { scrollState.value }
                                 .collect { scrollOffset ->
                                     // Change title text based on scroll offset
-                                    title.value = if (scrollOffset > 100) overViewTabData.org.name?: overViewTabData.org.login
-                                        else ""
+                                    title.value = if (scrollOffset > 100) overViewTabData.org.name
+                                        ?: overViewTabData.org.login
+                                    else ""
                                 }
                         }
                     }
