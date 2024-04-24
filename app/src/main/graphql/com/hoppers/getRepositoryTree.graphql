@@ -1,0 +1,17 @@
+query GetRepositoryTree($owner: String!, $repo: String!, $ref: String!) {
+    repository(owner: $owner, name: $repo) {
+        object(expression: $ref) {
+            ... on Tree {
+                entries {
+                    name
+                    type
+                    object {
+                        ... on Blob {
+                            text
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

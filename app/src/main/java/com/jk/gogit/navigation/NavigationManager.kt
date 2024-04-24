@@ -10,13 +10,14 @@ import com.jk.gogit.profile.UserProfileScreen
 import com.jk.gogit.pullrequest.PullRequestListScreen
 import com.jk.gogit.repos.RepositoryListScreen
 import com.jk.gogit.repositorydetails.RepoDetailScreen
+import com.jk.gogit.repositorydetails.tree.RepoTreeScreen
 import com.jk.gogit.users.UserListScreen
 
 @Composable
 fun Start() {
     NavHost(
         navController = LocalNavController.current,
-        startDestination = if (com.hoppers.networkmodule.network.AuthManager.getAccessToken() == null) AppScreens.LOGIN.route else AppScreens.LOGIN.route
+        startDestination = if (com.hoppers.networkmodule.network.AuthManager.getAccessToken() == null) AppScreens.LOGIN.route else AppScreens.USERPROFILE.route
     ) {
         composable(route = AppScreens.LOGIN.route) {
             LoginScreen()
@@ -41,6 +42,9 @@ fun Start() {
         }
         composable(route = AppScreens.PULLREQUESTS.route) {
             PullRequestListScreen()
+        }
+        composable(route = AppScreens.REPOTREESCREEN.route) {
+            RepoTreeScreen()
         }
     }
 }

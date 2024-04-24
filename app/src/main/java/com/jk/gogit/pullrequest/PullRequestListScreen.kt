@@ -35,7 +35,7 @@ fun PullRequestListScreen() {
 
     val localNavyController = LocalNavController.current
     val items =
-        localNavyController.previousBackStackEntry?.savedStateHandle?.get<List<GetRepoDetailsQuery.Node?>?>(
+        localNavyController.previousBackStackEntry?.savedStateHandle?.get<List<GetRepoDetailsQuery.Node1?>?>(
             AppScreens.PULLREQUESTS.route
         )!!
 
@@ -63,7 +63,7 @@ fun PullRequestListScreen() {
 }
 
 @Composable
-fun PullRequestItem(node: GetRepoDetailsQuery.Node) {
+fun PullRequestItem(node: GetRepoDetailsQuery.Node1) {
     val navController = LocalNavController.current
 
     val message = when(node.state){

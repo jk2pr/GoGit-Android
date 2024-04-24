@@ -13,6 +13,8 @@ import com.jk.gogit.repos.RepoListViewModel
 import com.jk.gogit.repos.services.RepoExecutor
 import com.jk.gogit.repositorydetails.RepoDetailExecutor
 import com.jk.gogit.repositorydetails.RepoDetailViewModel
+import com.jk.gogit.repositorydetails.tree.RepoTreeExecutor
+import com.jk.gogit.repositorydetails.tree.RepoTreeViewModel
 import com.jk.gogit.users.services.UserListExecutor
 import com.jk.gogit.users.viewmodel.UserListViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -25,6 +27,7 @@ val appModule = module {
     single<FeedExecutor> { FeedExecutor(get()) }
     single<UserProfileExecutor> { UserProfileExecutor(get()) }
     single<RepoExecutor> { RepoExecutor(get()) }
+    single<RepoTreeExecutor> { RepoTreeExecutor(get()) }
     single<SearchExecutor> { SearchExecutor(get()) }
     single<UserListExecutor> { UserListExecutor(get()) }
     single<RepoDetailExecutor> { RepoDetailExecutor(get()) }
@@ -36,4 +39,5 @@ val appModule = module {
     viewModel { params -> UserListViewModel(userListExecutor = get(), dispatchers = get(), login = params.get()) }
     viewModel { params -> SearchViewModel(searchExecutor = get(), dispatchers = get()) }
     viewModel { params -> RepoDetailViewModel(repoDetailExecutor = get(), dispatchers = get(), login = params.get(), repo = params.get(), path = params.get()) }
+    viewModel { params -> RepoTreeViewModel(repoTreeExecutor = get(), dispatchers = get(), login = params.get(), repo = params.get(), path = params.get()) }
 }

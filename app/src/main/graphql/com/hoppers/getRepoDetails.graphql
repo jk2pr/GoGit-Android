@@ -3,6 +3,19 @@ query getRepoDetails($owner_name: String!, $repoName: String!,$path:String!) {
         defaultBranchRef {
             name
         }
+        refs(refPrefix: "refs/heads/", first: 100, orderBy: { field: TAG_COMMIT_DATE, direction: DESC }) {
+            nodes {
+                name
+                target {
+                    ... on Commit{
+                        history{
+                            totalCount
+                        }
+                    }
+                }
+
+            }
+        }
         name
         description
         url
