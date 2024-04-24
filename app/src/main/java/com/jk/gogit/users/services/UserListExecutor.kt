@@ -1,6 +1,7 @@
 package com.jk.gogit.users.services
 
 import com.apollographql.apollo3.ApolloClient
+import com.hoppers.FollowUserMutation
 import com.hoppers.GetFollowersAndFollowingQuery
 import com.hoppers.fragment.UserFields
 import javax.inject.Inject

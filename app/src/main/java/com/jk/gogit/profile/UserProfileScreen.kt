@@ -1,10 +1,7 @@
 package com.jk.gogit.profile
 
-import androidx.compose.animation.AnimatedVisibility
+import android.util.Log
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import com.hoppers.networkmodule.network.AuthManager
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,48 +18,33 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.jk.gogit.R
+import com.hoppers.networkmodule.network.AuthManager
 import com.jk.gogit.UiState
 import com.jk.gogit.components.ComposeLocalWrapper
 import com.jk.gogit.components.DropdownMenuItemContent
 import com.jk.gogit.components.Page
-import com.jk.gogit.components.TitleText
 import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.navigation.AppScreens
 import com.jk.gogit.overview.OverViewTab
 import com.jk.gogit.overview.model.OverViewTabData
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun UserProfileScreen() {
 
-    val menuItems: List<DropdownMenuItemContent> = remember {
-        listOf(DropdownMenuItemContent {
-            Icon(
-                painter = painterResource(id = org.koin.android.R.drawable.abc_ic_menu_share_mtrl_alpha),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .clickable {
-                        //Handle click event
-                    }
-            )
-
-        })
-    }
 
     val localNavController = LocalNavController.current
     val localContext = LocalContext.current
@@ -73,7 +55,7 @@ fun UserProfileScreen() {
     val scrollState = rememberScrollState()
     val title = remember { mutableStateOf("") }
 
-    Page(menuItems = menuItems,
+    Page(
         floatingActionButton = {
             FloatingActionButton(
                 shape = MaterialTheme.shapes.extraLarge,
@@ -99,7 +81,7 @@ fun UserProfileScreen() {
                 )
             }
 
-             }) {
+        }) {
         when (val result = viewModel.feedStateFlow.collectAsState().value) {
             is UiState.Loading ->
                 CircularProgressIndicator(
@@ -108,20 +90,38 @@ fun UserProfileScreen() {
                 )
 
             is UiState.Content -> {
-                val overViewTabData = result.data as OverViewTabData.OverViewScreenData
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(scrollState)
-                        .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.Top,
-                ) {
-                    Header(data = overViewTabData.user)
 
-                    OverViewTab(overViewTabData = overViewTabData)
-                }
-                title.value = overViewTabData.user.name ?: overViewTabData.user.login
-               /* LaunchedEffect(Unit) {
+                if (result.data is OverViewTabData.OverViewScreenData) {
+                    val overViewTabData = result.data
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(scrollState)
+                            .padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.Top,
+                    ) {
+                        UserProfileHeader(data = overViewTabData.user!!, onFollow = { viewerIsFollowing ->
+                            if (viewerIsFollowing) // if following
+                            viewModel.setState(UserProfileViewModel.MainState.UnFollowEvent(overViewTabData.user.id))
+                            else //Not following
+                            viewModel.setState(UserProfileViewModel.MainState.FollowEvent(overViewTabData.user.id))
+                        })
+
+                        OverViewTab(overViewTabData = overViewTabData){ ownerName, repoName, defaultBranch ->
+                            localNavController.currentBackStackEntry
+                                ?.savedStateHandle?.let {
+                                    it[AppScreens.USERPROFILE.route] = ownerName
+                                    it[AppScreens.REPOLIST.route] = defaultBranch
+                                    it[AppScreens.REPODETAIL.route] = repoName
+                                }
+                            localNavController.navigate(AppScreens.REPODETAIL.route)
+
+                        }
+                    }
+                    title.value =
+                        overViewTabData.user?.name ?: overViewTabData.user?.login.orEmpty()
+                    /* LaunchedEffect(Unit) {
                     scrollState.scrollTo(0)
                     snapshotFlow { scrollState.value }
                         .collect { scrollOffset ->
@@ -130,9 +130,20 @@ fun UserProfileScreen() {
                                 ?: overViewTabData.user.login else localContext.getString(R.string.app_name)
                         }
                 }*/
+                } else {
+                    Log.d("UserProfileScreen", "Follow ${result.data}")
+
+                }
             }
 
-            is UiState.Error -> Text(text = result.message)
+            is UiState.Error -> Text(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = result.message,
+                softWrap = true,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.error)
+            )
+
             is UiState.Empty -> {}
         }
 

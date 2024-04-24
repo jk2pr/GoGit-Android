@@ -1,11 +1,15 @@
 query GetUser($username: String!) {
     user(login: $username) {
+
         login
         name
         bio
+        id
         status {
             message
         }
+        viewerIsFollowing
+        isFollowingViewer
         avatarUrl
         websiteUrl
         anyPinnableItems
