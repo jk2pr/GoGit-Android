@@ -1,8 +1,7 @@
-package com.jk.gogit.profile
+package com.jk.gogit.orgdetails
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,24 +12,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.MailOutline
-import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.MailOutline
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,28 +28,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.hoppers.GetUserQuery
+import com.hoppers.GetOrganizationDetailQuery
 import com.jk.gogit.R
-import com.jk.gogit.components.ComposeLocalWrapper
-import com.jk.gogit.components.TitleText
 import com.jk.gogit.components.localproviders.LocalNavController
-import com.jk.gogit.extensions.formatNumber
-import com.jk.gogit.navigation.AppScreens
-import com.jk.gogit.profile.model.UserProfile
 
 @Composable
-fun Header(data: GetUserQuery.User, modifier: Modifier = Modifier) {
+fun OrgDetailsHeader(
+    data: GetOrganizationDetailQuery.Organization,
+    modifier: Modifier = Modifier
+) {
     val localNavController = LocalNavController.current
 
     Column(modifier = modifier) {
@@ -94,12 +79,12 @@ fun Header(data: GetUserQuery.User, modifier: Modifier = Modifier) {
                 }*/
                 Text(
                     softWrap = true,
-                    text = buildAnnotatedString {
-                        append(data.login)
-                        if (data.pronouns.orEmpty().isNotBlank()) {
-                            append(" \u2022 (${data.pronouns})")
-                        }
-                    },
+                    text = data.name.orEmpty(),
+                    style = MaterialTheme.typography.titleLarge
+                )
+                Text(
+                    softWrap = true,
+                    text = data.login,
                     style = MaterialTheme.typography.bodyMedium
                 )
 
@@ -108,11 +93,8 @@ fun Header(data: GetUserQuery.User, modifier: Modifier = Modifier) {
                     items = mapOf(
                         Icons.Outlined.MailOutline to data.email,
                         Icons.Outlined.LocationOn to data.location,
-                        ImageVector.vectorResource(id = R.drawable.outline_home_work_24) to data.company
                     )
                 )
-                //Text(text = data.email, imageVector = Icons.Default.Email)
-                //Text(text = data.location, imageVector = Icons.Default.LocationOn)
 
 
             }
@@ -148,7 +130,7 @@ fun Header(data: GetUserQuery.User, modifier: Modifier = Modifier) {
             }
             BulletList(
                 style = MaterialTheme.typography.bodyMedium,
-                items = mapOf(Icons.Outlined.Info to data.bio)
+                items = mapOf(Icons.Outlined.Info to data.description)
 
             )
         }
@@ -157,42 +139,8 @@ fun Header(data: GetUserQuery.User, modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .padding(vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.End,
         ) {
-            Row {
-                TextButton(
-                    contentPadding = PaddingValues(0.dp),
-                    onClick = {
-                        localNavController.currentBackStackEntry
-                            ?.savedStateHandle
-                            ?.set(AppScreens.USERPROFILE.route, "${data.login}/followers")
-
-                        localNavController.navigate(AppScreens.USERLIST.route)
-                    }) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            modifier = Modifier.size(24.dp),
-                            painter = painterResource(id = R.drawable.add_follow_following_icon),
-                            contentDescription = "",
-                        )
-                        Text(text = "${data.followers.totalCount.formatNumber()} followers")
-                    }
-                }
-                TextButton(
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                    contentPadding = PaddingValues(start = 4.dp),
-                    onClick = {
-                        localNavController.currentBackStackEntry
-                            ?.savedStateHandle
-                            ?.set(AppScreens.USERPROFILE.route, "${data.login}/following")
-                        localNavController.navigate(AppScreens.USERLIST.route)
-                    }) {
-                    Text(
-                        text = buildAnnotatedString {
-                            append("\u2022 ${data.following.totalCount.formatNumber()} following")
-                        })
-                }
-            }
             OutlinedButton(
                 contentPadding = PaddingValues(horizontal = 24.dp),
                 shape = MaterialTheme.shapes.small,
@@ -201,7 +149,6 @@ fun Header(data: GetUserQuery.User, modifier: Modifier = Modifier) {
                 onClick = { /* Follow Button Clicked */ },
             ) {
                 Text(
-
                     text = "Follow",
                     // style = TextStyle(color = Color.Blue),
                     //   modifier = Modifier.wrapContentWidth(),

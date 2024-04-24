@@ -1,4 +1,4 @@
-query GetPinnedItems($user: String!) {
+query getUserPinnedItems($user: String!) {
     user(login: $user) {
         pinnedItems(first: 6, types: [REPOSITORY, GIST]) {
             nodes {
@@ -8,17 +8,3 @@ query GetPinnedItems($user: String!) {
         }
     }
 }
-
-
-fragment GistFields on Gist {
-    name
-    description
-    url
-    files {
-        name
-        text
-    }
-    createdAt
-    updatedAt
-}
-

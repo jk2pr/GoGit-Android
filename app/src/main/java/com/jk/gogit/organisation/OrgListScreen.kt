@@ -1,6 +1,7 @@
-package com.jk.gogit.repos
+package com.jk.gogit.organisation
 
 
+import androidx.compose.foundation.background
 import com.hoppers.networkmodule.network.AuthManager
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,11 +17,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.hoppers.fragment.Org
 import com.hoppers.fragment.Repos
 import com.jk.gogit.UiState
-import com.jk.gogit.components.DropdownFilter
+import com.jk.gogit.components.OrgItem
 import com.jk.gogit.components.Page
 import com.jk.gogit.components.RepositoryItem
 import com.jk.gogit.components.localproviders.LocalNavController
@@ -31,34 +34,23 @@ import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
-fun RepositoryListScreen() {
+fun OrgListScreen() {
 
     val localNavyController = LocalNavController.current
     val savedStateHandle = (localNavyController.previousBackStackEntry?.savedStateHandle)
     val login =
-        savedStateHandle?.get<String>(AppScreens.REPOLIST.route)
+        savedStateHandle?.get<String>(AppScreens.ORGLIST.route)
             ?: AuthManager.getLogin()!!
-    val isStarred =
-        savedStateHandle?.get<Boolean>(AppScreens.USERPROFILE.route)
-            ?: false
-    val isOrg =
-        savedStateHandle?.get<Boolean>(AppScreens.REPODETAIL.route)
-            ?: false
 
-    val viewModel =
-        koinViewModel<RepoListViewModel>(parameters = { parametersOf(login, isStarred, isOrg) })
-    Page(title = { Text(text = "Repositories") }) {
-        when (val result = viewModel.repoStateFlow.collectAsState().value) {
-            is UiState.Loading -> Box(
-                Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
+    val viewModel = koinViewModel<OrgListViewModel>(parameters = { parametersOf(login) })
+    Page(title = { Text(text = "Organizations") }) {
+        when (val result = viewModel.orgStateFlow.collectAsState().value) {
+            is UiState.Loading ->
                 CircularProgressIndicator(
                     modifier = Modifier
                         .size(50.dp)
-                        .align(Alignment.Center),
                 )
-            }
+
 
             is UiState.Error -> {}
             is UiState.Empty -> {}
@@ -67,9 +59,8 @@ fun RepositoryListScreen() {
                 val nodes = result.data as List<*>
                 if (nodes.isEmpty())
                     Text(
-                        text = "No repositories found",
+                        text = "No organizations found",
                         style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.fillMaxSize(),
                         textAlign = TextAlign.Center
                     )
                 else
@@ -78,19 +69,16 @@ fun RepositoryListScreen() {
                             .fillMaxSize()
                             .padding(horizontal = 16.dp)
                     ) {
-                        val languageMap = viewModel.languageMapStateFlow.collectAsState().value
-                        DropdownFilter(options = languageMap.keys.toList()) { language ->
-                            viewModel.setState(RepoListViewModel.MainState.FilterEvent(language))
-                        }
                         LazyColumn {
                             items(nodes.size) {
                                 if (it > 0) HorizontalDivider()
                                 nodes[it]?.let { nodes ->
-                                    RepositoryItem(nodes as Repos)
+                                    OrgItem(nodes as Org)
                                 }
                             }
                         }
                     }
+
             }
         }
     }

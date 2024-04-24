@@ -20,6 +20,7 @@ class RepoListViewModel(
     private val repoExecutor: RepoExecutor,
     private val dispatchers: DispatcherProvider,
     private val login: String,
+    private val isOrg: Boolean = false,
     private val isStarred:Boolean = false
 ) : ViewModel() {
 
@@ -41,7 +42,7 @@ class RepoListViewModel(
                 is MainState.FetchEvent -> {
                     flow {
                         emit(UiState.Loading)
-                        val r = repoExecutor.execute(user = login, isStarred = isStarred)
+                        val r = repoExecutor.execute(user = login, isStarred = isStarred, isOrg = isOrg)
                         result.clear()
                         result.addAll(r)
                         emit(UiState.Content(result))

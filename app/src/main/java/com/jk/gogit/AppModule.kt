@@ -7,6 +7,10 @@ import com.jk.gogit.feed.viewmodel.FeedViewModel
 import com.hoppers.networkmodule.network.apolloClient
 import com.hoppers.networkmodule.network.ktorHttpClient
 import com.jk.gogit.login.AuthViewModel
+import com.jk.gogit.organisation.OrgExecutor
+import com.jk.gogit.organisation.OrgListViewModel
+import com.jk.gogit.orgdetails.OrgDetailsExecutor
+import com.jk.gogit.orgdetails.OrgDetailsViewModel
 import com.jk.gogit.profile.UserProfileViewModel
 import com.jk.gogit.profile.services.UserProfileExecutor
 import com.jk.gogit.repos.RepoListViewModel
@@ -28,12 +32,15 @@ val appModule = module {
     single<SearchExecutor> { SearchExecutor(get()) }
     single<UserListExecutor> { UserListExecutor(get()) }
     single<RepoDetailExecutor> { RepoDetailExecutor(get()) }
+    single<OrgExecutor> { OrgExecutor(get()) }
+    single<OrgDetailsExecutor> { OrgDetailsExecutor(get()) }
     viewModel { params -> FeedViewModel(feedExecutor = get(), dispatchers = get(), login = params.get()) }
-    viewModel { params -> AuthViewModel() }
+    viewModel { _ -> AuthViewModel() }
     viewModel { params -> UserProfileViewModel(userProfileExecutor = get(), dispatchers = get(), login = params.get()) }
-    viewModel { params -> RepoListViewModel(repoExecutor = get(), dispatchers = get(), login = params.get(), isStarred = params.get()) }
-   // viewModel { params -> OverViewModel(overViewExecutor = get(), dispatchers = get(), login = params.get()) }
+    viewModel { params -> RepoListViewModel(repoExecutor = get(), dispatchers = get(), login = params.get(), isStarred = params.get(), isOrg = params.get()) }
     viewModel { params -> UserListViewModel(userListExecutor = get(), dispatchers = get(), login = params.get()) }
-    viewModel { params -> SearchViewModel(searchExecutor = get(), dispatchers = get()) }
+    viewModel { _ -> SearchViewModel(searchExecutor = get(), dispatchers = get()) }
     viewModel { params -> RepoDetailViewModel(repoDetailExecutor = get(), dispatchers = get(), login = params.get(), repo = params.get(), path = params.get()) }
+    viewModel { params -> OrgListViewModel(orgExecutor = get(), dispatchers = get(), login = params.get(),) }
+    viewModel { params -> OrgDetailsViewModel(orgDetailsExecutor = get(), dispatchers = get(), login = params.get(),) }
 }
