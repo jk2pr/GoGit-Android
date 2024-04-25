@@ -35,11 +35,11 @@ fun PullRequestListScreen() {
 
     val localNavyController = LocalNavController.current
     val items =
-        localNavyController.previousBackStackEntry?.savedStateHandle?.get<List<GetRepoDetailsQuery.Node1?>?>(
+        localNavyController.previousBackStackEntry?.savedStateHandle?.get<List<GetRepoDetailsQuery.Pr?>?>(
             AppScreens.PULLREQUESTS.route
         )!!
 
-    Page {
+    Page(title = { Text("Pull Requests") }) {
         if (items.isEmpty()) {
             Text("No Pull Requests")
             return@Page
@@ -63,13 +63,13 @@ fun PullRequestListScreen() {
 }
 
 @Composable
-fun PullRequestItem(node: GetRepoDetailsQuery.Node1) {
+fun PullRequestItem(node: GetRepoDetailsQuery.Pr) {
     val navController = LocalNavController.current
 
-    val message = when(node.state){
+    val message = when (node.state) {
         PullRequestState.OPEN -> "#${node.number} opened on ${node.createdAt} by ${node.author?.login}"
         PullRequestState.CLOSED -> "#${node.number} was closed by ${node.author?.login} on ${node.createdAt}"
-        PullRequestState.MERGED ->"#${node.number} by ${node.author?.login} was merged on ${node.createdAt}"
+        PullRequestState.MERGED -> "#${node.number} by ${node.author?.login} was merged on ${node.createdAt}"
         PullRequestState.UNKNOWN__ -> ""
     }
 
@@ -94,7 +94,7 @@ fun PullRequestItem(node: GetRepoDetailsQuery.Node1) {
                     R.drawable.git_pull_request_svgrepo_com
 
             ),
-            tint = if(node.state == PullRequestState.MERGED)  Color.Magenta else Color.Green,
+            tint = if (node.state == PullRequestState.MERGED) Color.Magenta else Color.Green,
             contentDescription = null,
             modifier = Modifier
                 .size(16.dp)

@@ -22,7 +22,7 @@ class RepoDetailExecutor @Inject constructor(private val client: ApolloClient) {
 
         return r.run {
             val modifiedPullRequests = this.pullRequests.copy(
-                nodes = this.pullRequests.nodes?.mapNotNull { pr ->
+                pr = this.pullRequests.pr?.mapNotNull { pr ->
                     pr?.copy(
                         createdAt = pr.createdAt.toString().toDate().formatDateRelativeToToday()
                     )

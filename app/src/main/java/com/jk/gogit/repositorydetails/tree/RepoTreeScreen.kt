@@ -1,26 +1,32 @@
 package com.jk.gogit.repositorydetails.tree
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.hoppers.GetRepoDetailsQuery
 import com.hoppers.GetRepositoryTreeQuery
+import com.jk.gogit.R
 import com.jk.gogit.UiState
 import com.jk.gogit.components.Page
 import com.jk.gogit.components.TitleText
@@ -49,14 +55,10 @@ fun RepoTreeScreen() {
                 "$path:"
             )
         })
-    val scrollState = rememberScrollState()
-    val titleKey = remember { mutableStateOf("") }
-    val titleValue = remember { mutableStateOf("") }
 
     Page(title = {
         Column {
-            Text(text = titleKey.value)
-            TitleText(title = titleValue.value)
+            Text(text = "Files")
         }
     }
     ) {
@@ -68,30 +70,49 @@ fun RepoTreeScreen() {
                 )
 
             is UiState.Content -> {
-                val repo = (result.data as GetRepositoryTreeQuery.Data).repository
-                LazyColumn(
-                    contentPadding = PaddingValues(4.dp),
+                val data = (result.data as List<*>)
+                Column(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 8.dp, vertical = 8.dp),
+                        .padding(8.dp)
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    Card(
+                        border = BorderStroke(DividerDefaults.Thickness, DividerDefaults.color),
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+                    ) {
+                        LazyColumn(
+                            contentPadding = PaddingValues(4.dp),
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp, vertical = 8.dp),
+                        ) {
 
-                    val data = repo?.`object`?.onTree?.entries.orEmpty()
-                    items(data.size) { index ->
-                        if (index > 0)
-                        // Add a line as a separator
-                            HorizontalDivider()
-                        data[index].let { tree ->
+                            items(data.size) { index ->
+                                if (index > 0)
+                                // Add a line as a separator
+                                    HorizontalDivider()
+                                data[index].let { tree ->
+                                    tree as GetRepositoryTreeQuery.Entry
+                                    Row(modifier = Modifier.padding(8.dp)) {
+                                        Icon(
+                                            painter = if (tree.type == "tree")
+                                                painterResource(id = R.drawable.folder_svgrepo_com) else painterResource(
+                                                id = R.drawable.ic_file_black_24dp
+                                            ),
+                                            tint = Color(android.graphics.Color.parseColor("#FFC36E")),
+                                            contentDescription = "Icon",
+                                            modifier = Modifier.size(24.dp)
+                                        )
+                                        Spacer(modifier = Modifier.size(8.dp))
+                                        Text(text = "${tree.name} ${tree.type}")
+                                    }
 
-                            Row {
-                                Text(text = tree.name)
+                                }
+
                             }
-
                         }
-
-
                     }
-
                 }
             }
 

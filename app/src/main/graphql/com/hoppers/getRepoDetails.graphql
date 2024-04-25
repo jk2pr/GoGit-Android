@@ -4,7 +4,7 @@ query getRepoDetails($owner_name: String!, $repoName: String!,$path:String!) {
             name
         }
         refs(refPrefix: "refs/heads/", first: 100, orderBy: { field: TAG_COMMIT_DATE, direction: DESC }) {
-            nodes {
+           commits: nodes {
                 name
                 target {
                     ... on Commit{
@@ -35,15 +35,15 @@ query getRepoDetails($owner_name: String!, $repoName: String!,$path:String!) {
         issues(states: [OPEN]) {
             totalCount
         }
-        pullRequests(states: [OPEN,CLOSED,MERGED], first: 100) {
-            nodes {
-                labels{
+        pullRequests(states: [OPEN,CLOSED,MERGED], first: 100, orderBy: { field: CREATED_AT, direction: DESC }) {
+            pr:nodes {
+                labels(first: 100){
                     nodes {
                         color
                         name
                     }
                 }
-                comments{
+                comments(first: 100){
                     nodes {
                         author {
                             __typename

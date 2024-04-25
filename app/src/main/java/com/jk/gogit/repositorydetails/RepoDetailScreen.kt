@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,11 +23,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -73,7 +68,6 @@ import com.jk.gogit.components.TitleText
 import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.navigation.AppScreens
 import com.jk.gogit.overview.InfoRow
-import com.jk.gogit.search.Chip
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -172,13 +166,13 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
         InfoRow(
             iconId = R.drawable.git_pull_request_merge,
             label = "Pull Requests",
-            count = repo.pullRequests.nodes?.size
+            count = repo.pullRequests.pr?.size
         ) {
-            repo.pullRequests.nodes?.joinToString(separator = ",") { it.toString() } // Convert to string
+            repo.pullRequests.pr?.joinToString(separator = ",") { it.toString() } // Convert to string
 
             localNavController.currentBackStackEntry
                 ?.savedStateHandle
-                ?.set(AppScreens.PULLREQUESTS.route, repo.pullRequests.nodes)
+                ?.set(AppScreens.PULLREQUESTS.route, repo.pullRequests.pr)
             localNavController.navigate(AppScreens.PULLREQUESTS.route)
         }
         InfoRow(
@@ -228,16 +222,24 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
                 localNavController.currentBackStackEntry
                     ?.savedStateHandle?.let {
                         it[AppScreens.USERPROFILE.route] = repo.owner.login
-                        it[AppScreens.REPOLIST.route] = repo.defaultBranchRef?.name.orEmpty()
+                        it[AppScreens.REPOLIST.route] = selectedBranch.value
                         it[AppScreens.REPODETAIL.route] = repo.name
                     }
                 localNavController.navigate(AppScreens.REPOTREESCREEN.route)
             }
-            InfoRow(iconId = R.drawable.commit_svgrepo_com, label = "Commits", count = repo.refs?.nodes?.find {
+            InfoRow(iconId = R.drawable.commit_svgrepo_com, label = "Commits", count = repo.refs?.commits?.find {
                 it?.name == selectedBranch.value
-            }?.target?.onCommit?.history?.totalCount)
+            }?.target?.onCommit?.history?.totalCount){
 
+                localNavController.currentBackStackEntry
+                    ?.savedStateHandle?.let {
+                                it[AppScreens.USERPROFILE.route] = repo.owner.login
+                                it[AppScreens.REPOLIST.route] = selectedBranch.value
+                                it[AppScreens.REPODETAIL.route] = repo.name
+                            }
 
+                localNavController.navigate(AppScreens.COMMITLIST.route)
+            }
         }
     }
 
@@ -252,7 +254,7 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
         style = LocalTextStyle.current.copy(color = LocalContentColor.current)
     )
     if (isSheetOpen)
-        repo.refs?.nodes.orEmpty().let {
+        repo.refs?.commits.orEmpty().let {
             BottomSheetLayout(
                 modalSheetState = modalSheetState,
                 selectedBranch = selectedBranch.value,
@@ -320,7 +322,7 @@ fun BottomSheetLayout(
     modalSheetState: SheetState,
     defaultBranch: String,
     selectedBranch: String,
-    data: List<GetRepoDetailsQuery.Node?>,
+    data: List<GetRepoDetailsQuery.Commit?>,
     onBranchSelected: (String) -> Unit,
     onDismiss: () -> Unit
 ) {

@@ -12,11 +12,11 @@ class RepoTreeExecutor @Inject constructor(private val client: ApolloClient) {
         path: String,
         page: Int,
         perPage: Int,
-    ): GetRepositoryTreeQuery.Data {
+    ): List<GetRepositoryTreeQuery.Entry> {
 
         val r = client
             .query(GetRepositoryTreeQuery(owner = user, repo = repo, ref = path))
-            .execute().data!!
+            .execute().data!!.repository?.`object`?.onTree?.entries?.sortedByDescending { it.type }.orEmpty()
 
         return r
     }
