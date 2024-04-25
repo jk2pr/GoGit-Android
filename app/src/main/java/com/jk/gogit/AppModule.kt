@@ -17,6 +17,10 @@ import com.jk.gogit.repos.RepoListViewModel
 import com.jk.gogit.repos.services.RepoExecutor
 import com.jk.gogit.repositorydetails.RepoDetailExecutor
 import com.jk.gogit.repositorydetails.RepoDetailViewModel
+import com.jk.gogit.repositorydetails.commits.CommitListExecutor
+import com.jk.gogit.repositorydetails.commits.CommitListViewModel
+import com.jk.gogit.repositorydetails.tree.RepoTreeExecutor
+import com.jk.gogit.repositorydetails.tree.RepoTreeViewModel
 import com.jk.gogit.users.services.UserListExecutor
 import com.jk.gogit.users.viewmodel.UserListViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -29,11 +33,12 @@ val appModule = module {
     single<FeedExecutor> { FeedExecutor(get()) }
     single<UserProfileExecutor> { UserProfileExecutor(get()) }
     single<RepoExecutor> { RepoExecutor(get()) }
+    single<RepoTreeExecutor> { RepoTreeExecutor(get()) }
     single<SearchExecutor> { SearchExecutor(get()) }
     single<UserListExecutor> { UserListExecutor(get()) }
     single<RepoDetailExecutor> { RepoDetailExecutor(get()) }
     single<OrgExecutor> { OrgExecutor(get()) }
-    single<OrgDetailsExecutor> { OrgDetailsExecutor(get()) }
+    single<CommitListExecutor> { CommitListExecutor(get()) }
     viewModel { params -> FeedViewModel(feedExecutor = get(), dispatchers = get(), login = params.get()) }
     viewModel { _ -> AuthViewModel() }
     viewModel { params -> UserProfileViewModel(userProfileExecutor = get(), dispatchers = get(), login = params.get()) }
@@ -43,4 +48,6 @@ val appModule = module {
     viewModel { params -> RepoDetailViewModel(repoDetailExecutor = get(), dispatchers = get(), login = params.get(), repo = params.get(), path = params.get()) }
     viewModel { params -> OrgListViewModel(orgExecutor = get(), dispatchers = get(), login = params.get(),) }
     viewModel { params -> OrgDetailsViewModel(orgDetailsExecutor = get(), dispatchers = get(), login = params.get(),) }
+    viewModel { params -> RepoTreeViewModel(repoTreeExecutor = get(), dispatchers = get(), login = params.get(), repo = params.get(), path = params.get()) }
+    viewModel { params -> CommitListViewModel(commitListExecutor = get(), dispatchers = get(), login = params.get(), path = params.get(), repo = params.get()) }
 }

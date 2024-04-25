@@ -13,6 +13,8 @@ import com.jk.gogit.profile.UserProfileScreen
 import com.jk.gogit.pullrequest.PullRequestListScreen
 import com.jk.gogit.repos.RepositoryListScreen
 import com.jk.gogit.repositorydetails.RepoDetailScreen
+import com.jk.gogit.repositorydetails.commits.CommitListScreen
+import com.jk.gogit.repositorydetails.tree.RepoTreeScreen
 import com.jk.gogit.users.UserListScreen
 
 @Composable
@@ -45,11 +47,17 @@ fun Start() {
         composable(route = AppScreens.PULLREQUESTS.route) {
             PullRequestListScreen()
         }
+        composable(route = AppScreens.REPOTREESCREEN.route) {
+            RepoTreeScreen()
+        }
         composable(route = AppScreens.ORGLIST.route) {
             OrgListScreen()
         }
         composable(route = AppScreens.ORGDETAIL.route) {
             OrgDetailsScreen()
+        }
+        composable(route = AppScreens.COMMITLIST.route) {
+            CommitListScreen()
         }
     }
 }
