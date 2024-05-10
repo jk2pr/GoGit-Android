@@ -2,6 +2,7 @@ package com.jk.gogit.repositorydetails.tree
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hoppers.GetRepositoryTreeQuery
 import com.jk.gogit.DispatcherProvider
 import com.jk.gogit.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +18,7 @@ class RepoTreeViewModel(
     private val dispatchers: DispatcherProvider,
     private val login: String,
     private val repo: String,
-    private val path: String
+    private var path: String
 ) : ViewModel() {
 
     private val _userListStateFlow = MutableStateFlow<UiState>(UiState.Empty)
@@ -27,36 +28,67 @@ class RepoTreeViewModel(
         setState(MainState.FeedEvent)
     }
 
-    private fun setState(mainState: MainState) =
+    fun setState(mainState: MainState) =
         viewModelScope.launch {
             when (mainState) {
                 is MainState.FeedEvent -> {
                     flow {
-                        emit(UiState.Loading)
+                        //  emit(UiState.Loading)
                         val result = repoTreeExecutor.execute(
-                            page = 1,
-                            perPage = 10,
                             user = login,
                             repo = repo,
                             path = path
                         )
 
-                        emit(UiState.Content(result))
+                        val pathToFile = toPathToFile(
+                            path = if (path.last() == ':') "" else path, //if this is from branch, then path is empty
+                            file = result,
+                        )
+                        emit(UiState.Content(pathToFile))
                     }.catch {
-                        emit(UiState.Error(it.message.toString()))
+                        // emit(UiState.Error(it.message.toString()))
                     }.flowOn(dispatchers.main).collect {
                         _userListStateFlow.value = it
                     }
                 }
 
                 is MainState.RefreshEvent -> {
+                    flow {
+                        val newPath = mainState.newPath
+                        emit(UiState.Loading)
+                        val finalPath = StringBuffer(path)
+                        if (finalPath.last() == ':')
+                        //this is branch
+                            finalPath.append(newPath)
+                        else
+                            finalPath.append("/$newPath")
+                        path = finalPath.toString()
+                        val result =
+                            repoTreeExecutor.execute(user = login, repo = repo, path = path)
+                        val pathToFile = toPathToFile(path = newPath, file = result)
+                        emit(UiState.Content(pathToFile))
+                    }.catch {
+                        emit(UiState.Error(it.message.toString()))
+                    }.flowOn(dispatchers.main).collect {
+                        _userListStateFlow.value = it
+                    }
+
                 }
             }
         }
 
+    private fun toPathToFile(
+        path: String,
+        file: List<GetRepositoryTreeQuery.Entry>,
+    ) = PathToFile(
+        path = path,
+        file = file,
+    )
+
+
     sealed class MainState {
-        object FeedEvent : MainState()
-        object RefreshEvent : MainState()
+        data object FeedEvent : MainState()
+        class RefreshEvent(val newPath: String) : MainState()
     }
 
 

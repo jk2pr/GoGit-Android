@@ -32,8 +32,30 @@ query getRepoDetails($owner_name: String!, $repoName: String!,$path:String!) {
         }
         stargazerCount
         forkCount
-        issues(states: [OPEN]) {
+        issues(states: [OPEN, CLOSED], first: 100) {
             totalCount
+            allIssues : nodes {
+                title
+                url
+                createdAt
+                updatedAt
+                closedAt
+                state
+                author {
+                    login
+                }
+                body
+                number
+                comments {
+                    totalCount
+                }
+                labels(first: 5) {
+                    edges {
+                        node {
+                            name
+                        }
+                    }
+                }}
         }
         pullRequests(states: [OPEN,CLOSED,MERGED], first: 100, orderBy: { field: CREATED_AT, direction: DESC }) {
             pr:nodes {

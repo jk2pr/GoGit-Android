@@ -1,5 +1,6 @@
 package com.jk.gogit.extensions
 
+import androidx.compose.ui.graphics.Color
 import org.joda.time.DateTime
 import java.text.DecimalFormat
 import java.time.LocalDate
@@ -45,7 +46,9 @@ fun Float.format(): String {
         "%.1f".format(this)
     }
 }
-
+fun String.toColor(): Color {
+    return Color(android.graphics.Color.parseColor(this))
+}
 
     /*return when {
         this >= 1000000 -> (this / 1000000).toDouble().roundToInt().toString() + "M"

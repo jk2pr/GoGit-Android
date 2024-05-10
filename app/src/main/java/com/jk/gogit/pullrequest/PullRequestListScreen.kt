@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -24,22 +23,31 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.hoppers.GetRepoDetailsQuery
-import com.hoppers.type.PullRequestState
 import com.jk.gogit.R
 import com.jk.gogit.components.Page
 import com.jk.gogit.components.localproviders.LocalNavController
+import com.jk.gogit.extensions.toColor
 import com.jk.gogit.navigation.AppScreens
+
+
+val GREEN_500 = "#1B5E20".toColor()
+val MAGENTA_500 = "#8250F4".toColor()
 
 @Composable
 fun PullRequestListScreen() {
 
     val localNavyController = LocalNavController.current
     val items =
-        localNavyController.previousBackStackEntry?.savedStateHandle?.get<List<GetRepoDetailsQuery.Pr?>?>(
+        localNavyController.previousBackStackEntry?.savedStateHandle?.get<Any>(
             AppScreens.PULLREQUESTS.route
         )!!
+    items as List<*>
 
-    Page(title = { Text("Pull Requests") }) {
+    Page(title = {
+        val title = if (items.firstOrNull() is GetRepoDetailsQuery.Pr) "Pull Request" else "Issues"
+        Text(title)
+    }
+    ) {
         if (items.isEmpty()) {
             Text("No Pull Requests")
             return@Page
@@ -54,7 +62,65 @@ fun PullRequestListScreen() {
                 // Add a line as a separator
                     HorizontalDivider()
                 items[index]?.let {
-                    PullRequestItem(it)
+                    val title: String
+                    val body: String
+                    val number: Int
+                    val createdAt: String
+                    val authorLogin: String
+                    val state: String
+                    if (it is GetRepoDetailsQuery.Pr) {
+                        title = it.title
+                        body = it.body
+                        number = it.number
+                        createdAt = it.createdAt.toString()
+                        authorLogin = it.author?.login.orEmpty()
+                        state = it.state.rawValue
+                    } else {
+                        it as GetRepoDetailsQuery.AllIssue
+                        title = it.title
+                        body = it.body
+                        number = it.number
+                        createdAt = it.createdAt.toString()
+                        authorLogin = it.author?.login.orEmpty()
+                        state = it.state.rawValue
+
+                    }
+
+                    val message = when (state) {
+                        "OPEN" -> "#${number} opened on $createdAt by $authorLogin"
+                        "CLOSED" -> "#${number} was closed by $authorLogin on $createdAt"
+                        "MERGED" -> "#${number} by $authorLogin was merged on $createdAt"
+                        else -> ""
+                    }
+
+                    val imageVector =
+                        ImageVector.vectorResource(
+                            if (it is GetRepoDetailsQuery.Pr)  // Handle PR
+                                when (state) {
+                                    "OPEN" -> R.drawable.git_pull_request_merge
+                                    "CLOSED" -> R.drawable.git_pull_request_closed_svgrepo_com
+                                    else -> R.drawable.git_pull_request_svgrepo_com
+                                }
+                            else
+                                if (state == "OPEN") R.drawable.issue_opened_16 else R.drawable.issue_closed_svgrepo_com
+
+                        )
+                    val tint =
+                        if (it is GetRepoDetailsQuery.Pr)
+                            when (state) {
+                                "OPEN" -> GREEN_500
+                                "MERGED" -> MAGENTA_500
+                                else -> Color.Red
+                            }
+                        else if (state == "OPEN") MAGENTA_500 else GREEN_500
+
+                    PullRequestItem(
+                        title = title,
+                        body = body,
+                        message = "$state $message",
+                        tint = tint,
+                        imageVector = imageVector
+                    )
                 }
             }
         }
@@ -63,15 +129,14 @@ fun PullRequestListScreen() {
 }
 
 @Composable
-fun PullRequestItem(node: GetRepoDetailsQuery.Pr) {
+fun PullRequestItem(
+    title: String, body: String,
+    message: String, tint: Color,
+    imageVector: ImageVector
+) {
     val navController = LocalNavController.current
 
-    val message = when (node.state) {
-        PullRequestState.OPEN -> "#${node.number} opened on ${node.createdAt} by ${node.author?.login}"
-        PullRequestState.CLOSED -> "#${node.number} was closed by ${node.author?.login} on ${node.createdAt}"
-        PullRequestState.MERGED -> "#${node.number} by ${node.author?.login} was merged on ${node.createdAt}"
-        PullRequestState.UNKNOWN__ -> ""
-    }
+
 
 
     Row(
@@ -87,14 +152,8 @@ fun PullRequestItem(node: GetRepoDetailsQuery.Pr) {
 
     ) {
         Icon(
-            imageVector = ImageVector.vectorResource(
-                id = if (node.state == PullRequestState.OPEN)
-                    R.drawable.git_pull_request_merge
-                else
-                    R.drawable.git_pull_request_svgrepo_com
-
-            ),
-            tint = if (node.state == PullRequestState.MERGED) Color.Magenta else Color.Green,
+            imageVector = imageVector,
+            tint = tint,
             contentDescription = null,
             modifier = Modifier
                 .size(16.dp)
@@ -103,7 +162,7 @@ fun PullRequestItem(node: GetRepoDetailsQuery.Pr) {
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = node.title.trim(),
+                    text = title.trim(),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.labelLarge,
@@ -111,7 +170,7 @@ fun PullRequestItem(node: GetRepoDetailsQuery.Pr) {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = node.body,
+                    text = body,
                     maxLines = 1,
                     style = MaterialTheme.typography.labelMedium.merge(Color.Gray),
                 )

@@ -10,8 +10,6 @@ class RepoTreeExecutor @Inject constructor(private val client: ApolloClient) {
         user: String,
         repo: String,
         path: String,
-        page: Int,
-        perPage: Int,
     ): List<GetRepositoryTreeQuery.Entry> {
 
         val r = client

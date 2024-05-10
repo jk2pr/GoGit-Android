@@ -47,7 +47,7 @@ fun RepositoryListScreen() {
 
     val viewModel =
         koinViewModel<RepoListViewModel>(parameters = { parametersOf(login, isStarred, isOrg) })
-    Page(title = { Text(text = "Repositories") }) {
+    Page(title = { Text(text = if (isStarred) "Starred Repositories" else "Repositories") }) {
         when (val result = viewModel.repoStateFlow.collectAsState().value) {
             is UiState.Loading -> Box(
                 Modifier.fillMaxSize(),

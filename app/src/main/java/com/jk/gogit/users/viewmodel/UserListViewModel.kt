@@ -24,19 +24,36 @@ class UserListViewModel(
     init {
         setState(MainState.FeedEvent)
     }
+
     private fun setState(mainState: MainState) =
         viewModelScope.launch {
             when (mainState) {
                 is MainState.FeedEvent -> {
                     flow {
                         emit(UiState.Loading)
-                        val type = login.split("/").last()
-                        val result = userListExecutor.execute(
-                            page = 1,
-                            perPage = 10,
-                            user = login,
-                            type = type
-                        )
+                        val params = login.split("/")
+                        val user = params.first()
+                        var requestType = ""
+                        var repo = ""
+                        if (params.size == 3)
+                            repo = params[1]
+                        requestType = params.last()
+
+
+                        val result = if (requestType == "stargazers")
+                            userListExecutor.executeStargazers(
+                                page = 1,
+                                perPage = 10,
+                                user = user,
+                                repoName = repo,
+                            )
+                        else
+                            userListExecutor.execute(
+                                page = 1,
+                                perPage = 10,
+                                user = user,
+                                type = requestType
+                            )
                         emit(UiState.Content(result))
                     }.catch {
                         emit(UiState.Error(it.message.toString()))

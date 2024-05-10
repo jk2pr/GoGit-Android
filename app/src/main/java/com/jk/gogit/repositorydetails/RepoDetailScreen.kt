@@ -61,6 +61,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.hoppers.GetRepoDetailsQuery
+import com.hoppers.type.IssueState
 import com.jk.gogit.R
 import com.jk.gogit.UiState
 import com.jk.gogit.components.Page
@@ -160,8 +161,14 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
         InfoRow(
             iconId = R.drawable.issue_opened_16,
             label = "Issue",
-            count = repo.issues.totalCount
-        )
+            count = repo.issues.allIssues?.count { it?.state == IssueState.OPEN }
+        ){
+            repo.issues.allIssues?.joinToString(separator = ",") { it.toString() }
+            localNavController.currentBackStackEntry
+                ?.savedStateHandle
+                ?.set(AppScreens.PULLREQUESTS.route, repo.issues.allIssues)
+            localNavController.navigate(AppScreens.PULLREQUESTS.route)
+        }
 
         InfoRow(
             iconId = R.drawable.git_pull_request_merge,
@@ -180,7 +187,13 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
             label = "Stars",
             count = repo.stargazerCount,
             tint = Color(android.graphics.Color.parseColor("#FFA500")),
-        )
+        ){
+            localNavController.currentBackStackEntry
+                ?.savedStateHandle
+                ?.set(AppScreens.USERPROFILE.route, "${repo.owner.login}/${repo.name}/stargazers")
+            localNavController.navigate(AppScreens.USERLIST.route)
+
+        }
         InfoRow(iconId = R.drawable.baseline_fork_left_24, label = "Forks", count = repo.forkCount)
         InfoRow(
             iconId = R.drawable.organization_65,
