@@ -151,8 +151,7 @@ fun RepoDetailScreen() {
 @Composable
 fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
     val localNavController = LocalNavController.current
-    val savedStateHandle = localNavController.currentBackStackEntry
-        ?.savedStateHandle
+    val savedStateHandle = localNavController.currentBackStackEntry?.savedStateHandle
     val modalSheetState = rememberModalBottomSheetState()
     var isSheetOpen by rememberSaveable { mutableStateOf(false) }
     val selectedBranch = remember { mutableStateOf(repo.defaultBranchRef?.name.orEmpty()) }
@@ -166,9 +165,9 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
             label = "Issue",
             count = repo.issues.allIssues?.count { it?.state == IssueState.OPEN }
         ){
-            repo.issues.allIssues?.joinToString(separator = ",") { it.toString() }
-            localNavController.currentBackStackEntry
-                ?.savedStateHandle
+            if (repo.issues.allIssues.isNullOrEmpty())
+                return@InfoRow
+            savedStateHandle
                 ?.set(AppScreens.PULLREQUESTS.route, repo.issues.allIssues)
             localNavController.navigate(AppScreens.PULLREQUESTS.route)
         }
@@ -178,10 +177,9 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
             label = "Pull Requests",
             count = repo.pullRequests.pr?.size
         ) {
-            repo.pullRequests.pr?.joinToString(separator = ",") { it.toString() } // Convert to string
-
-            localNavController.currentBackStackEntry
-                ?.savedStateHandle
+            if (repo.pullRequests.pr.isNullOrEmpty())
+                return@InfoRow
+            savedStateHandle
                 ?.set(AppScreens.PULLREQUESTS.route, repo.pullRequests.pr)
             localNavController.navigate(AppScreens.PULLREQUESTS.route)
         }
@@ -191,19 +189,18 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
             count = repo.stargazerCount,
             tint = Color(android.graphics.Color.parseColor("#FFA500")),
         ){
-           savedStateHandle?.let {
-               it[NavigationArgs.USER_NAME] = repo.owner.login
-               it[NavigationArgs.REPO_NAME] = repo.name
-               it[NavigationArgs.FILTER] = "stargazers"
-           }
-            localNavController.navigate(AppScreens.USERLIST.route)
-
+            if (repo.stargazerCount > 0) {
+                savedStateHandle?.let {
+                    it[NavigationArgs.USER_NAME] = repo.owner.login
+                    it[NavigationArgs.REPO_NAME] = repo.name
+                    it[NavigationArgs.FILTER] = "stargazers"
+                }
+                localNavController.navigate(AppScreens.USERLIST.route)
+            }
         }
         InfoRow(iconId = R.drawable.baseline_fork_left_24, label = "Forks", count = repo.forkCount)
         {
-
-                val savedStateHandle =
-                    localNavController.currentBackStackEntry?.savedStateHandle
+            if (repo.forkCount > 0) {
                 val keys = savedStateHandle?.keys()
                 keys?.forEach { savedStateHandle.remove<Any>(it) }
 
@@ -213,7 +210,7 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
                     it[NavigationArgs.FILTER] = "Forks"
                 }
                 localNavController.navigate(AppScreens.REPOLIST.route)
-
+            }
         }
     /*    InfoRow(
             iconId = R.drawable.organization_65,
@@ -237,18 +234,19 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
             iconId = R.drawable.baseline_remove_red_eye_24,
             label = "Watchers",
             count = repo.watchers.totalCount
-        ){
-            val keys = savedStateHandle?.keys()
-            keys?.forEach { savedStateHandle.remove<Any>(it) }
+        ) {
+            if (repo.watchers.totalCount > 0) {
+                val keys = savedStateHandle?.keys()
+                keys?.forEach { savedStateHandle.remove<Any>(it) }
 
-            savedStateHandle?.let {
-                it[NavigationArgs.USER_NAME] = repo.owner.login
-                it[NavigationArgs.REPO_NAME] = repo.name
-                it[NavigationArgs.FILTER] = "watchers"
+                savedStateHandle?.let {
+                    it[NavigationArgs.USER_NAME] = repo.owner.login
+                    it[NavigationArgs.REPO_NAME] = repo.name
+                    it[NavigationArgs.FILTER] = "watchers"
+                }
+                localNavController.navigate(AppScreens.USERLIST.route)
             }
-            localNavController.navigate(AppScreens.USERLIST.route)
         }
-
         HorizontalDivider()
         Column {
             Row(

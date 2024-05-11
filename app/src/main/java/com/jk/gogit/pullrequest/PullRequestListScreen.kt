@@ -42,14 +42,15 @@ fun PullRequestListScreen() {
             AppScreens.PULLREQUESTS.route
         )!!
     items as List<*>
-
-    Page(title = {
-        val title = if (items.firstOrNull() is GetRepoDetailsQuery.Pr) "Pull Request" else "Issues"
-        Text(title)
-    }
-    ) {
+    val tt =
+        when (items.first()) {
+            null -> "PullRequest"
+            is GetRepoDetailsQuery.Pr -> "PullRequest"
+            else -> "Issues"
+        }
+    Page(title = { Text(tt) }) {
         if (items.isEmpty()) {
-            Text("No Pull Requests")
+            Text("No $tt found")
             return@Page
         }
         LazyColumn(
@@ -134,11 +135,6 @@ fun PullRequestItem(
     message: String, tint: Color,
     imageVector: ImageVector
 ) {
-    val navController = LocalNavController.current
-
-
-
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
