@@ -1,7 +1,6 @@
 package com.jk.gogit.repositorydetails.commits
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,8 +21,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,33 +36,20 @@ import com.jk.gogit.repositorydetails.commits.CommitListExecutor.CommitData
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CommitListScreen() {
-    val hasInternetConnection =
-        remember { mutableStateOf(true) } // Assuming internet connection by default
 
     val localNavyController = LocalNavController.current
     val savedStateHandle = (localNavyController.previousBackStackEntry?.savedStateHandle)
 
 
     val login =
-        savedStateHandle?.get<String>(AppScreens.USERPROFILE.route)
-            ?: AuthManager.getLogin()!!
-    val branchName =
-        savedStateHandle?.get<String>(AppScreens.REPOLIST.route)
-            ?: false
-    val repoName =
-        savedStateHandle?.get<String>(AppScreens.REPODETAIL.route)
-            ?: false
-    val viewModel =
-        koinViewModel<CommitListViewModel>(parameters = {
-            parametersOf(
-                login,
-                branchName,
-                repoName
-            )
-        })
+        savedStateHandle?.get<String>(AppScreens.USERPROFILE.route) ?: AuthManager.getLogin()!!
+    val branchName = savedStateHandle?.get<String>(AppScreens.REPOLIST.route) ?: false
+    val repoName = savedStateHandle?.get<String>(AppScreens.REPODETAIL.route) ?: false
+    val viewModel = koinViewModel<CommitListViewModel>(
+        parameters = { parametersOf(login, branchName, repoName) }
+    )
 
 
     Page(title = {
@@ -113,7 +97,7 @@ fun CommitListScreen() {
                                 items(com.size) { index ->
                                     if (index > 0)
                                     // Add a line as a separator
-
+                                        HorizontalDivider()
                                     CommitsItem(commitData)
                                 }
                             }
@@ -171,13 +155,13 @@ private fun CommitsItem(commit: CommitData) {
                             modifier = modifier.widthIn(max = 220.dp)
                         )
 
-                            Text(
-                                modifier = modifier
-                                        .align(Alignment.TopEnd),
-                                style = MaterialTheme.typography.labelMedium,
-                                text = commit?.oid.toString().trim().substring(0, 7),
+                        Text(
+                            modifier = modifier
+                                .align(Alignment.TopEnd),
+                            style = MaterialTheme.typography.labelMedium,
+                            text = commit?.oid.toString().trim().substring(0, 7),
 
-                                )
+                            )
 
                     }
                 }
