@@ -42,7 +42,7 @@ val appModule = module {
     viewModel { params -> FeedViewModel(feedExecutor = get(), dispatchers = get(), login = params.get()) }
     viewModel { _ -> AuthViewModel() }
     viewModel { params -> UserProfileViewModel(userProfileExecutor = get(), dispatchers = get(), login = params.get()) }
-    viewModel { params -> RepoListViewModel(repoExecutor = get(), dispatchers = get(), login = params.get(), isStarred = params.get(), isOrg = params.get()) }
+    viewModel { params -> RepoListViewModel(repoExecutor = get(), dispatchers = get(), login = params.get(), isStarred = params.get(), isOrg = params.get(), filter = params.get(), repoName = params.get()) }
     viewModel { params -> UserListViewModel(userListExecutor = get(), dispatchers = get(), login = params.get()) }
     viewModel { _ -> SearchViewModel(searchExecutor = get(), dispatchers = get()) }
     viewModel { params -> RepoDetailViewModel(repoDetailExecutor = get(), dispatchers = get(), login = params.get(), repo = params.get(), path = params.get()) }

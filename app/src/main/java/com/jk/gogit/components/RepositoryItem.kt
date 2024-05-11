@@ -29,7 +29,8 @@ fun RepositoryItem(repo: Repos) {
     val localNavController = LocalNavController.current
     Column(
         modifier = Modifier
-            .fillMaxWidth().padding(vertical = 8.dp)
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
             .clickable {
                 localNavController.currentBackStackEntry
                     ?.savedStateHandle?.let {
@@ -42,9 +43,14 @@ fun RepositoryItem(repo: Repos) {
     ) {
         Text(
             text = repo.repoName,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.primary),
             modifier = Modifier.padding(bottom = 4.dp)
         )
+        if (repo.isFork)
+            Text(
+                text = "Forked from ${repo.owner.login}/${repo.repoName}",
+                style = MaterialTheme.typography.bodySmall.copy(MaterialTheme.colorScheme.primary)
+            )
         if (!repo.description.isNullOrBlank()) {
             Text(
                 text = repo.description,
@@ -53,6 +59,7 @@ fun RepositoryItem(repo: Repos) {
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
+
         }
         Row(
             modifier = Modifier.fillMaxWidth(),

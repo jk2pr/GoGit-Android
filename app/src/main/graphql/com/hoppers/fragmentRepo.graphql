@@ -7,6 +7,13 @@ fragment  Repos on Repository {
         login
         avatarUrl
     }
+    isFork
+    parent {
+        name
+        owner {
+            login
+        }
+    }
     description
     url
     primaryLanguage {

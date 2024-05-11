@@ -1,5 +1,5 @@
 query SearchThings($queryString: String!, $type: SearchType!) {
-    search(query: $queryString, type: $type, first: 10) {
+    search(query: $queryString, type: $type, first: 100) {
         repositoryCount
         nodes {
             ... Repos
