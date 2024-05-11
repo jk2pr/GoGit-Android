@@ -28,6 +28,7 @@ import com.jk.gogit.components.Page
 import com.jk.gogit.components.UserItem
 import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.navigation.AppScreens
+import com.jk.gogit.navigation.NavigationArgs
 import com.jk.gogit.users.viewmodel.UserListViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -37,14 +38,18 @@ fun UserListScreen() {
     val hasInternetConnection =
         remember { mutableStateOf(true) } // Assuming internet connection by default
 
-    val localNavyController = LocalNavController.current
-    val login =
-        localNavyController.previousBackStackEntry?.savedStateHandle?.get<String>(AppScreens.USERPROFILE.route)!!
+    val savedStateHandle =
+        LocalNavController.current.previousBackStackEntry?.savedStateHandle ?: return
+    val login = savedStateHandle.get<String>(NavigationArgs.USER_NAME)!!
 
-    val viewModel = koinViewModel<UserListViewModel>(parameters = { parametersOf(login) })
+    val filter = savedStateHandle.get<String>(NavigationArgs.FILTER).orEmpty()
+    val repoName = savedStateHandle.get<String>(NavigationArgs.REPO_NAME).orEmpty()
+
+    val viewModel =
+        koinViewModel<UserListViewModel>(parameters = { parametersOf(login, filter, repoName) })
 
     Page(title = {
-        Text(text = login.split("/").last().replaceFirstChar { it.uppercase() })
+        Text(text = filter.replaceFirstChar { it.uppercase() })
     }) {
         Box(
             modifier = Modifier
@@ -52,22 +57,6 @@ fun UserListScreen() {
                 .padding(horizontal = 16.dp),
             contentAlignment = Alignment.Center
         ) {
-
-            if (!hasInternetConnection.value) {
-                Text(
-                    text = stringResource(id = R.string.no_internet),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    textAlign = TextAlign.Center,
-                    fontSize = 20.sp,
-                    //  fontFamily = FontFamily(Font(R.font.bebasneue_regular)),
-                    color = Color.Black
-                )
-            }
-
-
-
             when (val result = viewModel.userListStateFlow.collectAsState().value) {
                 is UiState.Loading -> {
                     CircularProgressIndicator(

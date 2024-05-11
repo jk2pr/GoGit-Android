@@ -45,9 +45,14 @@ import com.jk.gogit.R
 import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.extensions.formatNumber
 import com.jk.gogit.navigation.AppScreens
+import com.jk.gogit.navigation.NavigationArgs
 
 @Composable
-fun UserProfileHeader(data: GetUserQuery.User, modifier: Modifier = Modifier, onFollow: (Boolean)-> Unit ) {
+fun UserProfileHeader(
+    data: GetUserQuery.User,
+    modifier: Modifier = Modifier,
+    onFollow: (Boolean) -> Unit
+) {
     val localNavController = LocalNavController.current
     val loggedInUser = AuthManager.getLogin()
 
@@ -153,8 +158,10 @@ fun UserProfileHeader(data: GetUserQuery.User, modifier: Modifier = Modifier, on
                     contentPadding = PaddingValues(0.dp),
                     onClick = {
                         localNavController.currentBackStackEntry
-                            ?.savedStateHandle
-                            ?.set(AppScreens.USERPROFILE.route, "${data.login}/followers")
+                            ?.savedStateHandle?.let {
+                                it[NavigationArgs.USER_NAME] = data.login
+                                it[NavigationArgs.FILTER] = "followers"
+                            }
 
                         localNavController.navigate(AppScreens.USERLIST.route)
                     }) {
@@ -172,8 +179,11 @@ fun UserProfileHeader(data: GetUserQuery.User, modifier: Modifier = Modifier, on
                     contentPadding = PaddingValues(start = 4.dp),
                     onClick = {
                         localNavController.currentBackStackEntry
-                            ?.savedStateHandle
-                            ?.set(AppScreens.USERPROFILE.route, "${data.login}/following")
+                            ?.savedStateHandle?.let {
+                                it[NavigationArgs.USER_NAME] = data.login
+                                it[NavigationArgs.FILTER] = "following"
+                            }
+
                         localNavController.navigate(AppScreens.USERLIST.route)
                     }) {
                     Text(
@@ -183,23 +193,23 @@ fun UserProfileHeader(data: GetUserQuery.User, modifier: Modifier = Modifier, on
                 }
             }
             if (data.login != loggedInUser)
-            OutlinedButton(
-                contentPadding = PaddingValues(horizontal = 24.dp),
-                shape = MaterialTheme.shapes.small,
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                //colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.outline, contentColor = MaterialTheme.colorScheme.onPrimary),
-                onClick = {
-                    onFollow(data.viewerIsFollowing)
+                OutlinedButton(
+                    contentPadding = PaddingValues(horizontal = 24.dp),
+                    shape = MaterialTheme.shapes.small,
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                    //colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.outline, contentColor = MaterialTheme.colorScheme.onPrimary),
+                    onClick = {
+                        onFollow(data.viewerIsFollowing)
 
-                },
-            ) {
-                Text(
-                    text = if(data.viewerIsFollowing) "unfollow" else "Follow",
-                    // style = TextStyle(color = Color.Blue),
-                    //   modifier = Modifier.wrapContentWidth(),
-                    textAlign = TextAlign.Center
-                )
-            }
+                    },
+                ) {
+                    Text(
+                        text = if (data.viewerIsFollowing) "unfollow" else "Follow",
+                        // style = TextStyle(color = Color.Blue),
+                        //   modifier = Modifier.wrapContentWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                }
         }
     }
     HorizontalDivider()

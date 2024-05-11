@@ -151,6 +151,8 @@ fun RepoDetailScreen() {
 @Composable
 fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
     val localNavController = LocalNavController.current
+    val savedStateHandle = localNavController.currentBackStackEntry
+        ?.savedStateHandle
     val modalSheetState = rememberModalBottomSheetState()
     var isSheetOpen by rememberSaveable { mutableStateOf(false) }
     val selectedBranch = remember { mutableStateOf(repo.defaultBranchRef?.name.orEmpty()) }
@@ -189,9 +191,11 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
             count = repo.stargazerCount,
             tint = Color(android.graphics.Color.parseColor("#FFA500")),
         ){
-            localNavController.currentBackStackEntry
-                ?.savedStateHandle
-                ?.set(AppScreens.USERPROFILE.route, "${repo.owner.login}/${repo.name}/stargazers")
+           savedStateHandle?.let {
+               it[NavigationArgs.USER_NAME] = repo.owner.login
+               it[NavigationArgs.REPO_NAME] = repo.name
+               it[NavigationArgs.FILTER] = "stargazers"
+           }
             localNavController.navigate(AppScreens.USERLIST.route)
 
         }
@@ -211,16 +215,39 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
                 localNavController.navigate(AppScreens.REPOLIST.route)
 
         }
-        InfoRow(
+    /*    InfoRow(
             iconId = R.drawable.organization_65,
             label = "Contributors",
             count = repo.collaborators?.totalCount ?: 0
-        )
+        ){
+
+                val keys = savedStateHandle?.keys()
+                keys?.forEach { savedStateHandle.remove<Any>(it) }
+
+                savedStateHandle?.let {
+                    it[NavigationArgs.USER_NAME] = repo.owner.login
+                    it[NavigationArgs.REPO_NAME] = repo.name
+                    it[NavigationArgs.FILTER] = "contributors"
+                }
+                localNavController.navigate(AppScreens.USERLIST.route)
+
+
+        }*/
         InfoRow(
             iconId = R.drawable.baseline_remove_red_eye_24,
             label = "Watchers",
             count = repo.watchers.totalCount
-        )
+        ){
+            val keys = savedStateHandle?.keys()
+            keys?.forEach { savedStateHandle.remove<Any>(it) }
+
+            savedStateHandle?.let {
+                it[NavigationArgs.USER_NAME] = repo.owner.login
+                it[NavigationArgs.REPO_NAME] = repo.name
+                it[NavigationArgs.FILTER] = "watchers"
+            }
+            localNavController.navigate(AppScreens.USERLIST.route)
+        }
 
         HorizontalDivider()
         Column {
