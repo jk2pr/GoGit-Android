@@ -1,0 +1,12 @@
+query getForks($ownerName:String!,$repoName:String!) {
+    repository(owner: $ownerName, name: $repoName) {
+        forks(first: 100) {
+            totalCount
+
+                nodes {
+                    ...Repos
+                }
+            }
+        }
+
+}

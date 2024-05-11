@@ -1,0 +1,15 @@
+#this is populare repo and starred repo
+query GetUserPopularRepos($username: String!, $cursor: String, $first: Int!) {
+    user(login: $username) {
+        repositories(first: $first, orderBy: {field: STARGAZERS, direction: DESC}, after: $cursor) {
+            totalCount
+            nodes {
+                ... Repos
+            }
+            pageInfo {
+                endCursor
+                hasNextPage
+            }
+        }
+    }
+}

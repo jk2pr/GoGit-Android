@@ -1,0 +1,78 @@
+[versions]
+agp = "8.4.0"
+kotlin = "1.9.22"
+coreKtx = "1.13.0"
+junit = "4.13.2"
+junitVersion = "1.1.5"
+espressoCore = "3.5.1"
+lifecycleRuntimeKtx = "2.7.0"
+activityCompose = "1.9.0"
+composeBom = "2024.04.01"
+firebasebom = "32.8.1"
+loggingInterceptor = "4.9.1"
+markdownviewAndroid = "0.4.1"
+navigationRuntimeKtx = "2.7.7"
+navigationCompose = "2.7.7"
+firebaseAuthKtx = "22.3.1"
+googleServices = "4.4.1"
+ktor = "2.3.9"
+koin-bom = "3.5.3"
+kotlinxSerialization = "1.8.2"
+constraintlayout = "1.0.1"
+coil ="2.2.2"
+appoloCleint = "4.0.0-beta.5"
+jodaTime = "2.12.5"
+appcompat = "1.6.1"
+material = "1.11.0"
+
+[libraries]
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebasebom" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
+coil = {group = "io.coil-kt", name = "coil-compose", version.ref = "coil"}
+joda-time = {group = "joda-time", name = "joda-time", version.ref = "jodaTime"}
+
+ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor" }
+ktor-content-negotioation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+#kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlin" }
+ktor-clientloggging = { group = "io.ktor", name = "ktor-client-logging-jvm", version.ref = "ktor" }
+ktor-client-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor" }
+
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
+koin-core = { module = "io.insert-koin:koin-core" }
+koin-android = { module = "io.insert-koin:koin-android" }
+koin-androidx-navigation = { module = "io.insert-koin:koin-androidx-navigation" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose" }
+androidx-constraintlayout-compose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayout" }
+
+logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
+markdownview-android = { group = "com.github.jeziellago", name = "compose-markdown", version.ref = "markdownviewAndroid" }
+
+apollo-runtime = { group = "com.apollographql.apollo3",name = "apollo-runtime", version.ref = "appoloCleint" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+kotlinx-serializtion = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+appolo-client-android = { id = "com.apollographql.apollo3" , version.ref = "appoloCleint" }
+

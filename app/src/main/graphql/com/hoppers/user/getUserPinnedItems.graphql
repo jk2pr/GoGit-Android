@@ -1,0 +1,10 @@
+query getUserPinnedItems($user: String!) {
+    user(login: $user) {
+        pinnedItems(first: 6, types: [REPOSITORY, GIST]) {
+            nodes {
+                ... Repos
+                ... GistFields
+            }
+        }
+    }
+}

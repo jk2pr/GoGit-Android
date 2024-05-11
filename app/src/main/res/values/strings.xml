@@ -112,7 +112,7 @@
     <string name="edit_your_profile">Edit Profile</string>
     <string name="name">Name</string>
     <string name="reset">Reset</string>
-    <string name="terms_condition">By logging you indicate that you have read and agree to our Privacy Policy</string>
+    <string name="terms_condition">Your login indicates acceptance of our Privacy Policy.</string>
     <string name="title_activity_pp_activitiy">Privacy Policy</string>
 
 </resources>
