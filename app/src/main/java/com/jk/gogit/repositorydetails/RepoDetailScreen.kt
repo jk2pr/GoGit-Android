@@ -68,6 +68,7 @@ import com.jk.gogit.components.Page
 import com.jk.gogit.components.TitleText
 import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.navigation.AppScreens
+import com.jk.gogit.navigation.NavigationArgs
 import com.jk.gogit.overview.InfoRow
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.launch
@@ -195,6 +196,21 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
 
         }
         InfoRow(iconId = R.drawable.baseline_fork_left_24, label = "Forks", count = repo.forkCount)
+        {
+
+                val savedStateHandle =
+                    localNavController.currentBackStackEntry?.savedStateHandle
+                val keys = savedStateHandle?.keys()
+                keys?.forEach { savedStateHandle.remove<Any>(it) }
+
+                savedStateHandle?.let {
+                    it[AppScreens.REPOLIST.route] = repo.owner.login
+                    it[NavigationArgs.REPO_NAME] = repo.name
+                    it[NavigationArgs.FILTER] = "Forks"
+                }
+                localNavController.navigate(AppScreens.REPOLIST.route)
+
+        }
         InfoRow(
             iconId = R.drawable.organization_65,
             label = "Contributors",
@@ -308,6 +324,11 @@ fun RepoDetailHeader(repo: GetRepoDetailsQuery.Repository) {
             Text(text = repo.owner.login)
         }
         TitleText(title = repo.name)
+        if (repo.isFork)
+            Text(
+                text = "Forked from ${repo.owner.login}/${repo.name}",
+                style = MaterialTheme.typography.bodySmall.copy(MaterialTheme.colorScheme.primary)
+            )
         Spacer(modifier = Modifier.height(8.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(

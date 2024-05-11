@@ -32,6 +32,7 @@ query getRepoDetails($owner_name: String!, $repoName: String!,$path:String!) {
         }
         stargazerCount
         forkCount
+        isFork
         issues(states: [OPEN, CLOSED], first: 100) {
             totalCount
             allIssues : nodes {

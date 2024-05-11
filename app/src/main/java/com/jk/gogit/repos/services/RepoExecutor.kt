@@ -1,6 +1,7 @@
 package com.jk.gogit.repos.services
 
 import com.apollographql.apollo3.ApolloClient
+import com.hoppers.GetForksQuery
 import com.hoppers.GetOrgReposQuery
 import com.hoppers.GetUserReposQuery
 import com.hoppers.GetUserStarredReposQuery
@@ -16,7 +17,9 @@ class RepoExecutor
     suspend fun execute(
         user: String,
         isStarred: Boolean = false,
-        isOrg: Boolean = false
+        isOrg: Boolean = false,
+        filter:String? = null,
+        repoName: String = ""
     ): List<Repos?> {
 
         val response = if (isOrg)
@@ -24,6 +27,12 @@ class RepoExecutor
                 .execute().data?.organization?.repositories?.nodes?.map {
                     it?.repos as Repos
                 }
+        else
+            if (filter == "Forks")
+                client.query(GetForksQuery(ownerName = user, repoName = repoName))
+                    .execute().data?.repository?.forks?.nodes?.map {
+                        it?.repos as Repos
+                    }
         else
             if (isStarred)
                 client.query(GetUserStarredReposQuery(user))
