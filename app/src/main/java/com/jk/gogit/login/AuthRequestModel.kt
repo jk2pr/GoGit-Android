@@ -12,7 +12,7 @@ class AuthRequestModel {
 
     fun generate(): AuthRequestModel {
         val model = AuthRequestModel()
-        model.scopes.addAll(listOf("user","user:follow", "read:org","repo", "gist", "notifications"))
+        model.scopes.addAll(listOf("user","user:follow", "admin:org","admin:repo_hook","admin:org_hook","repo" ,"public_repo", "gist", "notifications"))
       //  model.note = BuildConfig.APPLICATION_ID
        // model.clientId = BuildConfig.client_id
         //model.clientSecret = BuildConfig.client_secret

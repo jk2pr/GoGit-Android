@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
@@ -22,7 +21,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -66,7 +64,8 @@ fun SearchScreen() {
                 .padding(horizontal = 16.dp)
         ) {
             AnimatedVisibility(visible = isSearchActivated.value) {
-                Chip(modifier = Modifier.fillMaxWidth(),
+                Chip(
+                    modifier = Modifier.fillMaxWidth(),
                     types = listOf(SearchType.REPOSITORY, SearchType.USER, SearchType.ISSUE)
                 ) {
                     viewModel.updateType(it)
@@ -85,7 +84,8 @@ fun SearchScreen() {
                 }
 
                 is UiState.Error,
-                is UiState.Empty -> {}
+                is UiState.Empty -> {
+                }
 
 
                 is UiState.Content -> {
@@ -122,7 +122,7 @@ fun Chip(
             val isSelected = selectedType.value == type
             Card(
                 colors = CardDefaults.cardColors(
-                    containerColor = if (isSelected) MaterialTheme.colorScheme.primary else LocalContentColor.current
+                    containerColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
                 ),
                 modifier = Modifier
                     .clickable {
@@ -148,20 +148,20 @@ fun SearchComponent(
 ) {
     // Implement your search component here
     val searchText = remember { mutableStateOf("") }
-    val interactionSource = remember { MutableInteractionSource() }
+    remember { MutableInteractionSource() }
 
     TextField(
         modifier = modifier
-            .wrapContentWidth()
-            .padding(horizontal = 16.dp),
+            .fillMaxWidth(0.85f)
+            .padding(horizontal = 8.dp),
         shape = MaterialTheme.shapes.small,
         colors = OutlinedTextFieldDefaults.colors(),
         value = searchText.value,
         onValueChange = {
-                isSearchActivated.value = true
-                searchText.value = it
-                if (it.isEmpty()) isSearchActivated.value = false
-                onSearchTextChanged(it)
+            isSearchActivated.value = true
+            searchText.value = it
+            if (it.isEmpty()) isSearchActivated.value = false
+            onSearchTextChanged(it)
 
         },
         placeholder = { Text("GitHub Search") },

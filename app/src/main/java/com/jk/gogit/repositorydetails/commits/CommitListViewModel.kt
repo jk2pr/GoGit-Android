@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jk.gogit.DispatcherProvider
 import com.jk.gogit.UiState
-import com.jk.gogit.repositorydetails.tree.RepoTreeExecutor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch

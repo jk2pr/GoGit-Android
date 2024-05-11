@@ -3,8 +3,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.hoppers.networkmodule.network.AuthManager
 import com.jk.gogit.components.localproviders.LocalNavController
-import com.jk.gogit.search.SearchScreen
-import com.jk.gogit.feed.screen.FeedScreen
 import com.jk.gogit.login.screen.LoginScreen
 import com.jk.gogit.navigation.AppScreens
 import com.jk.gogit.organisation.OrgListScreen
@@ -15,19 +13,17 @@ import com.jk.gogit.repos.RepositoryListScreen
 import com.jk.gogit.repositorydetails.RepoDetailScreen
 import com.jk.gogit.repositorydetails.commits.CommitListScreen
 import com.jk.gogit.repositorydetails.tree.RepoTreeScreen
+import com.jk.gogit.search.SearchScreen
 import com.jk.gogit.users.UserListScreen
 
 @Composable
 fun Start() {
     NavHost(
         navController = LocalNavController.current,
-        startDestination = if (AuthManager.getAccessToken() == null) AppScreens.LOGIN.route else AppScreens.USERPROFILE.route
+        startDestination = if (AuthManager.getAccessToken().isNullOrEmpty()) AppScreens.LOGIN.route else AppScreens.USERPROFILE.route
     ) {
         composable(route = AppScreens.LOGIN.route) {
             LoginScreen()
-        }
-        composable(route = AppScreens.FEED.route) {
-            FeedScreen()
         }
         composable(route = AppScreens.USERPROFILE.route) {
             UserProfileScreen()

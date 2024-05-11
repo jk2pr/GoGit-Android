@@ -2,7 +2,6 @@ package com.jk.gogit.organisation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hoppers.fragment.Org
 import com.jk.gogit.DispatcherProvider
 import com.jk.gogit.UiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi

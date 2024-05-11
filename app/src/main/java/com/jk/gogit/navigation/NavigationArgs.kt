@@ -2,6 +2,7 @@ package com.jk.gogit.navigation
 
 class NavigationArgs {
         companion object {
+            const val USER_NAME: String = "user_name"
             const val REPO_NAME: String = "repo_name"
             const val FILTER: String = "filter"
             const val FEED_SCREEN: String = "feed_screen"

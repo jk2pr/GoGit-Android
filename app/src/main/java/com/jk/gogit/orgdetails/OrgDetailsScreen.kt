@@ -2,7 +2,6 @@ package com.jk.gogit.orgdetails
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,8 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -47,7 +44,6 @@ import com.hoppers.networkmodule.network.AuthManager
 import com.jk.gogit.R
 import com.jk.gogit.UiState
 import com.jk.gogit.components.ComposeLocalWrapper
-import com.jk.gogit.components.DropdownMenuItemContent
 import com.jk.gogit.components.Page
 import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.navigation.AppScreens
@@ -67,7 +63,6 @@ fun OrgDetailsScreen() {
 
 
     val localNavController = LocalNavController.current
-    val localContext = LocalContext.current
     val login =
         (localNavController.previousBackStackEntry?.savedStateHandle?.get<String>(AppScreens.ORGDETAIL.route)
             ?: AuthManager.getLogin())!!
@@ -157,7 +152,7 @@ fun OrgDetailsScreen() {
 
                                     is PinnedGist -> GistItem(
                                         gist = item.gist, modifier = itemModifier
-                                    ) { _, _, _ -> }
+                                    )
 
 
                                 }

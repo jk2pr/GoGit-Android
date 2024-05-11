@@ -2,10 +2,8 @@ package com.jk.gogit.repositorydetails.commits
 
 import com.apollographql.apollo3.ApolloClient
 import com.hoppers.GetCommitsQuery
-import com.hoppers.GetRepositoryTreeQuery
 import com.jk.gogit.extensions.formatDateRelativeToToday
 import com.jk.gogit.extensions.toDate
-import java.util.Locale.Category
 import javax.inject.Inject
 
 class CommitListExecutor @Inject constructor(private val client: ApolloClient) {
