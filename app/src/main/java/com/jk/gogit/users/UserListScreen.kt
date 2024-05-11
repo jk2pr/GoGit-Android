@@ -27,7 +27,6 @@ import com.jk.gogit.UiState
 import com.jk.gogit.components.Page
 import com.jk.gogit.components.UserItem
 import com.jk.gogit.components.localproviders.LocalNavController
-import com.jk.gogit.navigation.AppScreens
 import com.jk.gogit.navigation.NavigationArgs
 import com.jk.gogit.users.viewmodel.UserListViewModel
 import org.koin.androidx.compose.koinViewModel

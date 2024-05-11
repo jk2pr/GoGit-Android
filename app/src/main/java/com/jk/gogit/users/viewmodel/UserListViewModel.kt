@@ -1,15 +1,15 @@
 package com.jk.gogit.users.viewmodel
 
-import android.util.Log
-import androidx.lifecycle.*
-import com.google.firebase.auth.FirebaseAuth
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.jk.gogit.DispatcherProvider
 import com.jk.gogit.UiState
-import com.jk.gogit.feed.services.FeedExecutor
 import com.jk.gogit.users.services.UserListExecutor
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 class UserListViewModel(

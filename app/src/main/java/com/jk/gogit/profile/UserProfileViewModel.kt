@@ -1,12 +1,9 @@
 package com.jk.gogit.profile
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
 import com.jk.gogit.DispatcherProvider
 import com.jk.gogit.UiState
-import com.jk.gogit.feed.services.FeedExecutor
 import com.jk.gogit.overview.model.OverViewTabData
 import com.jk.gogit.profile.services.UserProfileExecutor
 import kotlinx.coroutines.ExperimentalCoroutinesApi

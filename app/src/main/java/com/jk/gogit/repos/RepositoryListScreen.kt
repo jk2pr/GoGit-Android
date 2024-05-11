@@ -3,7 +3,6 @@ package com.jk.gogit.repos
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import com.hoppers.networkmodule.network.AuthManager
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,13 +23,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hoppers.fragment.Repos
+import com.hoppers.networkmodule.network.AuthManager
 import com.jk.gogit.R
 import com.jk.gogit.UiState
-import com.jk.gogit.components.ColoredBullet
 import com.jk.gogit.components.DropdownFilter
 import com.jk.gogit.components.Page
 import com.jk.gogit.components.RepositoryItem

@@ -2,14 +2,12 @@ package com.jk.gogit.extensions
 
 import androidx.compose.ui.graphics.Color
 import org.joda.time.DateTime
-import java.text.DecimalFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Date
-import kotlin.math.abs
 
 fun String.toDate():Date {
     val dateTime = DateTime.parse(replace(" ", "T"))

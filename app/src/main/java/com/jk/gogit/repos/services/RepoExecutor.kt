@@ -8,7 +8,6 @@ import com.hoppers.GetUserStarredReposQuery
 import com.hoppers.fragment.Repos
 import com.jk.gogit.extensions.formatDateRelativeToToday
 import com.jk.gogit.extensions.toDate
-import java.util.Date
 import javax.inject.Inject
 
 class RepoExecutor
