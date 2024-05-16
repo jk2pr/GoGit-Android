@@ -18,7 +18,7 @@ class RepoTreeViewModel(
     private val dispatchers: DispatcherProvider,
     private val login: String,
     private val repo: String,
-    private var path: String
+    private var basePath: String
 ) : ViewModel() {
 
     private val _userListStateFlow = MutableStateFlow<UiState>(UiState.Empty)
@@ -37,11 +37,11 @@ class RepoTreeViewModel(
                         val result = repoTreeExecutor.execute(
                             user = login,
                             repo = repo,
-                            path = path
+                            path = basePath
                         )
 
                         val pathToFile = toPathToFile(
-                            path = if (path.last() == ':') "" else path, //if this is from branch, then path is empty
+                            path =  basePath,
                             file = result,
                         )
                         emit(UiState.Content(pathToFile))
@@ -54,18 +54,11 @@ class RepoTreeViewModel(
 
                 is MainState.RefreshEvent -> {
                     flow {
-                        val newPath = mainState.newPath
+                        val endpoint = mainState.newPath
                         emit(UiState.Loading)
-                        val finalPath = StringBuffer(path)
-                        if (finalPath.last() == ':')
-                        //this is branch
-                            finalPath.append(newPath)
-                        else
-                            finalPath.append("/$newPath")
-                        path = finalPath.toString()
                         val result =
-                            repoTreeExecutor.execute(user = login, repo = repo, path = path)
-                        val pathToFile = toPathToFile(path = newPath, file = result)
+                            repoTreeExecutor.execute(user = login, repo = repo, path = endpoint)
+                        val pathToFile = toPathToFile(path = endpoint, file = result)
                         emit(UiState.Content(pathToFile))
                     }.catch {
                         emit(UiState.Error(it.message.toString()))

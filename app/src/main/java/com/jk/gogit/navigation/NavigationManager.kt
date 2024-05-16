@@ -12,6 +12,7 @@ import com.jk.gogit.pullrequest.PullRequestListScreen
 import com.jk.gogit.repos.RepositoryListScreen
 import com.jk.gogit.repositorydetails.RepoDetailScreen
 import com.jk.gogit.repositorydetails.commits.CommitListScreen
+import com.jk.gogit.repositorydetails.tree.FileContentScreen
 import com.jk.gogit.repositorydetails.tree.RepoTreeScreen
 import com.jk.gogit.search.SearchScreen
 import com.jk.gogit.users.UserListScreen
@@ -54,6 +55,9 @@ fun Start() {
         }
         composable(route = AppScreens.COMMITLIST.route) {
             CommitListScreen()
+        }
+        composable(route = AppScreens.FILECONTENT.route) {
+            FileContentScreen()
         }
     }
 }

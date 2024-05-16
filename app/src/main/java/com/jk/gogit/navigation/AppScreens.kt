@@ -14,6 +14,7 @@ sealed class AppScreens(val route: String) {
     data object ORGLIST : AppScreens(ScreenName.ORGLIST_SCREEN)
     data object ORGDETAIL : AppScreens(ScreenName.ORGDETAIL_SCREEN)
     data object COMMITLIST : AppScreens(ScreenName.COMMIT_LIST_SCREEN)
+    data object FILECONTENT : AppScreens(ScreenName.FILE_CONTENT_SCREEN)
 
 
     class ScreenName {
@@ -30,6 +31,7 @@ sealed class AppScreens(val route: String) {
             const val ORGLIST_SCREEN:String = "org_list_screen"
             const val ORGDETAIL_SCREEN:String = "org_detail_screen"
             const val COMMIT_LIST_SCREEN:String = "commit_list_screen"
+            const val FILE_CONTENT_SCREEN:String = "file_content_screen"
         }
     }
 
