@@ -28,6 +28,7 @@ fun Page(
     title: @Composable () -> Unit = {},
     menuItems: List<DropdownMenuItemContent> = emptyList(),
     floatingActionButton: @Composable () -> Unit = {},
+    contentAlignment: Alignment = Alignment.Center,
     content: @Composable () -> Unit
 ) {
     Scaffold(
@@ -38,7 +39,7 @@ fun Page(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues),
-                contentAlignment = Alignment.Center
+                contentAlignment = contentAlignment
             ) {
                 content()
             }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -32,6 +33,7 @@ import com.jk.gogit.UiState
 import com.jk.gogit.components.Page
 import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.navigation.AppScreens
+import com.jk.gogit.navigation.NavigationArgs
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -48,6 +50,7 @@ fun RepoTreeScreen() {
         savedStateHandle.get<String>(AppScreens.REPOLIST.route)
     val data = remember { mutableStateListOf<GetRepositoryTreeQuery.Entry>() }
     val filePath = remember { mutableStateListOf<PathToFile>() }
+    var currentPath = "$branch:"
     val viewModel =
         koinViewModel<RepoTreeViewModel>(parameters = { parametersOf(login, repoName, "$branch:") })
 
@@ -55,11 +58,26 @@ fun RepoTreeScreen() {
         //filePath.clear()
         val index = filePath.indexOf(p)
         filePath.removeRange(index + 1, filePath.size)
+        currentPath = p.path
         data.clear()
         data.addAll(p.file)
     }
-    val onFolderSelected: (String) -> Unit = { tree ->
-        viewModel.setState(RepoTreeViewModel.MainState.RefreshEvent(tree))
+    val onFolderSelected: (GetRepositoryTreeQuery.Entry) -> Unit = { tree ->
+
+        if (tree.type == "tree") {
+            val delimiters = if (currentPath.last() == ':') "" else "/"
+            currentPath = (currentPath + delimiters + tree.name)
+            viewModel.setState(
+                RepoTreeViewModel.MainState.RefreshEvent(currentPath)
+            )
+        } else {
+
+            localNavyController.currentBackStackEntry?.savedStateHandle?.let {
+                it[NavigationArgs.FILE_NAME] = tree.name
+                it[NavigationArgs.FILE_CONTENT] =  tree.`object`?.onBlob?.text
+            }
+            localNavyController.navigate(AppScreens.FILECONTENT.route)
+        }
     }
 
     Page(title = { Text(text = "Files") }) {
@@ -80,7 +98,7 @@ fun RepoTreeScreen() {
                     clear()
                     addAll(d.file)
                 }
-                filePath.add(PathToFile(path = d.path, file = d.file))
+                filePath.add(d)
             }
         }
     }
@@ -92,9 +110,9 @@ private fun Form(
     filePath: MutableList<PathToFile>,
     data: List<GetRepositoryTreeQuery.Entry>,
     onPathSelected: (PathToFile) -> Unit,
-    onFolderSelected: (String) -> Unit
+    onFolderSelected: (GetRepositoryTreeQuery.Entry) -> Unit
 ) {
-
+    if (data.isEmpty()) return
     Column(
         modifier = Modifier
             .padding(8.dp)
@@ -107,7 +125,9 @@ private fun Form(
                 Row(modifier = Modifier.clickable {
                     onPathSelected(path)
                 }) {
-                    Text(text = path.path)
+                    val branch = path.path.split(":").first()
+                    val t = path.path.replace("$branch:", "")
+                    Text(text = t.split("/").lastOrNull() ?: t)
                     Icon(
                         painter = painterResource(id = R.drawable.ic_chevron_right_white_24dp),
                         contentDescription = "separator"
@@ -133,14 +153,16 @@ private fun Form(
                         HorizontalDivider()
                     data[index].let { tree ->
                         Row(modifier = Modifier
+                            .fillMaxWidth()
                             .padding(8.dp)
                             .clickable {
-                                onFolderSelected(tree.name)
+                                onFolderSelected(tree)
                             }) {
                             Icon(
-                                painter = if (tree.type == "tree")
-                                    painterResource(id = R.drawable.folder_svgrepo_com) else painterResource(
-                                    id = R.drawable.ic_file_black_24dp
+                                painter = painterResource(
+                                    if (tree.type == "tree")
+                                        R.drawable.folder_svgrepo_com else
+                                        R.drawable.ic_file_black_24dp
                                 ),
                                 tint = Color(android.graphics.Color.parseColor("#FFC36E")),
                                 contentDescription = "Icon",
