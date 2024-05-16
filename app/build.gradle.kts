@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -12,6 +15,11 @@ apollo {
     }
 }
 
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties().apply {
+    load(FileInputStream(keystorePropertiesFile))
+}
+
 android {
     namespace = "com.jk.gogit"
     compileSdk = 34
@@ -20,7 +28,7 @@ android {
         applicationId = "com.jk.gogit"
         minSdk = 29
         targetSdk = 34
-        versionCode = 1
+        versionCode = 8
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -28,15 +36,24 @@ android {
             useSupportLibrary = true
         }
     }
-
+    signingConfigs {
+        create("release") {
+            storeFile = rootProject.file(keystoreProperties.getProperty("storeFile"))
+            keyAlias = keystoreProperties.getProperty("keyAlias")
+            keyPassword = keystoreProperties.getProperty("keyPassword")
+            storePassword = keystoreProperties.getProperty("storePassword")
+        }
+    }
     buildTypes {
-        release {
+        getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs["release"]
         }
+
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

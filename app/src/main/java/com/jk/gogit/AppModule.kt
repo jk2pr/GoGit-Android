@@ -43,6 +43,6 @@ val appModule = module {
     viewModel { params -> RepoDetailViewModel(repoDetailExecutor = get(), dispatchers = get(), login = params.get(), repo = params.get(), path = params.get()) }
     viewModel { params -> OrgListViewModel(orgExecutor = get(), dispatchers = get(), login = params.get(),) }
     viewModel { params -> OrgDetailsViewModel(orgDetailsExecutor = get(), dispatchers = get(), login = params.get(),) }
-    viewModel { params -> RepoTreeViewModel(repoTreeExecutor = get(), dispatchers = get(), login = params.get(), repo = params.get(), path = params.get()) }
+    viewModel { params -> RepoTreeViewModel(repoTreeExecutor = get(), dispatchers = get(), login = params.get(), repo = params.get(), basePath = params.get()) }
     viewModel { params -> CommitListViewModel(commitListExecutor = get(), dispatchers = get(), login = params.get(), path = params.get(), repo = params.get()) }
 }
