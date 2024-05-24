@@ -6,5 +6,6 @@ plugins {
     alias(libs.plugins.google.services) apply false
     alias(libs.plugins.kotlinx.serializtion) apply false
     alias(libs.plugins.appolo.client.android) apply false
+    alias(libs.plugins.kotlinMultiplatform) apply false
 
 }

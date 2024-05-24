@@ -66,7 +66,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.10"
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
     packaging {
         resources {
@@ -117,6 +117,7 @@ dependencies {
 
     implementation (libs.markdownview.android)
     implementation(project(":networkmodule"))
+    implementation (project(":shared"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

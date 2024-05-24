@@ -24,8 +24,10 @@ appoloCleint = "4.0.0-beta.5"
 jodaTime = "2.12.5"
 appcompat = "1.6.1"
 material = "1.11.0"
+compose-compiler = "1.5.10"
 
 [libraries]
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -75,4 +77,5 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 kotlinx-serializtion = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 appolo-client-android = { id = "com.apollographql.apollo3" , version.ref = "appoloCleint" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform" , version.ref = "kotlin" }
 
