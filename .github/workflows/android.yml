@@ -28,7 +28,7 @@ jobs:
     - name: create google_service.json
       env:
         GOOGLE_SERVICE_JSON: ${{ secrets.GOOGLE_SERVICE_JSON }}
-      run: echo "$GOOGLE_SERVICE_JSON" > ./app/google-services.json
+      run: echo "$GOOGLE_SERVICE_JSON" > ./androidApp/google-services.json
     - name: Change wrapper permissions
       run: chmod +x ./gradlew
     - name: Clean
