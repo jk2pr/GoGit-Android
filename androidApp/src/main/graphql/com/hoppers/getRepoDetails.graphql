@@ -1,0 +1,119 @@
+query getRepoDetails($owner_name: String!, $repoName: String!,$path:String!) {
+    repository(owner: $owner_name, name: $repoName) {
+        defaultBranchRef {
+            name
+        }
+        refs(refPrefix: "refs/heads/", first: 100, orderBy: { field: TAG_COMMIT_DATE, direction: DESC }) {
+           commits: nodes {
+                name
+                target {
+                    ... on Commit{
+                        history{
+                            totalCount
+                        }
+                    }
+                }
+
+            }
+        }
+        name
+        description
+        url
+        createdAt
+        updatedAt
+        collaborators {
+            totalCount
+        }
+        watchers {
+            totalCount
+        }
+        primaryLanguage {
+            name
+        }
+        stargazerCount
+        forkCount
+        isFork
+        issues(states: [OPEN, CLOSED], first: 100) {
+            totalCount
+            allIssues : nodes {
+                title
+                url
+                createdAt
+                updatedAt
+                closedAt
+                state
+                author {
+                    login
+                }
+                body
+                number
+                comments {
+                    totalCount
+                }
+                labels(first: 5) {
+                    edges {
+                        node {
+                            name
+                        }
+                    }
+                }}
+        }
+        pullRequests(states: [OPEN,CLOSED,MERGED], first: 100, orderBy: { field: CREATED_AT, direction: DESC }) {
+            pr:nodes {
+                labels(first: 100){
+                    nodes {
+                        color
+                        name
+                    }
+                }
+                comments(first: 100){
+                    nodes {
+                        author {
+                            __typename
+                        }
+                        bodyHTML
+                    }
+                }
+                body
+                number
+                title
+                state
+                createdAt
+                updatedAt
+                author {
+                    login
+                }
+                merged
+                mergedAt
+                mergedBy {
+                    login
+                }
+                baseRefName
+                headRefName
+                commits(last: 10) {
+                    nodes {
+                        commit {
+                            oid
+                        }
+                    }
+                }
+            }
+        }
+        releases {
+            totalCount
+        }
+        licenseInfo {
+            name
+        }
+        owner {
+            login
+            avatarUrl
+        }
+
+        readme: object(expression: $path) {
+            ... on Blob {
+                text
+            }
+        }
+    }
+}

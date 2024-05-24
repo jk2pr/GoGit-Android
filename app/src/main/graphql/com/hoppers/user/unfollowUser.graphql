@@ -1,5 +1,0 @@
-mutation unfollowUser($user:ID!) {
-    unfollowUser(input: {userId: $user}) {
-        clientMutationId
-    }
-}

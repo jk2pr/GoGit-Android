@@ -1,0 +1,23 @@
+query GetCommits($owner:String!, $name: String! , $branch:String!) {
+    repository(owner: $owner, name: $name) {
+        ref(qualifiedName: $branch) {
+            target {
+                ... on Commit {
+                    history(first: 100) {
+                   commits: nodes {
+                            oid
+                            message
+                            committedDate
+                            description: messageHeadline # Rename the field to 'description' for clarity
+                            author {
+                                name
+                                email
+                                date
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

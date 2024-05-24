@@ -1,0 +1,18 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="tab_indicator_height">3dp</dimen>
+    <dimen name="container_padding">3dp</dimen>
+    <dimen name="dp10">10dp</dimen>
+    <dimen name="dp15">15dp</dimen>
+    <dimen name="dp40">40dp</dimen>
+    <dimen name="dp20">20dp</dimen>
+    <dimen name="dp55">55dp</dimen>
+    <dimen name="dp100">100dp</dimen>
+    <dimen name="dp400">400dp</dimen>
+    <dimen name="dp200">200dp</dimen>
+    <dimen name="dp5">5dp</dimen>
+    <dimen name="sp35">35sp</dimen>
+    <dimen name="sp25">25sp</dimen>
+    <dimen name="sp10">10sp</dimen>
+    <dimen name="sp14">14sp</dimen>
+</resources>

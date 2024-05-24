@@ -1,0 +1,10 @@
+query getWatchers($ownerName:String!, $repoName:String!) {
+    repository(owner: $ownerName, name: $repoName) {
+        watchers(first: 100) {
+            nodes {
+                ...UserFields
+            }
+        }
+    }
+
+}

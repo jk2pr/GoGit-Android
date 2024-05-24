@@ -1,0 +1,74 @@
+<resources>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:windowTranslucentStatus">false</item>
+
+    </style>
+
+    <!--<style name="PopupMenu" parent="android:Widget.Holo.Light.ListPopupWindow">
+        <item name="android:popupBackground">@color/tab_selected_color</item>
+    </style>
+    <style name="Popup.TextAppearance" parent="@android:style/Widget.Holo.Light.TextView">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>-->
+
+
+
+        <!-- Base application theme. -->
+        <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+            <!-- Customize your theme here. -->
+            <item name="colorPrimary">@color/colorPrimary</item>
+            <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+            <item name="colorAccent">@color/colorAccent</item>
+
+
+            <!--  <item name="android:windowContentTransitions">true</item>-->
+
+        </style>
+
+
+
+
+        <style name="AppTheme.Splash" parent="@style/Theme.AppCompat.Light.NoActionBar">
+            <item name="android:windowBackground">@color/githubLightBackGroundColor</item>
+            <item name="android:windowDisablePreview">true</item>
+            <item name="windowActionBar">false</item>
+            <item name="windowNoTitle">true</item>
+            <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+            <item name="android:windowContentOverlay">@null</item>
+
+
+
+    </style>
+
+        <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+        <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+            <item name="android:actionMenuTextColor">#FFFFFF</item>
+        </style>
+
+
+        <style name="Dialog.Alert" parent="@style/Theme.AppCompat.Dialog.Alert">
+            <item name="android:textColor">@android:color/holo_red_dark</item>
+        </style>
+
+
+    <style name="TextLabel" parent="Widget.Design.TextInputLayout">
+       <item name="android:textColorHint">@color/githubLightTextColor</item>
+        <item name="android:textColor">@color/githubLightTextColor</item>
+        <item name="android:paddingStart">@dimen/dp10</item>
+        <item name="android:paddingEnd">@dimen/dp10</item>
+
+        <item name="android:textSize">20sp</item>
+       <item name="colorError">@android:color/holo_red_light</item>
+        <item name="colorControlHighlight">@color/githubLightTextColor</item>
+        <item name="colorControlNormal">@color/githubLightTextColor</item>
+        <item name="colorControlActivated">@color/githubLightTextColor</item>
+    </style>
+
+</resources>

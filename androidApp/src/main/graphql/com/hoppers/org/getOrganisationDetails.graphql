@@ -1,0 +1,18 @@
+query GetOrganizationDetail($username:String!){
+    organization(login: $username){
+
+        login
+        name
+        avatarUrl
+        websiteUrl
+        description
+        anyPinnableItems
+        email
+        twitterUsername
+        location
+        url
+        repositories {
+            totalCount
+        }
+    }
+}

@@ -1,0 +1,5 @@
+mutation followUser($user:ID!) {
+    followUser(input: {userId: $user}) {
+        clientMutationId
+    }
+}

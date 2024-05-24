@@ -14,7 +14,6 @@ pluginManagement {
     }
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
@@ -23,5 +22,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "GoGit"
-include(":app")
+include(":androidApp")
 include(":networkmodule")
+include(":shared")

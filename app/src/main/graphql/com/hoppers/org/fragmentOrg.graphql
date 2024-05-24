@@ -1,8 +1,0 @@
-fragment  Org on Organization {
-    name
-    description
-    login
-    avatarUrl
-    createdAt
-    updatedAt
-}

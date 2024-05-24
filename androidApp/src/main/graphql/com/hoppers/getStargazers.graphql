@@ -1,0 +1,10 @@
+query getStargazers($owner_name: String!, $repoName: String!) {
+    repository(owner: $owner_name, name: $repoName) {
+        stargazers(first: 100) {
+                nodes {
+                   ...UserFields
+
+            }
+        }
+    }
+}

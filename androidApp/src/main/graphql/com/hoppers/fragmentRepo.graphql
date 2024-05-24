@@ -1,0 +1,27 @@
+fragment  Repos on Repository {
+    repoName:name
+    defaultBranchRef {
+        name
+    }
+    owner {
+        login
+        avatarUrl
+    }
+    isFork
+    parent {
+        name
+        owner {
+            login
+        }
+    }
+    description
+    url
+    primaryLanguage {
+        name
+        color
+    }
+    stargazerCount
+    forkCount
+    createdAt
+    updatedAt
+}
