@@ -35,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.text.HtmlCompat
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.hoppers.GetUserQuery
@@ -92,6 +93,7 @@ fun UserProfileHeader(
                 )
 
                 BulletList(
+                    maxLine = 1,
                     items = mapOf(
                         Icons.Outlined.MailOutline to data.email,
                         Icons.Outlined.LocationOn to data.location,
@@ -112,7 +114,7 @@ fun UserProfileHeader(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start)) {
                 TextButton(
                     contentPadding = PaddingValues(0.dp),
                     onClick = {
@@ -126,7 +128,7 @@ fun UserProfileHeader(
                     }) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.group_24dp),
@@ -149,7 +151,7 @@ fun UserProfileHeader(
                     }) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.bullet_24dp),
@@ -210,7 +212,7 @@ fun BulletList(
                     tint = tint
                 )
                 Text(
-                    text = it.value!!,
+                    text = HtmlCompat.fromHtml(it.value!!, 0).toString(),
                     style = style,
                     maxLines = maxLine,
                     overflow = TextOverflow.Ellipsis,
