@@ -6,20 +6,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.MailOutline
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -56,7 +54,10 @@ fun UserProfileHeader(
     val localNavController = LocalNavController.current
     val loggedInUser = AuthManager.getLogin()
 
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)
+    ) {
         val painter =
             rememberAsyncImagePainter(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -69,23 +70,17 @@ fun UserProfileHeader(
             )
 
 
-        Row(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             Image(
                 painter = painter,
                 contentDescription = null,
                 modifier = Modifier
-                    .size(80.dp),
-                contentScale = ContentScale.Crop
+                    .size(112.dp),
             )
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp)
-            ) {
-
-                /* if (!data.name.isNullOrBlank()) {
-                    Text(text = data.name)
-                }*/
+            Column {
                 Text(
                     softWrap = true,
                     text = buildAnnotatedString {
@@ -94,63 +89,32 @@ fun UserProfileHeader(
                             append(" \u2022 (${data.pronouns})")
                         }
                     },
-                    style = MaterialTheme.typography.bodyLarge
                 )
 
                 BulletList(
-                    style = MaterialTheme.typography.bodyLarge,
                     items = mapOf(
                         Icons.Outlined.MailOutline to data.email,
                         Icons.Outlined.LocationOn to data.location,
                         ImageVector.vectorResource(id = R.drawable.outline_home_work_24) to data.company
                     )
                 )
-                //Text(text = data.email, imageVector = Icons.Default.Email)
-                //Text(text = data.location, imageVector = Icons.Default.LocationOn)
-
-
             }
         }
+        BulletList(
+            maxLine = 1,
+            items = mapOf(ImageVector.vectorResource(id = R.drawable.baseline_link_24) to data.websiteUrl?.toString())
+        )
 
-        Column {
-            Row(
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
+        BulletList(items = mapOf(Icons.Outlined.Info to data.bio))
 
-            ) {
-                Column(
-                    modifier = Modifier
-                        .wrapContentWidth()
-                        .weight(0.5f)
-                ) {
-                   BulletList(
-                        style = MaterialTheme.typography.bodyLarge,
-                        maxLine = 1,
-                        items = mapOf(ImageVector.vectorResource(id = R.drawable.baseline_link_24) to data.websiteUrl?.toString())
-                    )
-
-                }
-
-
-            }
-            BulletList(
-                style = MaterialTheme.typography.bodyLarge,
-                items = mapOf(Icons.Outlined.Info to data.bio)
-
-            )
-        }
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start)) {
                 TextButton(
+                    contentPadding = PaddingValues(0.dp),
                     onClick = {
                         localNavController.currentBackStackEntry
                             ?.savedStateHandle?.let {
@@ -160,16 +124,19 @@ fun UserProfileHeader(
 
                         localNavController.navigate(AppScreens.USERLIST.route)
                     }) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
                         Icon(
-                            modifier = Modifier.size(24.dp),
-                            painter = painterResource(id = R.drawable.add_follow_following_icon),
-                            contentDescription = "",
+                            painter = painterResource(id = R.drawable.group_24dp),
+                            contentDescription = "follow icon",
                         )
                         Text(text = "${data.followers.totalCount.formatNumber()} followers")
                     }
                 }
                 TextButton(
+                    contentPadding = PaddingValues(0.dp),
                     modifier = Modifier.align(Alignment.CenterVertically),
                     onClick = {
                         localNavController.currentBackStackEntry
@@ -180,15 +147,23 @@ fun UserProfileHeader(
 
                         localNavController.navigate(AppScreens.USERLIST.route)
                     }) {
-                    Text(
-                        text = buildAnnotatedString {
-                            append("\u2022 ${data.following.totalCount.formatNumber()} following")
-                        })
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.bullet_24dp),
+                            contentDescription = "following icon",
+                        )
+                        Text(
+                            text = "${data.following.totalCount.formatNumber()} following"
+                        )
+                    }
+
                 }
             }
             if (data.login != loggedInUser)
-                OutlinedButton(
-                    contentPadding = PaddingValues(horizontal = 24.dp),
+                ElevatedButton(
                     shape = MaterialTheme.shapes.small,
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                     //colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.outline, contentColor = MaterialTheme.colorScheme.onPrimary),
@@ -215,24 +190,25 @@ fun BulletList(
     modifier: Modifier = Modifier,
     maxLine: Int = Int.MAX_VALUE,
     tint: Color = LocalContentColor.current,
-    style: TextStyle,
+    style: TextStyle = LocalTextStyle.current,
     lineSpacing: Dp = 8.dp,
     items: Map<ImageVector, String?>,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterVertically)
     ) {
         items.forEach {
             if (it.value.isNullOrBlank()) return@forEach
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(lineSpacing),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Icon(
                     imageVector = it.key,
                     contentDescription = "",
-                    modifier = modifier.size(16.dp),
                     tint = tint
                 )
-                Spacer(modifier = Modifier.size(lineSpacing))
                 Text(
                     text = it.value!!,
                     style = style,

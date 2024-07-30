@@ -1,6 +1,8 @@
 package com.jk.gogit.components
 
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
@@ -17,9 +19,10 @@ fun HyperLinkText(
     startIndex: Int,
     endIndex: Int,
     hyperLinkStyle: SpanStyle = SpanStyle(),
-    localStringStyle: TextStyle = TextStyle(),
+    localStringStyle: TextStyle = LocalTextStyle.current,
     action: (String) -> Unit
 ) {
+
     val annotatedString = buildAnnotatedString {
         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
             append(hyperLink)
@@ -40,6 +43,8 @@ fun HyperLinkText(
 
     ClickableText(
         modifier = modifier,
+        style = localStringStyle.copy(color = LocalContentColor.current),
+        text = annotatedString,
         onClick = {
             annotatedString
                 .getStringAnnotations("URL", it, it)
@@ -47,7 +52,6 @@ fun HyperLinkText(
                     action(stringAnnotation.item)
                 }
         },
-        style = localStringStyle,
-        text = annotatedString
-    )
+
+        )
 }

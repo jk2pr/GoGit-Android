@@ -49,7 +49,9 @@ fun SearchScreen() {
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
         ) {
+            HorizontalDivider()
             AnimatedVisibility(visible = isSearchActivated.value) {
+
                 Chip(
                     modifier = Modifier.fillMaxWidth(),
                     types = listOf(SearchType.REPOSITORY, SearchType.USER, SearchType.ISSUE)

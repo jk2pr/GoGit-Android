@@ -3,13 +3,11 @@ package com.jk.gogit.repos
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -68,17 +66,7 @@ fun RepositoryListScreen() {
         )
     }) {
         when (val result = viewModel.repoStateFlow.collectAsState().value) {
-            is UiState.Loading -> Box(
-                Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .align(Alignment.Center),
-                )
-            }
-
+            is UiState.Loading -> CircularProgressIndicator()
             is UiState.Error -> {}
             is UiState.Empty -> {}
             is UiState.Content -> {
@@ -95,7 +83,8 @@ fun RepositoryListScreen() {
                     Column(
                         Modifier
                             .fillMaxSize()
-                            .padding(horizontal = 16.dp)
+                            .padding( 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)
                     ) {
                         if (filter.isEmpty()) {
                             val languageMap = viewModel.languageMapStateFlow.collectAsState().value

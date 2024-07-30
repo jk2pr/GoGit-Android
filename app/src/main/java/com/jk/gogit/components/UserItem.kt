@@ -34,7 +34,7 @@ fun UserItem(node: UserFields) {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(vertical = 8.dp)
             .clickable {
                 navController.currentBackStackEntry
                     ?.savedStateHandle

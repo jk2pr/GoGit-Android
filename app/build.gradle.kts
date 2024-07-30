@@ -111,6 +111,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout.compose)
 
 
+    //Network Monitor
+    implementation (libs.connext)
 
     implementation(libs.coil)
     implementation(libs.joda.time)

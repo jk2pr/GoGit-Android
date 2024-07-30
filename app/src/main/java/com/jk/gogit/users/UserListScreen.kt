@@ -1,6 +1,6 @@
 package com.jk.gogit.users
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,8 +10,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -31,8 +29,6 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun UserListScreen() {
-    val hasInternetConnection =
-        remember { mutableStateOf(true) } // Assuming internet connection by default
 
     val savedStateHandle =
         LocalNavController.current.previousBackStackEntry?.savedStateHandle ?: return
@@ -47,22 +43,20 @@ fun UserListScreen() {
     Page(title = { Text(text = filter.replaceFirstChar { it.uppercase() }) }) {
 
         when (val result = viewModel.userListStateFlow.collectAsState().value) {
-            is UiState.Loading -> {
-                CircularProgressIndicator()
-            }
-
+            is UiState.Loading -> CircularProgressIndicator()
             is UiState.Content -> {
 
-                Box(modifier = Modifier.fillMaxSize()) {
-                    val items = result.data as List<*>
-                    LazyColumn {
-                        items(items.size) { index ->
-                            if (index > 0)
-                            // Add a line as a separator
-                                HorizontalDivider()
+                val items = result.data as List<*>
+                LazyColumn(
+                    verticalArrangement = Arrangement.Top,
+                    modifier = Modifier.padding(8.dp).fillMaxSize()
+                   ) {
+                    items(items.size) { index ->
+                        if (index > 0)
+                        // Add a line as a separator
+                            HorizontalDivider()
 
-                            UserItem(items[index] as UserFields)
-                        }
+                        UserItem(items[index] as UserFields)
                     }
                 }
             }

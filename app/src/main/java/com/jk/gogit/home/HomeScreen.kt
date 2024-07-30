@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,7 +15,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -35,8 +36,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.hoppers.networkmodule.AuthManager
@@ -58,7 +57,11 @@ fun HomeScreen() {
     val viewModel = koinViewModel<FeedViewModel>(parameters = { parametersOf(login) })
     val navController = LocalNavController.current
     val onSearchClick: () -> Unit = { navController.navigate(AppScreens.SEARCH.route) }
-    val onProfileClick: () -> Unit = { navController.navigate(AppScreens.USERPROFILE.route) }
+    val onProfileClick: () -> Unit = {
+        navController.currentBackStackEntry?.savedStateHandle
+            ?.set(AppScreens.USERPROFILE.route, login)
+        navController.navigate(AppScreens.USERPROFILE.route)
+    }
 
     Page(
         title = { Text(stringResource(id = R.string.app_name)) },
@@ -73,74 +76,83 @@ fun HomeScreen() {
                     )
                 }
                 IconButton(onClick = onProfileClick) {
+                    val imagePainter = rememberAsyncImagePainter(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(getAvatarUrl)
+                            .placeholder(R.drawable.face_24dp_fill0_wght400_grad0_opsz24)
+                            .error(R.drawable.face_24dp_fill0_wght400_grad0_opsz24)
+                            .crossfade(enable = true)
+                            .build(),
+                        contentScale = ContentScale.Inside
+                    )
                     Image(
-                        painter = rememberAsyncImagePainter(model = getAvatarUrl),
-                        contentDescription = "Search",
-                        modifier = Modifier
-                            .clip(CircleShape),
+                        contentDescription = "Profile Image",
+                        modifier = Modifier.clip(CircleShape),
+                        painter = imagePainter
                     )
                 }
+            }
+        ),
+        content = {
+            when (val result = viewModel.feedStateFlow.collectAsState().value) {
+                is UiState.Loading ->
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(50.dp)
+                    )
 
-            },
-        )
+                is UiState.Content -> {
+                    (result.data as List<*>).let { items ->
+                        LazyColumn(
+                            Modifier
+                                .padding(8.dp)
+                                .fillMaxSize()
+                        ) {
+                            items(items.size) {
+                                if (it > 0) HorizontalDivider()
+                                FeedItem(feed = items[it] as Feed,
+                                    onActorClick = { feed ->
+                                        navController.currentBackStackEntry
+                                            ?.savedStateHandle
+                                            ?.set(AppScreens.USERPROFILE.route, feed.actor.login)
+                                        navController.navigate(AppScreens.USERPROFILE.route)
+                                    },
+                                    onRepoClick = { url ->
+                                        val a = url.split("/")
+                                        val owner = a[4]
+                                        val repo = a[5]
+                                        navController.currentBackStackEntry
+                                            ?.savedStateHandle?.let {
+                                                it[AppScreens.USERPROFILE.route] = owner
+                                                it[AppScreens.REPODETAIL.route] = repo
+                                            }
 
-    ) {
-
-        when (val result = viewModel.feedStateFlow.collectAsState().value) {
-            is UiState.Loading ->
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(50.dp)
-                )
-
-            is UiState.Content -> {
-                (result.data as List<*>).let { items ->
-                    LazyColumn(Modifier.fillMaxSize()) {
-                        items(items.size) {
-                            if (it > 0) HorizontalDivider()
-                            FeedItem(feed = items[it] as Feed,
-                                onActorClick = { feed ->
-                                    navController.currentBackStackEntry
-                                        ?.savedStateHandle
-                                        ?.set(AppScreens.USERPROFILE.route, feed.actor.login)
-                                    navController.navigate(AppScreens.USERPROFILE.route)
-                                },
-                                onRepoClick = { url ->
-                                    val a = url.split("/")
-                                    val owner = a[4]
-                                    val repo = a[5]
-                                    navController.currentBackStackEntry
-                                        ?.savedStateHandle?.let {
-                                            it[AppScreens.USERPROFILE.route] = owner
-                                            it[AppScreens.REPODETAIL.route] = repo
-                                        }
-
-                                    navController.navigate(AppScreens.REPODETAIL.route)
-                                })
+                                        navController.navigate(AppScreens.REPODETAIL.route)
+                                    })
+                            }
                         }
                     }
                 }
+
+
+                is UiState.Error ->
+                    Text(
+                        text = result.message,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        textAlign = TextAlign.Center,
+                        fontSize = 20.sp,
+                        //   fontFamily = FontFamily(Font(R.font.bebasneue_regular)),
+                        color = Color.Black
+                    )
+
+
+                is UiState.Empty -> {}
+
+
             }
-
-
-            is UiState.Error ->
-                Text(
-                    text = result.message,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    textAlign = TextAlign.Center,
-                    fontSize = 20.sp,
-                    //   fontFamily = FontFamily(Font(R.font.bebasneue_regular)),
-                    color = Color.Black
-                )
-
-
-            is UiState.Empty -> {}
-
-
-        }
-    }
+        })
 }
 
 @Composable
@@ -149,83 +161,61 @@ fun FeedItem(feed: Feed, onActorClick: (Feed) -> Unit = {}, onRepoClick: (String
     val eventName = feed.getEventName()
     val time = feed.createdAt
 
-    Column(
+    val painter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(feed.actor.avatar_url)
+            .placeholder(R.drawable.ic_image_black_24dp)
+            .error(R.drawable.ic_broken_image_black_24dp)
+            .crossfade(enable = true)
+            .build(),
+        contentScale = ContentScale.Inside
+    )
+
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(vertical = 8.dp)
+            .wrapContentHeight(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        ConstraintLayout(
+        Image(
+            painter = painter,
+            contentDescription = "Image",
             modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-        ) {
-            val (imgActor, column) = createRefs()
-            val painter =
-                rememberAsyncImagePainter(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(feed.actor.avatar_url)
-                        .placeholder(R.drawable.ic_image_black_24dp)
-                        .error(R.drawable.ic_broken_image_black_24dp)
-                        .crossfade(enable = true)
-                        .build(),
-                    contentScale = ContentScale.Inside
-                )
-            Image(
-                painter = painter,
-                contentDescription = "Image",
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape)
-                    .clickable { onActorClick(feed) }
-                    .constrainAs(imgActor) {
-                        start.linkTo(parent.start)
-                        top.linkTo(parent.top)
-                    },
-                contentScale = ContentScale.FillBounds
+                .align(Alignment.Top)
+                .size(48.dp)
+                .clip(CircleShape)
+                .clickable { onActorClick(feed) },
+            contentScale = ContentScale.FillBounds
+        )
+        Column(modifier = Modifier.fillMaxWidth()) {
+
+            HyperLinkText(
+                hyperLink = actorName,
+                localStringStyle = LocalTextStyle.current,
+                modifier = Modifier,
+                localString = " $eventName",
+                startIndex = 0,
+                endIndex = actorName.length,
+                action = { onActorClick(feed) })
+
+            Text(
+                text = time,
+                style = MaterialTheme.typography.bodySmall,
+                textAlign = TextAlign.End
             )
-            Column(
-                modifier = Modifier
-                    .constrainAs(column) {
-                        start.linkTo(imgActor.end, margin = 16.dp)
-                        centerVerticallyTo(parent)
-                        end.linkTo(parent.end, margin = 16.dp)
-                        width = Dimension.fillToConstraints
-                    }) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-
-                    HyperLinkText(
-                        hyperLink = actorName,
-                        localStringStyle = LocalTextStyle.current,
-                        modifier = Modifier,
-                        localString = " $eventName",
-                        startIndex = 0,
-                        endIndex = actorName.length,
-                        action = { onActorClick(feed) })
-
-                    Text(
-                        text = time,
-                        style = MaterialTheme.typography.bodySmall,
-                        textAlign = TextAlign.End
-                    )
-                    val data = feed.repo
-                    TextButton(
-                        contentPadding = PaddingValues(0.dp),
-                        onClick = { onRepoClick(data.url) },
-                        content = {
-                            Text(
-                                text = data.name,
-                                style = LocalTextStyle.current.merge(
-                                    ButtonDefaults.textButtonColors().contentColor
-                                ),
-                            )
-                        }
-                    )
+            val data = feed.repo
+            TextButton(
+                contentPadding = PaddingValues(0.dp),
+                onClick = { onRepoClick(data.url) },
+                content = {
+                    Text(text = data.name)
                 }
-            }
+            )
+
         }
     }
+
 
 }
 
