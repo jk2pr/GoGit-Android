@@ -18,15 +18,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.hoppers.networkmodule.network.AuthManager
+import com.hoppers.networkmodule.AuthManager
 import com.jk.gogit.UiState
 import com.jk.gogit.components.ComposeLocalWrapper
 import com.jk.gogit.components.Page
@@ -41,16 +41,14 @@ import org.koin.core.parameter.parametersOf
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun UserProfileScreen() {
-
-
     val localNavController = LocalNavController.current
-    val localContext = LocalContext.current
     val login =
         (localNavController.previousBackStackEntry?.savedStateHandle?.get<String>(AppScreens.USERPROFILE.route)
             ?: AuthManager.getLogin())!!
     val viewModel = koinViewModel<UserProfileViewModel>(parameters = { parametersOf(login) })
     val scrollState = rememberScrollState()
     val title = remember { mutableStateOf("") }
+    val seachActivate by remember { mutableStateOf(false) }
 
     Page(
         floatingActionButton = {
@@ -98,14 +96,24 @@ fun UserProfileScreen() {
                             .padding(horizontal = 16.dp),
                         verticalArrangement = Arrangement.Top,
                     ) {
-                        UserProfileHeader(data = overViewTabData.user!!, onFollow = { viewerIsFollowing ->
-                            if (viewerIsFollowing) // if following
-                            viewModel.setState(UserProfileViewModel.MainState.UnFollowEvent(overViewTabData.user.id))
-                            else //Not following
-                            viewModel.setState(UserProfileViewModel.MainState.FollowEvent(overViewTabData.user.id))
-                        })
+                        UserProfileHeader(
+                            data = overViewTabData.user!!,
+                            onFollow = { viewerIsFollowing ->
+                                if (viewerIsFollowing) // if following
+                                    viewModel.setState(
+                                        UserProfileViewModel.MainState.UnFollowEvent(
+                                            overViewTabData.user.id
+                                        )
+                                    )
+                                else //Not following
+                                    viewModel.setState(
+                                        UserProfileViewModel.MainState.FollowEvent(
+                                            overViewTabData.user.id
+                                        )
+                                    )
+                            })
 
-                        OverViewTab(overViewTabData = overViewTabData){ ownerName, repoName, defaultBranch ->
+                        OverViewTab(overViewTabData = overViewTabData) { ownerName, repoName, defaultBranch ->
                             localNavController.currentBackStackEntry
                                 ?.savedStateHandle?.let {
                                     it[AppScreens.USERPROFILE.route] = ownerName

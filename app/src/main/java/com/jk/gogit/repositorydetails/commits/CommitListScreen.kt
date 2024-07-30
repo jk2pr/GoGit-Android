@@ -27,7 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.hoppers.networkmodule.network.AuthManager
+import com.hoppers.networkmodule.AuthManager
 import com.jk.gogit.UiState
 import com.jk.gogit.components.Page
 import com.jk.gogit.components.localproviders.LocalNavController

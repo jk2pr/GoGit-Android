@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.hoppers.GetUserQuery
-import com.hoppers.networkmodule.network.AuthManager
+import com.hoppers.networkmodule.AuthManager
 import com.jk.gogit.R
 import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.extensions.formatNumber
@@ -94,11 +94,11 @@ fun UserProfileHeader(
                             append(" \u2022 (${data.pronouns})")
                         }
                     },
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyLarge
                 )
 
                 BulletList(
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodyLarge,
                     items = mapOf(
                         Icons.Outlined.MailOutline to data.email,
                         Icons.Outlined.LocationOn to data.location,
@@ -126,12 +126,8 @@ fun UserProfileHeader(
                         .wrapContentWidth()
                         .weight(0.5f)
                 ) {
-                    /* BulletList(
-                        style = MaterialTheme.typography.bodyMedium,
-                        items = mapOf(ImageVector.vectorResource(id = R.drawable.outline_home_work_24) to data.company)
-                    )*/
-                    BulletList(
-                        style = MaterialTheme.typography.bodyMedium,
+                   BulletList(
+                        style = MaterialTheme.typography.bodyLarge,
                         maxLine = 1,
                         items = mapOf(ImageVector.vectorResource(id = R.drawable.baseline_link_24) to data.websiteUrl?.toString())
                     )
@@ -141,7 +137,7 @@ fun UserProfileHeader(
 
             }
             BulletList(
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyLarge,
                 items = mapOf(Icons.Outlined.Info to data.bio)
 
             )
@@ -155,7 +151,6 @@ fun UserProfileHeader(
         ) {
             Row {
                 TextButton(
-                    contentPadding = PaddingValues(0.dp),
                     onClick = {
                         localNavController.currentBackStackEntry
                             ?.savedStateHandle?.let {
@@ -176,7 +171,6 @@ fun UserProfileHeader(
                 }
                 TextButton(
                     modifier = Modifier.align(Alignment.CenterVertically),
-                    contentPadding = PaddingValues(start = 4.dp),
                     onClick = {
                         localNavController.currentBackStackEntry
                             ?.savedStateHandle?.let {
@@ -225,12 +219,13 @@ fun BulletList(
     lineSpacing: Dp = 8.dp,
     items: Map<ImageVector, String?>,
 ) {
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center
+    ) {
         items.forEach {
             if (it.value.isNullOrBlank()) return@forEach
-            Row(
-                verticalAlignment = if (maxLine == 1) Alignment.CenterVertically else Alignment.Top
-            ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = it.key,
                     contentDescription = "",
