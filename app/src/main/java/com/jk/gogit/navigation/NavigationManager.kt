@@ -1,8 +1,9 @@
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.hoppers.networkmodule.network.AuthManager
+import com.hoppers.networkmodule.AuthManager
 import com.jk.gogit.components.localproviders.LocalNavController
+import com.jk.gogit.home.HomeScreen
 import com.jk.gogit.login.screen.LoginScreen
 import com.jk.gogit.navigation.AppScreens
 import com.jk.gogit.organisation.OrgListScreen
@@ -21,13 +22,16 @@ import com.jk.gogit.users.UserListScreen
 fun Start() {
     NavHost(
         navController = LocalNavController.current,
-        startDestination = if (AuthManager.getAccessToken().isNullOrEmpty()) AppScreens.LOGIN.route else AppScreens.USERPROFILE.route
+        startDestination = if (AuthManager.getAccessToken().isNullOrEmpty()) AppScreens.LOGIN.route else AppScreens.HOME.route
     ) {
         composable(route = AppScreens.LOGIN.route) {
             LoginScreen()
         }
         composable(route = AppScreens.USERPROFILE.route) {
             UserProfileScreen()
+        }
+        composable(route = AppScreens.HOME.route) {
+            HomeScreen()
         }
         composable(route = AppScreens.USERLIST.route) {
             UserListScreen()

@@ -3,6 +3,7 @@ package com.hoppers.networkmodule.network
 import android.util.Log
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.network.okHttpClient
+import com.hoppers.networkmodule.AuthManager
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.DefaultRequest

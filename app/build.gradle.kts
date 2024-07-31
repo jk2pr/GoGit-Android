@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.kotlinx.serializtion)
     alias(libs.plugins.appolo.client.android)
+    alias(libs.plugins.compose.compiler)
 }
 
 apollo {
@@ -65,9 +66,6 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.10"
-    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -77,6 +75,7 @@ android {
 
 dependencies {
 
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -111,6 +110,9 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.constraintlayout.compose)
 
+
+    //Network Monitor
+    implementation (libs.connext)
 
     implementation(libs.coil)
     implementation(libs.joda.time)

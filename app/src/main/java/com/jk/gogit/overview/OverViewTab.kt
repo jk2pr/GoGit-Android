@@ -1,7 +1,6 @@
 package com.jk.gogit.overview
 
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,16 +13,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DividerDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,7 +52,10 @@ import com.jk.gogit.overview.model.OverViewTabData.OverViewScreenData.OverViewIt
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @Composable
-fun OverViewTab(overViewTabData: OverViewTabData.OverViewScreenData, onClick: (String, String, String) -> Unit) {
+fun OverViewTab(
+    overViewTabData: OverViewTabData.OverViewScreenData,
+    onClick: (String, String, String) -> Unit
+) {
 
     //val viewModel = koinViewModel<OverViewModel>(parameters = { parametersOf(login) })
 
@@ -68,11 +69,11 @@ fun OverViewTab(overViewTabData: OverViewTabData.OverViewScreenData, onClick: (S
     val hasPinned = items.any { it is PinnedRepository || it is PinnedGist }
     Column(
         modifier = Modifier
-            .fillMaxHeight()
+            .fillMaxHeight(),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
@@ -80,7 +81,6 @@ fun OverViewTab(overViewTabData: OverViewTabData.OverViewScreenData, onClick: (S
                 contentDescription = "",
                 modifier = Modifier.size(16.dp),
             )
-            Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = if (hasPinned) "Pinned" else "Popular",
                 style = MaterialTheme.typography.labelLarge,
@@ -90,26 +90,24 @@ fun OverViewTab(overViewTabData: OverViewTabData.OverViewScreenData, onClick: (S
         val itemModifier = Modifier
             .width(200.dp)
             .height(150.dp)
-            .padding(end = 8.dp)
+        // .padding(end = 8.dp)
         LazyRow(
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-                .wrapContentHeight()
+            modifier = Modifier.fillMaxWidth()
         ) {
             items(items.size) { index ->
+                if (index > 0) VerticalDivider(thickness = 8.dp)
                 when (val item = items[index]) {
                     is PinnedRepository -> PinnedItems(
                         repo = item.repo, modifier = itemModifier
-                    ){ ownerName, repoName, defaultBranch ->
-                        onClick(ownerName,repoName, defaultBranch)
+                    ) { ownerName, repoName, defaultBranch ->
+                        onClick(ownerName, repoName, defaultBranch)
 
                     }
 
                     is PopularRepository -> PinnedItems(
                         repo = item.repo, modifier = itemModifier
-                    ){ ownerName, repoName, defaultBranch ->
-                        onClick(ownerName,repoName, defaultBranch)
+                    ) { ownerName, repoName, defaultBranch ->
+                        onClick(ownerName, repoName, defaultBranch)
 
                     }
 
@@ -123,7 +121,7 @@ fun OverViewTab(overViewTabData: OverViewTabData.OverViewScreenData, onClick: (S
             }
         }
         InfoCard(user = overViewTabData.user!!)
-        if (file.isEmpty() and (file  == "null")) return
+        if (file.isEmpty() and (file == "null")) return
         MarkdownText(
             markdown = file,
             modifier = Modifier.padding(vertical = 8.dp),
@@ -139,7 +137,7 @@ fun OverViewTab(overViewTabData: OverViewTabData.OverViewScreenData, onClick: (S
 
 @Composable
 fun PinnedItems(repo: Repos, modifier: Modifier, onClick: (String, String, String) -> Unit) {
-    Card(
+    ElevatedCard(
         modifier = modifier.clickable {
             onClick(repo.owner.login, repo.repoName, repo.defaultBranchRef?.name.orEmpty())
         },
@@ -243,8 +241,8 @@ fun PinnedItems(repo: Repos, modifier: Modifier, onClick: (String, String, Strin
 }
 
 @Composable
- fun GistItem(gist: GistFields, modifier: Modifier) {
-    Card(
+fun GistItem(gist: GistFields, modifier: Modifier) {
+    ElevatedCard(
         modifier = modifier.clickable {
             //onClick()
         },
@@ -271,12 +269,7 @@ fun PinnedItems(repo: Repos, modifier: Modifier, onClick: (String, String, Strin
 @Composable
 private fun InfoCard(user: GetUserQuery.User) {
     val localNavController = LocalNavController.current
-    Card(
-        border = BorderStroke(DividerDefaults.Thickness, DividerDefaults.color),
-        modifier = Modifier.padding(vertical = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-
-        ) {
+    OutlinedCard {
         InfoRow(
             iconId = R.drawable.git_repository_line_1,
             label = "Repositories",
@@ -296,7 +289,7 @@ private fun InfoCard(user: GetUserQuery.User) {
             label = "Organizations",
             count = user.organizations.totalCount,
             tint = Color.Red
-        ){
+        ) {
             val savedStateHandle = localNavController.currentBackStackEntry?.savedStateHandle
             val keys = savedStateHandle?.keys()
             keys?.forEach { savedStateHandle.remove<Any>(it) }
@@ -316,11 +309,11 @@ private fun InfoCard(user: GetUserQuery.User) {
             val savedStateHandle = localNavController.currentBackStackEntry?.savedStateHandle
             val keys = savedStateHandle?.keys()
             keys?.forEach { savedStateHandle.remove<Any>(it) }
-                savedStateHandle?.let {
-                    it[AppScreens.REPOLIST.route] = user.login
-                    //Is Starred true
-                    it[AppScreens.USERPROFILE.route] = true
-                }
+            savedStateHandle?.let {
+                it[AppScreens.REPOLIST.route] = user.login
+                //Is Starred true
+                it[AppScreens.USERPROFILE.route] = true
+            }
 
 
             localNavController.navigate(AppScreens.REPOLIST.route)
@@ -340,25 +333,28 @@ fun InfoRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 8.dp)
+            .padding(8.dp)
             .clickable {
                 onClick()
             },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             Icon(
                 ImageVector.vectorResource(id = iconId),
                 contentDescription = "",
                 tint = tint,
                 modifier = Modifier.size(16.dp),
             )
-            Spacer(modifier = Modifier.width(8.dp))
             Text(text = label, style = MaterialTheme.typography.labelLarge)
         }
-        if (count == null) return
-        Text(text = count.toString(), style = MaterialTheme.typography.labelLarge)
+        count?.let {
+            Text(text = count.toString(), style = MaterialTheme.typography.labelLarge)
+        }
     }
 }
 

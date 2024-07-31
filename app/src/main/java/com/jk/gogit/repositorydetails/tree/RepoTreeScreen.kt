@@ -1,6 +1,5 @@
 package com.jk.gogit.repositorydetails.tree
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,11 +11,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -136,10 +133,8 @@ private fun Form(
             }
         }
         Spacer(modifier = Modifier.size(8.dp))
-        Card(
-            border = BorderStroke(DividerDefaults.Thickness, DividerDefaults.color),
+        OutlinedCard(
             modifier = Modifier.padding(vertical = 8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.Transparent)
         ) {
             LazyColumn(
                 contentPadding = PaddingValues(4.dp),

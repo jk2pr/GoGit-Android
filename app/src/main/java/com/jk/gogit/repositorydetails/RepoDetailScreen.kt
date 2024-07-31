@@ -1,7 +1,6 @@
 package com.jk.gogit.repositorydetails
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,9 +24,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -35,6 +32,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -109,18 +107,16 @@ fun RepoDetailScreen() {
 
         when (val result = viewModel.userListStateFlow.collectAsState().value) {
             is UiState.Loading ->
-                CircularProgressIndicator(
-                    modifier = Modifier.size(50.dp)
-                )
+                CircularProgressIndicator()
 
             is UiState.Content -> {
                 val repo = result.data as GetRepoDetailsQuery.Repository
                 Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(scrollState)
-                        .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.Top,
+                        .padding(8.dp),
                 ) {
                     RepoDetailHeader(repo = repo)
                     RepoDetail(repo = repo)
@@ -155,16 +151,12 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
     val modalSheetState = rememberModalBottomSheetState()
     var isSheetOpen by rememberSaveable { mutableStateOf(false) }
     val selectedBranch = remember { mutableStateOf(repo.defaultBranchRef?.name.orEmpty()) }
-    Card(
-        border = BorderStroke(DividerDefaults.Thickness, DividerDefaults.color),
-        modifier = Modifier.padding(vertical = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
-    ) {
+    OutlinedCard {
         InfoRow(
             iconId = R.drawable.issue_opened_16,
             label = "Issue",
             count = repo.issues.allIssues?.count { it?.state == IssueState.OPEN }
-        ){
+        ) {
             if (repo.issues.allIssues.isNullOrEmpty())
                 return@InfoRow
             savedStateHandle
@@ -188,7 +180,7 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
             label = "Stars",
             count = repo.stargazerCount,
             tint = Color(android.graphics.Color.parseColor("#FFA500")),
-        ){
+        ) {
             if (repo.stargazerCount > 0) {
                 savedStateHandle?.let {
                     it[NavigationArgs.USER_NAME] = repo.owner.login
@@ -212,24 +204,24 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
                 localNavController.navigate(AppScreens.REPOLIST.route)
             }
         }
-    /*    InfoRow(
-            iconId = R.drawable.organization_65,
-            label = "Contributors",
-            count = repo.collaborators?.totalCount ?: 0
-        ){
+        /*    InfoRow(
+                iconId = R.drawable.organization_65,
+                label = "Contributors",
+                count = repo.collaborators?.totalCount ?: 0
+            ){
 
-                val keys = savedStateHandle?.keys()
-                keys?.forEach { savedStateHandle.remove<Any>(it) }
+                    val keys = savedStateHandle?.keys()
+                    keys?.forEach { savedStateHandle.remove<Any>(it) }
 
-                savedStateHandle?.let {
-                    it[NavigationArgs.USER_NAME] = repo.owner.login
-                    it[NavigationArgs.REPO_NAME] = repo.name
-                    it[NavigationArgs.FILTER] = "contributors"
-                }
-                localNavController.navigate(AppScreens.USERLIST.route)
+                    savedStateHandle?.let {
+                        it[NavigationArgs.USER_NAME] = repo.owner.login
+                        it[NavigationArgs.REPO_NAME] = repo.name
+                        it[NavigationArgs.FILTER] = "contributors"
+                    }
+                    localNavController.navigate(AppScreens.USERLIST.route)
 
 
-        }*/
+            }*/
         InfoRow(
             iconId = R.drawable.baseline_remove_red_eye_24,
             label = "Watchers",
@@ -256,23 +248,27 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
                     .fillMaxWidth()
                     .padding(8.dp)
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Icon(
                         painter = painterResource(id = R.drawable.branch_svgrepo_com),
                         contentDescription = null,
                         modifier = Modifier.size(16.dp)
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = selectedBranch.value,
+                    Text(
+                        text = selectedBranch.value,
                         overflow = TextOverflow.Ellipsis,
-                        maxLines = 1, modifier = Modifier.widthIn(max = 200.dp))
+                        maxLines = 1, modifier = Modifier.widthIn(max = 200.dp)
+                    )
                 }
                 TextButton(onClick = { isSheetOpen = true }) {
                     Text(text = "Change branch")
                 }
             }
             HorizontalDivider()
-            InfoRow(iconId = R.drawable.code_2_svgrepo_com, label = "Code"){
+            InfoRow(iconId = R.drawable.code_2_svgrepo_com, label = "Code") {
                 localNavController.currentBackStackEntry
                     ?.savedStateHandle?.let {
                         it[AppScreens.USERPROFILE.route] = repo.owner.login
@@ -281,16 +277,20 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
                     }
                 localNavController.navigate(AppScreens.REPOTREESCREEN.route)
             }
-            InfoRow(iconId = R.drawable.commit_svgrepo_com, label = "Commits", count = repo.refs?.commits?.find {
-                it?.name == selectedBranch.value
-            }?.target?.onCommit?.history?.totalCount){
+            InfoRow(
+                iconId = R.drawable.commit_svgrepo_com,
+                label = "Commits",
+                count = repo.refs?.commits?.find {
+                    it?.name == selectedBranch.value
+                }?.target?.onCommit?.history?.totalCount
+            ) {
 
                 localNavController.currentBackStackEntry
                     ?.savedStateHandle?.let {
-                                it[AppScreens.USERPROFILE.route] = repo.owner.login
-                                it[AppScreens.REPOLIST.route] = selectedBranch.value
-                                it[AppScreens.REPODETAIL.route] = repo.name
-                            }
+                        it[AppScreens.USERPROFILE.route] = repo.owner.login
+                        it[AppScreens.REPOLIST.route] = selectedBranch.value
+                        it[AppScreens.REPODETAIL.route] = repo.name
+                    }
 
                 localNavController.navigate(AppScreens.COMMITLIST.route)
             }
@@ -428,11 +428,16 @@ fun BottomSheetLayout(
                                 //  horizontalArrangement = if (index == 0) Arrangement.SpaceEvenly else Arrangement.Start
                             ) {
                                 Row {
-                                    Text(text = branch.name, modifier = Modifier.widthIn(max =250.dp))
+                                    Text(
+                                        text = branch.name,
+                                        modifier = Modifier.widthIn(max = 250.dp)
+                                    )
                                 }
-                                Box(modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 4.dp)) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 4.dp)
+                                ) {
                                     Card {
                                         if (branch.name == defaultBranch) {
                                             Text(

@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.hoppers.fragment.Org
-import com.hoppers.networkmodule.network.AuthManager
+import com.hoppers.networkmodule.AuthManager
 import com.jk.gogit.UiState
 import com.jk.gogit.components.OrgItem
 import com.jk.gogit.components.Page

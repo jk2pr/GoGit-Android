@@ -2,6 +2,8 @@ package com.jk.gogit
 
 import com.hoppers.networkmodule.network.apolloClient
 import com.hoppers.networkmodule.network.ktorHttpClient
+import com.jk.gogit.home.FeedExecutor
+import com.jk.gogit.home.FeedViewModel
 import com.jk.gogit.login.AuthViewModel
 import com.jk.gogit.organisation.OrgExecutor
 import com.jk.gogit.organisation.OrgListViewModel
@@ -28,6 +30,7 @@ val appModule = module {
     single { apolloClient }
     single<DispatcherProvider> { DefaultDispatchers() }
     single<UserProfileExecutor> { UserProfileExecutor(get()) }
+    single<FeedExecutor> { FeedExecutor(get()) }
     single<RepoExecutor> { RepoExecutor(get()) }
     single<RepoTreeExecutor> { RepoTreeExecutor(get()) }
     single<SearchExecutor> { SearchExecutor(get()) }
@@ -36,6 +39,7 @@ val appModule = module {
     single<OrgExecutor> { OrgExecutor(get()) }
     single<CommitListExecutor> { CommitListExecutor(get()) }
     viewModel { _ -> AuthViewModel() }
+    viewModel { params -> FeedViewModel(feedExecutor = get(), dispatchers = get(), login = params.get()) }
     viewModel { params -> UserProfileViewModel(userProfileExecutor = get(), dispatchers = get(), login = params.get()) }
     viewModel { params -> RepoListViewModel(repoExecutor = get(), dispatchers = get(), login = params.get(), isStarred = params.get(), isOrg = params.get(), filter = params.get(), repoName = params.get()) }
     viewModel { params -> UserListViewModel(userListExecutor = get(), dispatchers = get(), login = params.get(), filter = params.get(), repoName = params.get()) }

@@ -1,21 +1,22 @@
 package com.jk.gogit.components
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -30,6 +31,7 @@ import com.jk.gogit.navigation.AppScreens
 fun UserItem(node: UserFields) {
     val navController = LocalNavController.current
     Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
@@ -45,11 +47,14 @@ fun UserItem(node: UserFields) {
             painter = rememberAsyncImagePainter(node.avatarUrl),
             contentDescription = null,
             modifier = Modifier
-                .size(50.dp)
+                .size(48.dp)
+                .clip(CircleShape)
         )
-        Spacer(modifier = Modifier.width(8.dp))
-        Column {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 Text(
                     text = node.name.orEmpty().trim(),
                     maxLines = 2,
@@ -57,11 +62,10 @@ fun UserItem(node: UserFields) {
                     style = MaterialTheme.typography.labelLarge,
                     modifier = Modifier.widthIn(max = 200.dp)
                 )
-                Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = node.login,
                     maxLines = 1,
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.bodySmall,
                 )
             }
             if (!node.bio.isNullOrBlank())
@@ -76,13 +80,12 @@ fun UserItem(node: UserFields) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 if (!node.company.isNullOrBlank()) {
-                    Row {
+                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                         Icon(
                             ImageVector.vectorResource(id = R.drawable.outline_home_work_24),
                             contentDescription = "",
                             modifier = Modifier.size(16.dp),
                         )
-                        Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = node.company,
                             maxLines = 1,
@@ -95,13 +98,12 @@ fun UserItem(node: UserFields) {
                 }
 
                 if (!node.location.isNullOrBlank()) {
-                    Row {
+                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                         Icon(
                             ImageVector.vectorResource(id = R.drawable.outline_location_on_24),
                             contentDescription = "",
                             modifier = Modifier.size(16.dp),
                         )
-                        Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = node.location,
                             maxLines = 1,

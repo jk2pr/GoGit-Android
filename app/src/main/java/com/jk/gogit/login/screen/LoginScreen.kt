@@ -5,9 +5,6 @@ import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.ClickableText
@@ -65,24 +62,23 @@ fun LoginScreen() {
     Page {
         when (authenticationState) {
             AuthenticationState.Initial ->
-
                 Column(
-                    verticalArrangement = Arrangement.Center,
+                    verticalArrangement = Arrangement.spacedBy(
+                        space = 8.dp,
+                        alignment = Alignment.Top
+                    ),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp),
+                    modifier = Modifier.padding(horizontal = 8.dp),
                 ) {
                     Image(
                         modifier = Modifier
-                           // .heightIn(max = 300.dp)
-                            .align(Alignment.CenterHorizontally),
+                            .align(Alignment.CenterHorizontally)
+                            .size(148.dp),
                         contentDescription = "App Icon",
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
                         painter = painterResource(id = R.mipmap.ic_launcher_foreground),
                         alignment = Alignment.Center,
                     )
-
-                    Spacer(modifier = Modifier.height(50.dp))
 
                     Button(
                         onClick = {
@@ -94,12 +90,10 @@ fun LoginScreen() {
                             }
                         },
                         modifier = Modifier
-                            .fillMaxWidth()
                             .padding(vertical = 8.dp)
                     ) {
                         Text(text = stringResource(id = R.string.sign_in))
                     }
-                    Spacer(modifier = Modifier.height(100.dp))
                     val annotatedString = buildAnnotatedString {
                         pushStyle(style = ParagraphStyle(textAlign = TextAlign.Center))
                         append("Your login indicates acceptance of our ")
@@ -117,7 +111,7 @@ fun LoginScreen() {
 
                     ClickableText(
                         modifier = Modifier
-                           // .widthIn(max = 250.dp)
+                            // .widthIn(max = 250.dp)
                             .align(Alignment.CenterHorizontally),
                         text = annotatedString,
                         onClick = { offset ->
@@ -129,21 +123,23 @@ fun LoginScreen() {
                                 .firstOrNull()?.let { annotation ->
                                     val uri = Uri.parse(annotation.item)
                                     val intent = Intent(Intent.ACTION_VIEW, uri)
-                                    startActivity(activity,intent, null)
-                                   }
+                                    startActivity(activity, intent, null)
+                                }
                         },
-                        style = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.outline, fontSize = 14.sp),
+                        style = LocalTextStyle.current.copy(
+                            color = MaterialTheme.colorScheme.outline,
+                            fontSize = 14.sp
+                        ),
                         maxLines = 2
                     )
 
 
+                    // Other UI elements
 
-                // Other UI elements
-
-            }
+                }
 
             AuthenticationState.Authenticated ->
-                localNavController.navigate(AppScreens.USERPROFILE.route) {
+                localNavController.navigate(AppScreens.HOME.route) {
                     popUpTo(AppScreens.LOGIN.route) {
                         inclusive = true
                     }

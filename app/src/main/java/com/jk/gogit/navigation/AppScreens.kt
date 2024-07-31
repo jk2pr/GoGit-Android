@@ -2,6 +2,7 @@ package com.jk.gogit.navigation
 
 sealed class AppScreens(val route: String) {
     data object LOGIN : AppScreens(ScreenName.LOGIN_SCREEN)
+    data object HOME : AppScreens(ScreenName.HOME_SCREEN)
     data object USERPROFILE : AppScreens(ScreenName.USER_PROFILE_SCREEN)
     data object USERLIST : AppScreens(ScreenName.USER_LIST_SCREEN)
     data object REPOLIST : AppScreens(ScreenName.REPO_LIST_SCREEN)
@@ -18,6 +19,7 @@ sealed class AppScreens(val route: String) {
     class ScreenName {
         companion object {
             const val LOGIN_SCREEN: String = "login_screen"
+            const val HOME_SCREEN: String = "home_screen"
             const val USER_PROFILE_SCREEN: String = "user_profile_screen"
             const val USER_LIST_SCREEN: String = "user_list_screen"
             const val REPO_LIST_SCREEN: String = "repo_list_screen"

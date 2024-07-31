@@ -6,19 +6,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.hoppers.fragment.Repos
 import com.jk.gogit.R
 import com.jk.gogit.components.localproviders.LocalNavController
@@ -28,9 +24,10 @@ import com.jk.gogit.navigation.AppScreens
 fun RepositoryItem(repo: Repos) {
     val localNavController = LocalNavController.current
     Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .padding(vertical = 16.dp)
             .clickable {
                 localNavController.currentBackStackEntry
                     ?.savedStateHandle?.let {
@@ -75,34 +72,17 @@ fun RepositoryItem(repo: Repos) {
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_star_24),
-                    contentDescription = null,
+                IconWithText(
+                    res = R.drawable.baseline_star_24,
                     tint = Color(android.graphics.Color.parseColor("#FFA500")),
-                    modifier = Modifier.size(16.dp)
-                )
-                Text(
                     text = repo.stargazerCount.toString(),
-                    style = MaterialTheme.typography.bodySmall,
-                    //  fontFamily = FontFamily(Font(R.font.bebasneue_light)),
-                    modifier = Modifier.padding(start = 4.dp, end = 8.dp)
                 )
-            }
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_fork_left_24),
-                    contentDescription = null,
-                    modifier = Modifier.size(16.dp)
-                )
-                Text(
+                IconWithText(
+                    res = R.drawable.baseline_fork_left_24,
                     text = repo.forkCount.toString(),
-                    style = MaterialTheme.typography.bodySmall,
-                    //  fontFamily = FontFamily(Font(R.font.bebasneue_light)),
-                    fontSize = 14.sp,
-                    modifier = Modifier.padding(start = 4.dp)
                 )
             }
         }
@@ -113,5 +93,6 @@ fun RepositoryItem(repo: Repos) {
             textAlign = TextAlign.End
         )
     }
+
 }
 
