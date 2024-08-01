@@ -21,11 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.components.localproviders.LocalSnackBarHostState
-import com.tusharhow.connext.helper.CheckConnectivityStatus
 import com.tusharhow.connext.helper.connectivityStatus
 import com.tusharhow.connext.models.ConnectionStatus
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 
 @Composable
 fun Page(
