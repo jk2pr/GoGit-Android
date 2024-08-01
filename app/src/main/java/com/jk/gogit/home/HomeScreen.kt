@@ -43,6 +43,7 @@ import com.jk.gogit.R
 import com.jk.gogit.UiState
 import com.jk.gogit.components.DropdownMenuItemContent
 import com.jk.gogit.components.HyperLinkText
+import com.jk.gogit.components.OfflineError
 import com.jk.gogit.components.Page
 import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.home.model.Feed
@@ -135,17 +136,7 @@ fun HomeScreen() {
                 }
 
 
-                is UiState.Error ->
-                    Text(
-                        text = result.message,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
-                        textAlign = TextAlign.Center,
-                        fontSize = 20.sp,
-                        //   fontFamily = FontFamily(Font(R.font.bebasneue_regular)),
-                        color = Color.Black
-                    )
+                is UiState.Error -> OfflineError(message = result.message,)
 
 
                 is UiState.Empty -> {}

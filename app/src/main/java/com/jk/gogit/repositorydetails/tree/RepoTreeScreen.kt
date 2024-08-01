@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.hoppers.GetRepositoryTreeQuery
 import com.jk.gogit.R
 import com.jk.gogit.UiState
+import com.jk.gogit.components.OfflineError
 import com.jk.gogit.components.Page
 import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.navigation.AppScreens
@@ -88,7 +89,7 @@ fun RepoTreeScreen() {
         when (val result = viewModel.userListStateFlow.collectAsState().value) {
             is UiState.Loading -> {}
             is UiState.Empty -> {}
-            is UiState.Error -> Text(text = result.message)
+            is UiState.Error -> OfflineError(message = result.message,)
             is UiState.Content -> {
                 val d = result.data as PathToFile
                 data.apply {

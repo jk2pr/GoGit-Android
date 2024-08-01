@@ -14,12 +14,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.components.localproviders.LocalSnackBarHostState
 import com.tusharhow.connext.helper.CheckConnectivityStatus
+import com.tusharhow.connext.helper.connectivityStatus
+import com.tusharhow.connext.models.ConnectionStatus
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun Page(
@@ -29,6 +35,10 @@ fun Page(
     contentAlignment: Alignment = Alignment.Center,
     content: @Composable () -> Unit
 ) {
+
+    val snackBarHostState = LocalSnackBarHostState.current
+    val connection by connectivityStatus()
+    val isConnected = connection === ConnectionStatus.Connected
     Scaffold(
         topBar = { AppBar(menuItems = menuItems, title = title) },
         floatingActionButton = floatingActionButton,
@@ -39,15 +49,15 @@ fun Page(
                     .padding(top = paddingValues.calculateTopPadding()),
                 contentAlignment = contentAlignment
             ) {
-                CheckConnectivityStatus(
-                    connectedContent = { content() },
-                    disconnectedContent = { OfflineError() }
-                )
+                content()
+                if (!isConnected) LaunchedEffect(connection) {
+                    snackBarHostState.showSnackbar("No Internet Connection")
+                }
             }
         },
         snackbarHost = {
             SnackbarHost(
-                hostState = LocalSnackBarHostState.current,
+                hostState = snackBarHostState,
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight(Alignment.Bottom)

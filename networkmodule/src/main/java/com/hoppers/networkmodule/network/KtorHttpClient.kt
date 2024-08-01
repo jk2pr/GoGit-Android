@@ -53,24 +53,11 @@ class AuthorizationInterceptor : Interceptor {
                 addHeader("Authorization", "Bearer $tokens")
             }
             .build()
-        // Log request details
 
         return chain.proceed(request)
 
     }
 
-}
-
-private fun logRequest(request: okhttp3.Request) {
-    Log.d("AuthorizationInterceptor", "Request: ${request.method} ${request.url}")
-    // Log.d("AuthorizationInterceptor", "Headers: ${request.headers}")
-    Log.d("AuthorizationInterceptor", "Body: ${request.body}")
-}
-
-private fun logResponse(response: Response) {
-    //  Log.d("AuthorizationInterceptor", "Response: ${response.code} ${response.message}")
-    // Log.d("AuthorizationInterceptor", "Headers: ${response.headers}")
-    Log.d("AuthorizationInterceptor", "Body: ${response.body?.string()}")
 }
 
 val ktorHttpClient = HttpClient(Android) {

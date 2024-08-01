@@ -23,6 +23,7 @@ import com.hoppers.type.SearchType
 import com.jk.gogit.UiState
 import com.jk.gogit.components.Chip
 import com.jk.gogit.components.DropdownMenuItemContent
+import com.jk.gogit.components.OfflineError
 import com.jk.gogit.components.Page
 import com.jk.gogit.components.RepositoryItem
 import com.jk.gogit.components.SearchComponent
@@ -71,9 +72,8 @@ fun SearchScreen() {
                     )
                 }
 
-                is UiState.Error,
-                is UiState.Empty -> {
-                }
+                is UiState.Error -> OfflineError(message = result.message,)
+                is UiState.Empty -> {}
 
 
                 is UiState.Content -> {

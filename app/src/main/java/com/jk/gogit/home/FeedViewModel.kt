@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jk.gogit.DispatcherProvider
 import com.jk.gogit.UiState
+import com.jk.gogit.extensions.printifyMessage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,7 +39,7 @@ class FeedViewModel(
                         Log.d("FeedViewModel", "result: $result")
                         emit(UiState.Content(result))
                     }.catch {
-                        emit(UiState.Error(it.message.toString()))
+                        emit(UiState.Error(it.printifyMessage()))
                     }.flowOn(dispatchers.main).collect {
                         _feedStateFlow.value = it
                     }

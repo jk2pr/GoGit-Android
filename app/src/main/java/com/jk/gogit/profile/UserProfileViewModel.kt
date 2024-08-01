@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jk.gogit.DispatcherProvider
 import com.jk.gogit.UiState
+import com.jk.gogit.extensions.printifyMessage
 import com.jk.gogit.overview.model.OverViewTabData
 import com.jk.gogit.profile.services.UserProfileExecutor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,7 +24,7 @@ class UserProfileViewModel(
 
     private val _feedStateFlow = MutableStateFlow<UiState>(UiState.Empty)
     val feedStateFlow = _feedStateFlow.asStateFlow()
-    lateinit var overViewScreenData: OverViewTabData.OverViewScreenData
+    private lateinit var overViewScreenData: OverViewTabData.OverViewScreenData
 
     init {
         setState(mainState = MainState.FetchEvent)
@@ -40,7 +41,7 @@ class UserProfileViewModel(
                         overViewScreenData = overViewTabData.toOverViewScreenData()
                         emit(UiState.Content(overViewScreenData))
                     }.catch {
-                        emit(UiState.Error(it.message.toString()))
+                        emit(UiState.Error(it.printifyMessage()))
                     }.flowOn(dispatchers.main).collect {
                         _feedStateFlow.value = it
                     }
@@ -58,7 +59,7 @@ class UserProfileViewModel(
                         )
                         emit(UiState.Content(temp))
                     }.catch {
-                        emit(UiState.Error(it.message.toString()))
+                        emit(UiState.Error(it.printifyMessage()))
                     }.flowOn(dispatchers.main).collect {
                         _feedStateFlow.value = it
                     }
@@ -73,7 +74,7 @@ class UserProfileViewModel(
                         )
                         emit(UiState.Content(temp))
                     }.catch {
-                        emit(UiState.Error(it.message.toString()))
+                        emit(UiState.Error(it.printifyMessage()))
                     }.flowOn(dispatchers.main).collect {
                         _feedStateFlow.value = it
                     }

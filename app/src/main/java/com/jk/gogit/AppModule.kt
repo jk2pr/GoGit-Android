@@ -7,6 +7,7 @@ import com.jk.gogit.home.FeedViewModel
 import com.jk.gogit.login.AuthViewModel
 import com.jk.gogit.organisation.OrgExecutor
 import com.jk.gogit.organisation.OrgListViewModel
+import com.jk.gogit.orgdetails.OrgDetailsExecutor
 import com.jk.gogit.orgdetails.OrgDetailsViewModel
 import com.jk.gogit.profile.UserProfileViewModel
 import com.jk.gogit.profile.services.UserProfileExecutor
@@ -37,6 +38,7 @@ val appModule = module {
     single<UserListExecutor> { UserListExecutor(get()) }
     single<RepoDetailExecutor> { RepoDetailExecutor(get()) }
     single<OrgExecutor> { OrgExecutor(get()) }
+    single<OrgDetailsExecutor> { OrgDetailsExecutor(get()) }
     single<CommitListExecutor> { CommitListExecutor(get()) }
     viewModel { _ -> AuthViewModel() }
     viewModel { params -> FeedViewModel(feedExecutor = get(), dispatchers = get(), login = params.get()) }

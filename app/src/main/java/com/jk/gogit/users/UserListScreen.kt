@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.hoppers.fragment.UserFields
 import com.jk.gogit.R
 import com.jk.gogit.UiState
+import com.jk.gogit.components.OfflineError
 import com.jk.gogit.components.Page
 import com.jk.gogit.components.UserItem
 import com.jk.gogit.components.localproviders.LocalNavController
@@ -61,18 +62,7 @@ fun UserListScreen() {
                 }
             }
 
-            is UiState.Error -> {
-                Text(
-                    text = result.message,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    textAlign = TextAlign.Center,
-                    fontSize = 20.sp,
-                    //   fontFamily = FontFamily(Font(R.font.bebasneue_regular)),
-                    color = Color.Black
-                )
-            }
+            is UiState.Error -> OfflineError(message = result.message,)
 
             is UiState.Empty -> Text(
                 text = stringResource(id = R.string.no_data_available),

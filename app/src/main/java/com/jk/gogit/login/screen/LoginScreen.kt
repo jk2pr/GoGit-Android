@@ -138,7 +138,7 @@ fun LoginScreen() {
 
                 }
 
-            AuthenticationState.Authenticated ->
+           is AuthenticationState.Authenticated ->
                 localNavController.navigate(AppScreens.HOME.route) {
                     popUpTo(AppScreens.LOGIN.route) {
                         inclusive = true

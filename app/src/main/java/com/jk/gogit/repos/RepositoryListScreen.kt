@@ -26,6 +26,7 @@ import com.jk.gogit.R
 import com.jk.gogit.UiState
 import com.jk.gogit.components.DropdownFilter
 import com.jk.gogit.components.IconWithText
+import com.jk.gogit.components.OfflineError
 import com.jk.gogit.components.Page
 import com.jk.gogit.components.RepositoryItem
 import com.jk.gogit.components.localproviders.LocalNavController
@@ -67,7 +68,7 @@ fun RepositoryListScreen() {
     }) {
         when (val result = viewModel.repoStateFlow.collectAsState().value) {
             is UiState.Loading -> CircularProgressIndicator()
-            is UiState.Error -> {}
+            is UiState.Error -> OfflineError(message = result.message,)
             is UiState.Empty -> {}
             is UiState.Content -> {
 

@@ -119,6 +119,7 @@ dependencies {
 
     implementation (libs.markdownview.android)
     implementation(project(":networkmodule"))
+    implementation(libs.androidx.ui.text.google.fonts)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

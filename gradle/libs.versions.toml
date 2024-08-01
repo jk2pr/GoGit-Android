@@ -25,6 +25,7 @@ appoloCleint = "4.0.0-beta.5"
 jodaTime = "2.12.5"
 appcompat = "1.7.0"
 material = "1.12.0"
+uiTextGoogleFonts = "1.6.8"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -73,6 +74,7 @@ androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", versi
 apollo-runtime = { group = "com.apollographql.apollo3",name = "apollo-runtime", version.ref = "appoloCleint" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

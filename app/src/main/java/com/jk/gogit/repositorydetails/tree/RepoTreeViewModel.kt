@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hoppers.GetRepositoryTreeQuery
 import com.jk.gogit.DispatcherProvider
 import com.jk.gogit.UiState
+import com.jk.gogit.extensions.printifyMessage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -61,7 +62,7 @@ class RepoTreeViewModel(
                         val pathToFile = toPathToFile(path = endpoint, file = result)
                         emit(UiState.Content(pathToFile))
                     }.catch {
-                        emit(UiState.Error(it.message.toString()))
+                        emit(UiState.Error(it.printifyMessage()))
                     }.flowOn(dispatchers.main).collect {
                         _userListStateFlow.value = it
                     }

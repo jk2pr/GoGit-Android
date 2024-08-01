@@ -1,7 +1,9 @@
 package com.jk.gogit.extensions
 
 import androidx.compose.ui.graphics.Color
+import com.apollographql.apollo3.exception.ApolloNetworkException
 import org.joda.time.DateTime
+import java.net.UnknownHostException
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -63,6 +65,14 @@ fun String.toColor(): Color {
     return Color(android.graphics.Color.parseColor(this))
 }
 
+fun Throwable.printifyMessage(): String {
+    return when (this) {
+        is ApolloNetworkException,
+        is UnknownHostException -> "No Internet Connection"
+        is IllegalStateException -> "Access to this data is restricted by organization."
+        else -> "Something went wrong, Pleas try again"
+    }
+}
 /*return when {
     this >= 1000000 -> (this / 1000000).toDouble().roundToInt().toString() + "M"
     this >= 1000 -> (this / 1000).toDouble().roundToInt().toString() + "k"

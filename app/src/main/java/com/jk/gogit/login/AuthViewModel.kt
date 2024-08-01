@@ -5,13 +5,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.OAuthCredential
 import com.google.firebase.auth.OAuthProvider
 import com.hoppers.networkmodule.AuthManager
+import com.hoppers.networkmodule.model.UserProfile
 import com.jk.gogit.MainActivity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 sealed class AuthenticationState {
     data object Initial : AuthenticationState()
-    data object Authenticated : AuthenticationState()
+    data class Authenticated(val profile: Any?) : AuthenticationState()
     data object AuthenticationFailed : AuthenticationState()
     data object Loading : AuthenticationState()
 }
@@ -24,8 +27,11 @@ class AuthViewModel : ViewModel() {
     fun signInWithGithub(provider: OAuthProvider.Builder, activity: MainActivity) {
         val firebaseAuth = FirebaseAuth.getInstance()
         val currentUser = firebaseAuth.currentUser
-        if (currentUser != null && !AuthManager.getAccessToken().isNullOrEmpty()) {
-            _authenticationState.value = AuthenticationState.Authenticated
+        if (currentUser != null && !AuthManager.getAccessToken()
+                .isNullOrEmpty() && AuthManager.getAvatarUrl() != null
+        ) {
+            _authenticationState.value =
+                AuthenticationState.Authenticated(profile = currentUser.providerData.first())
             return
         }
 
@@ -33,7 +39,8 @@ class AuthViewModel : ViewModel() {
 
         val pendingResultTask = firebaseAuth.pendingAuthResult
         pendingResultTask?.addOnSuccessListener {
-            _authenticationState.value = AuthenticationState.Authenticated
+            _authenticationState.value =
+                AuthenticationState.Authenticated(it.user?.providerData?.first())
         }?.addOnFailureListener {
             // Handle failure
             _authenticationState.value = AuthenticationState.AuthenticationFailed
@@ -41,21 +48,24 @@ class AuthViewModel : ViewModel() {
             .startActivityForSignInWithProvider(activity, provider.build())
             .addOnSuccessListener { authResult ->
                 val profileData = authResult.additionalUserInfo?.profile
-                if (profileData != null) {
-                    val login = profileData["login"] as String
-                    val avatarUrl = profileData["avatar_url"] as String
+                val mappedProfileData = profileData?.mapValues { it.value.toString() }
 
-                    val accessToken = (authResult.credential as? OAuthCredential)?.accessToken
-                    if (accessToken != null)
+                val jsonString = Json.encodeToString(mappedProfileData)
+                val userProfile: UserProfile = Json.decodeFromString(jsonString)
 
-                        AuthManager.saveAccessToken(
-                            token = accessToken.toString(),
-                            login = login,
-                            avatarUrl = avatarUrl,
-                        )
-                    _authenticationState.value = AuthenticationState.Authenticated
-                }
+                _authenticationState.value =
+                    AuthenticationState.Authenticated(profile = userProfile)
+
+                val accessToken = (authResult.credential as? OAuthCredential)?.accessToken
+                if (!accessToken.isNullOrBlank())
+                    AuthManager.saveAccessToken(
+                        token = accessToken,
+                        avatarUrl = userProfile.avatarUrl.orEmpty(),
+                        login = userProfile.login.orEmpty()
+                    )
+                //  AuthManager.saveUserData(data= jsonString)
             }
+
             .addOnFailureListener {
                 // Handle failure
                 _authenticationState.value = AuthenticationState.AuthenticationFailed

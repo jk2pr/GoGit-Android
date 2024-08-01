@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jk.gogit.DispatcherProvider
 import com.jk.gogit.UiState
+import com.jk.gogit.extensions.printifyMessage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,7 +38,7 @@ class OrgListViewModel(
                         val r = orgExecutor.execute(user = login,)
                         emit(UiState.Content(r))
                     }.catch {
-                        emit(UiState.Error(it.message.toString()))
+                        emit(UiState.Error(it.printifyMessage()))
                     }.flowOn(dispatchers.main).collect {
                         _orgStateFlow.value = it
                     }

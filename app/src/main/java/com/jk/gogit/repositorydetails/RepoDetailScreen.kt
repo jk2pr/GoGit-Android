@@ -62,6 +62,7 @@ import com.hoppers.GetRepoDetailsQuery
 import com.hoppers.type.IssueState
 import com.jk.gogit.R
 import com.jk.gogit.UiState
+import com.jk.gogit.components.OfflineError
 import com.jk.gogit.components.Page
 import com.jk.gogit.components.TitleText
 import com.jk.gogit.components.localproviders.LocalNavController
@@ -136,7 +137,7 @@ fun RepoDetailScreen() {
                 }
             }
 
-            is UiState.Error -> Text(text = result.message)
+            is UiState.Error -> OfflineError(message = result.message,)
             is UiState.Empty -> {}
         }
 

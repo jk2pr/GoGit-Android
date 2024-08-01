@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.hoppers.networkmodule.AuthManager
 import com.jk.gogit.UiState
+import com.jk.gogit.components.OfflineError
 import com.jk.gogit.components.Page
 import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.navigation.AppScreens
@@ -54,7 +55,7 @@ fun CommitListScreen() {
         when (val result = viewModel.commListStateFlow.collectAsState().value) {
             is UiState.Loading -> CircularProgressIndicator()
 
-            is UiState.Error -> {}
+            is UiState.Error -> OfflineError(message = result.message,)
             is UiState.Empty -> {}
             is UiState.Content -> {
                 val commits = result.data as List<*>

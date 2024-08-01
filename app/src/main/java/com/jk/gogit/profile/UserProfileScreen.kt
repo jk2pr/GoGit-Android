@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.hoppers.networkmodule.AuthManager
 import com.jk.gogit.UiState
 import com.jk.gogit.components.ComposeLocalWrapper
+import com.jk.gogit.components.OfflineError
 import com.jk.gogit.components.Page
 import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.navigation.AppScreens
@@ -120,13 +121,7 @@ fun UserProfileScreen() {
                 }
             }
 
-            is UiState.Error -> Text(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                text = result.message,
-                softWrap = true,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.error)
-            )
+            is UiState.Error -> OfflineError(message = result.message,)
 
             is UiState.Empty -> {}
         }

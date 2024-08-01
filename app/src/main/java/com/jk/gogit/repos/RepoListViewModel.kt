@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.hoppers.fragment.Repos
 import com.jk.gogit.DispatcherProvider
 import com.jk.gogit.UiState
+import com.jk.gogit.extensions.printifyMessage
 import com.jk.gogit.repos.services.RepoExecutor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,7 +51,7 @@ class RepoListViewModel(
                         emit(UiState.Content(result))
                         updateLanguageMap(result)
                     }.catch {
-                        emit(UiState.Error(it.message.toString()))
+                        emit(UiState.Error(it.printifyMessage()))
                     }.flowOn(dispatchers.main).collect {
                         _repoStateFlow.value = it
                     }
