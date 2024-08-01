@@ -65,6 +65,7 @@ class UserProfileViewModel(
                     }
 
                 }
+
                 is MainState.UnFollowEvent -> {
                     flow {
                         emit(UiState.Loading)
