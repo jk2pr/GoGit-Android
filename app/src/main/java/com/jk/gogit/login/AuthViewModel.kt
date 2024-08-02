@@ -50,8 +50,9 @@ class AuthViewModel : ViewModel() {
                 val profileData = authResult.additionalUserInfo?.profile
                 val mappedProfileData = profileData?.mapValues { it.value.toString() }
 
-                val jsonString = Json.encodeToString(mappedProfileData)
-                val userProfile: UserProfile = Json.decodeFromString(jsonString)
+                val j = Json { ignoreUnknownKeys = true }
+                val jsonString = j.encodeToString(mappedProfileData)
+                val userProfile: UserProfile = j.decodeFromString(jsonString)
 
                 _authenticationState.value =
                     AuthenticationState.Authenticated(profile = userProfile)

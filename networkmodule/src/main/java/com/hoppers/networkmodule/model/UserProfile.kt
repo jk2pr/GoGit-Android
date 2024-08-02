@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UserProfile(
     @SerialName("gravatar_id") val gravatarId: String? = null,
+    @SerialName("notification_email") val notificationEmail: String? = null,
     @SerialName("twitter_username") val twitterUsername: String? = null,
     @SerialName("disk_usage") val diskUsage: Int = 0,
     val hireable: String? = null,

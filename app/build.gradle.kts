@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlinx.serializtion)
     alias(libs.plugins.appolo.client.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.google.firebase.crashlytics)
 }
 
 apollo {
@@ -82,6 +83,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.crashlytics)
 
     implementation(libs.apollo.runtime)
     implementation( libs.logging.interceptor)

@@ -26,6 +26,8 @@ jodaTime = "2.12.5"
 appcompat = "1.7.0"
 material = "1.12.0"
 uiTextGoogleFonts = "1.6.8"
+firebaseCrashlytics = "19.0.3"
+googleFirebaseCrashlytics = "3.0.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -75,6 +77,7 @@ apollo-runtime = { group = "com.apollographql.apollo3",name = "apollo-runtime", 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics", version.ref = "firebaseCrashlytics" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -85,3 +88,4 @@ kotlinx-serializtion = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 appolo-client-android = { id = "com.apollographql.apollo3" , version.ref = "appoloCleint" }
 
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "googleFirebaseCrashlytics" }
