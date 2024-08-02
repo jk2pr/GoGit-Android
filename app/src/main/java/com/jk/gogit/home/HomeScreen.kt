@@ -86,7 +86,9 @@ fun HomeScreen() {
                     )
                     Image(
                         contentDescription = "Profile Image",
-                        modifier = Modifier.clip(CircleShape).size(24.dp),
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .size(24.dp),
                         painter = imagePainter
                     )
                 }
@@ -134,7 +136,7 @@ fun HomeScreen() {
                 }
 
 
-                is UiState.Error -> OfflineError(message = result.message,)
+                is UiState.Error -> OfflineError(message = result.message)
 
 
                 is UiState.Empty -> {}
