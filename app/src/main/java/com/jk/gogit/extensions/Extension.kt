@@ -1,6 +1,7 @@
 package com.jk.gogit.extensions
 
 import androidx.compose.ui.graphics.Color
+import com.apollographql.apollo3.exception.ApolloHttpException
 import com.apollographql.apollo3.exception.ApolloNetworkException
 import org.joda.time.DateTime
 import java.net.UnknownHostException
@@ -27,7 +28,6 @@ fun Date.formatDateRelativeToToday(): String {
     val daysDifference = ChronoUnit.DAYS.between(localDate, today)
     val hoursDifference = ChronoUnit.HOURS.between(localDateTime, now)
     val minutesDifference = ChronoUnit.MINUTES.between(localDateTime, now)
-    val secondsDifference = ChronoUnit.SECONDS.between(localDateTime, now)
 
 
     return when {
@@ -67,8 +67,13 @@ fun String.toColor(): Color {
 
 fun Throwable.printifyMessage(): String {
     return when (this) {
+        is ApolloHttpException ->
+            if (this.statusCode == 401) "Unauthorized access, Please login again"
+            else "Something went wrong, Pleas try again"
+
         is ApolloNetworkException,
         is UnknownHostException -> "No Internet Connection"
+
         is IllegalStateException -> "Access to this data is restricted by organization."
         else -> "Something went wrong, Pleas try again"
     }
