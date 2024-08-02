@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
-            GoGitTheme(dynamicColor = false) {
+            GoGitTheme {
                 ComposeLocalWrapper {
                     KoinAndroidContext() {
                         Start()
