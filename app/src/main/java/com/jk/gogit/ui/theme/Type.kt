@@ -6,7 +6,7 @@ import androidx.compose.ui.text.googlefonts.Font
 import androidx.compose.ui.text.googlefonts.GoogleFont
 import com.jk.gogit.R
 
-const val fontName: String = "Poppins"
+const val fontName: String = "Finlandica"
 val provider = GoogleFont.Provider(
     providerAuthority = "com.google.android.gms.fonts",
     providerPackage = "com.google.android.gms",
