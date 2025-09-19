@@ -26,7 +26,7 @@ class UserProfileExecutor
 
         val userResponse = client.query(GetUserQuery(login)).execute()
         Log.d( "execute:" ,"${userResponse.extensions.keys}")
-        val user = userResponse.data?.user ?: throw userResponse.exception ?: IllegalStateException(
+        val user = userResponse.data?.user ?: throw  IllegalStateException(
             "Sorry, the user you're looking for was not found"
         )
 
@@ -78,13 +78,13 @@ class UserProfileExecutor
     }
     suspend fun followUser(userId: String): FollowUserMutation.Data
     {
-        return  client.mutation(FollowUserMutation(user = userId)).execute().dataOrThrow()
+        return  client.mutation(FollowUserMutation(user = userId)).execute().dataAssertNoErrors
 
 
     }
     suspend fun unFollowUser(userId: String): UnfollowUserMutation.Data
     {
-        return  client.mutation(UnfollowUserMutation(user = userId)).execute().dataOrThrow()
+        return  client.mutation(UnfollowUserMutation(user = userId)).execute().dataAssertNoErrors
 
 
     }

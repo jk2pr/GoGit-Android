@@ -24,7 +24,7 @@ val keystoreProperties = Properties().apply {
 
 android {
     namespace = "com.jk.gogit"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.jk.gogit"
@@ -75,7 +75,7 @@ android {
 }
 
 dependencies {
-
+    implementation("javax.inject:javax.inject:1")
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

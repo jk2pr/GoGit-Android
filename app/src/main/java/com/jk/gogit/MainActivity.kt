@@ -23,9 +23,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             GoGitTheme {
                 ComposeLocalWrapper {
-                    KoinAndroidContext() {
                         Start()
-                    }
                 }
             }
         }
