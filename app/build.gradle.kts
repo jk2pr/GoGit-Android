@@ -30,7 +30,7 @@ android {
         applicationId = "com.jk.gogit"
         minSdk = 29
         targetSdk = 36 // Updated from 34
-        versionCode = 8
+        versionCode = 11
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
