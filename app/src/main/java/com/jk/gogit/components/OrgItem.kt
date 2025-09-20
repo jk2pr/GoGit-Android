@@ -24,7 +24,7 @@ import com.jk.gogit.navigation.AppScreens
 
 @Composable
 fun OrgItem(org: Org) {
-    val localNavController = LocalNavController.current
+    LocalNavController.current
     val navController = LocalNavController.current
     Row(
         modifier = Modifier

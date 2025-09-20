@@ -23,7 +23,7 @@ import com.jk.gogit.search.SearchExecutor
 import com.jk.gogit.search.SearchViewModel
 import com.jk.gogit.users.services.UserListExecutor
 import com.jk.gogit.users.viewmodel.UserListViewModel
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {

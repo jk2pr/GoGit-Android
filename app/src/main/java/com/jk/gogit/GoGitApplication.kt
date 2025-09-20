@@ -1,22 +1,22 @@
 package com.jk.gogit
 
 import android.app.Application
-import android.content.Context
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.hoppers.networkmodule.AuthManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
+import androidx.core.content.edit
 
 class GoGitApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        val context = applicationContext
-        val sharedPreferences = getSharedPreferences("auth", Context.MODE_PRIVATE)
+        applicationContext
+        val sharedPreferences = getSharedPreferences("auth", MODE_PRIVATE)
         AuthManager.initialize(sharedPreferences, onLogout = {
-            sharedPreferences.edit().clear().apply()
-            val firebaseAuth = FirebaseAuth.getInstance()
+            sharedPreferences.edit { clear() }
+            FirebaseAuth.getInstance()
             //  firebaseAuth.signOut()
             showToast()
         })

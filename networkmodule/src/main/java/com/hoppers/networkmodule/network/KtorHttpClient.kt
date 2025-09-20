@@ -62,7 +62,10 @@ class AuthorizationInterceptor : Interceptor {
 
 val ktorHttpClient = HttpClient(Android) {
     followRedirects = false
-
+    engine {
+        connectTimeout = TIME_OUT
+        socketTimeout = TIME_OUT
+    }
     install(Auth) {
         bearer {
             // Load tokens function retrieves the access token for each request
@@ -85,10 +88,7 @@ val ktorHttpClient = HttpClient(Android) {
             }
         )
 
-        engine {
-            connectTimeout = TIME_OUT
-            socketTimeout = TIME_OUT
-        }
+
     }
     install(Logging) {
         logger = object : Logger {

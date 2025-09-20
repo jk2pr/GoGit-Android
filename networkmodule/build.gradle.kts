@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "com.hoppers.networkmodule"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         //applicationId = "com.hoppers.networkmodule"
         minSdk = 29
-        testOptions.targetSdk = 34
+        //testOptions.targetSdk = 34
       //  versionCode = 1
        // versionName = "1.0"
 
@@ -32,9 +32,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
     }
 }
 
@@ -57,4 +54,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+}
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
 }

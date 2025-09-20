@@ -22,7 +22,7 @@ class OrgDetailsExecutor
 
 
         val userResponse = client.query(GetOrganizationDetailQuery(login)).execute()
-        val org = userResponse.data?.organization ?: throw userResponse.exception ?: IllegalStateException(
+        val org = userResponse.data?.organization ?: throw IllegalStateException(
            "It seems that the organization $login has enabled OAuth App access restrictions, meaning that data access to third-parties is limited."
         )
 

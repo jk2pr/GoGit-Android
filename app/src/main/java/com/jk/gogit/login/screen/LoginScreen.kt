@@ -1,13 +1,12 @@
 package com.jk.gogit.login.screen
 
 import android.content.Intent
-import android.net.Uri
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LocalTextStyle
@@ -19,19 +18,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.LinkInteractionListener
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
+// import androidx.compose.ui.text.withStyle // Removed unused import
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.startActivity
+import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.OAuthProvider
 import com.jk.gogit.MainActivity
@@ -49,9 +49,9 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LoginScreen() {
-    val activity = LocalContext.current as MainActivity
+    val activity = LocalActivity.current as MainActivity
     val provider = OAuthProvider.newBuilder("github.com")
-    provider.setScopes(AuthRequestModel().generate().scopes)
+    provider.scopes = AuthRequestModel().generate().scopes
 
     val localNavController = LocalNavController.current
 
@@ -94,38 +94,50 @@ fun LoginScreen() {
                     ) {
                         Text(text = stringResource(id = R.string.sign_in))
                     }
+
+                    val privacyPolicyUrl = "https://jk2pr.github.io"
+                    val preLinkText = "Your login indicates acceptance of our "
+                    val linkText = "\nPrivacy Policy"
+
                     val annotatedString = buildAnnotatedString {
                         pushStyle(style = ParagraphStyle(textAlign = TextAlign.Center))
-                        append("Your login indicates acceptance of our ")
-                        pushStringAnnotation(
-                            tag = "PrivacyPolicy",
-                            annotation = "https://jk2pr.github.io"
-                        ) // Replace the URL with your actual Privacy Policy URL
-                        withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
-                            append("\n")
-                            append("Privacy Policy")
-                        }
-                        pop()
+                        append(preLinkText)
+
+                        val startIndex = length
+                        append(linkText)
+                        val endIndex = length
+
+                        // Apply visual style to the link text
+                        addStyle(
+                            style = SpanStyle(textDecoration = TextDecoration.Underline),
+                            start = startIndex,
+                            end = endIndex
+                        )
+
+                        // Create and add the LinkAnnotation
+                        val clickableAnnotation = LinkAnnotation.Clickable(
+                            tag = "PrivacyPolicyURL", // Semantic tag for the link
+                            linkInteractionListener = object : LinkInteractionListener {
+                                override fun onClick(link: LinkAnnotation) {
+                                    val uri = privacyPolicyUrl.toUri()
+                                    val intent = Intent(Intent.ACTION_VIEW, uri)
+                                    activity.startActivity(intent)
+                                }
+                            }
+                        )
+                        addLink(
+                            clickableAnnotation, // Corrected: pass annotation directly
+                            start = startIndex,
+                            end = endIndex
+                        )
+                        pop() // Pop the ParagraphStyle
                     }
 
 
-                    ClickableText(
+                    Text(
                         modifier = Modifier
-                            // .widthIn(max = 250.dp)
                             .align(Alignment.CenterHorizontally),
                         text = annotatedString,
-                        onClick = { offset ->
-                            annotatedString.getStringAnnotations(
-                                tag = "PrivacyPolicy",
-                                start = offset,
-                                end = offset
-                            )
-                                .firstOrNull()?.let { annotation ->
-                                    val uri = Uri.parse(annotation.item)
-                                    val intent = Intent(Intent.ACTION_VIEW, uri)
-                                    startActivity(activity, intent, null)
-                                }
-                        },
                         style = LocalTextStyle.current.copy(
                             color = MaterialTheme.colorScheme.outline,
                             fontSize = 14.sp

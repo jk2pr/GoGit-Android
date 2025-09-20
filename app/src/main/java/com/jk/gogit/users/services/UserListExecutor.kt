@@ -42,7 +42,7 @@ class UserListExecutor
             "watchers" -> GetWatchersQuery(ownerName = user, repoName = repoName)
             else -> GetWatchersQuery(ownerName = user, repoName = repoName)
         }
-        val response = client.query(query).execute().dataOrThrow()
+        val response = client.query(query).execute().dataAssertNoErrors
         val r = response.let { usr ->
             when (usr) {
                 is GetStargazersQuery.Data -> usr.repository?.stargazers?.nodes?.map { it?.userFields }
