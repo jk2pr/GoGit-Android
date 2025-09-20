@@ -123,9 +123,9 @@ fun HomeScreen() {
                                         val owner = a[4]
                                         val repo = a[5]
                                         navController.currentBackStackEntry
-                                            ?.savedStateHandle?.let {
-                                                it[AppScreens.USERPROFILE.route] = owner
-                                                it[AppScreens.REPODETAIL.route] = repo
+                                            ?.savedStateHandle?.let { s ->
+                                                s[AppScreens.USERPROFILE.route] = owner
+                                                s[AppScreens.REPODETAIL.route] = repo
                                             }
 
                                         navController.navigate(AppScreens.REPODETAIL.route)

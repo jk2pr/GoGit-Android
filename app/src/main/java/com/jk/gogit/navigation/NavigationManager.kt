@@ -1,3 +1,4 @@
+package com.jk.gogit.navigation
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -5,7 +6,6 @@ import com.hoppers.networkmodule.AuthManager
 import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.home.HomeScreen
 import com.jk.gogit.login.screen.LoginScreen
-import com.jk.gogit.navigation.AppScreens
 import com.jk.gogit.organisation.OrgListScreen
 import com.jk.gogit.orgdetails.OrgDetailsScreen
 import com.jk.gogit.profile.UserProfileScreen

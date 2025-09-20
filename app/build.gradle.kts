@@ -29,7 +29,7 @@ android {
     defaultConfig {
         applicationId = "com.jk.gogit"
         minSdk = 29
-        targetSdk = 34
+        targetSdk = 36 // Updated from 34
         versionCode = 8
         versionName = "1.0"
 
@@ -61,9 +61,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
     buildFeatures {
         compose = true
     }
@@ -75,7 +72,7 @@ android {
 }
 
 dependencies {
-    implementation("javax.inject:javax.inject:1")
+    implementation(libs.javax.inject)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -130,6 +127,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+}
 
-
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
 }

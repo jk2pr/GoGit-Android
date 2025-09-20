@@ -1,6 +1,5 @@
 package com.jk.gogit
 
-import Start
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,8 +9,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.jk.gogit.components.ComposeLocalWrapper
 import com.jk.gogit.login.screen.LoginScreen
+import com.jk.gogit.navigation.Start
 import com.jk.gogit.ui.theme.GoGitTheme
-import org.koin.androidx.compose.KoinAndroidContext
 import org.koin.core.annotation.KoinExperimentalAPI
 
 class MainActivity : ComponentActivity() {

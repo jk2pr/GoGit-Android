@@ -45,7 +45,7 @@ fun OrgDetailsHeader(
     data: GetOrganizationDetailQuery.Organization,
     modifier: Modifier = Modifier
 ) {
-    val localNavController = LocalNavController.current
+    LocalNavController.current
 
     Column(modifier = modifier) {
         val painter =
