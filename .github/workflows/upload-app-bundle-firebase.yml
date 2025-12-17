@@ -7,11 +7,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: set up JDK 18
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v4
+      - name: set up JDK 17
+        uses: actions/setup-java@v4
         with:
-          java-version: 18
+          java-version: '17'
+          distribution: 'temurin'
       - name: create keystore.properties
         env:
           KEYSTORE: ${{ secrets.KEYSTORE }}
@@ -30,27 +31,23 @@ jobs:
           gradlePath: app/build.gradle.kts # or app/build.gradle.kts
           versionCode: ${{github.run_number}}
           versionName: 2.0.0
-     # - name: Install NDK
-     #   run: echo "y" | sudo /usr/local/lib/android/sdk/tools/bin/sdkmanager --install "ndk;21.0.6113669" --sdk_root=${ANDROID_SDK_ROOT}
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
       - name: Clean
         run: ./gradlew clean
       - name: LintCheck
         run: ./gradlew ktlintCheck
-    #  - name: Run Test
-    #    run: ./gradlew assembleDebugAndroidTest
-      - name: build prod
-        run: ./gradlew app:bundleDebug --stacktrace
+      - name: Build Release App Bundle
+        run: ./gradlew app:bundleRelease --stacktrace
       - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
           name: aab
-          path: app/build/outputs/bundle/debug/**.aab
+          path: app/build/outputs/bundle/release/**.aab
       - name: Firebase App Distribution
         uses: hasretsariyer/firebase-app-distribution-github-action@v1.0
         with:
           app_id: ${{secrets.FIREBASE_APP_ID}}
           firebase_token: ${{secrets.FIREBASE_TOKEN}}
-          app_file: app/build/outputs/bundle/debug/app-debug.aab
+          app_file: app/build/outputs/bundle/release/app-release.aab
           tester_groups: maintainers
