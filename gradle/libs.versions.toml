@@ -30,6 +30,7 @@ uiTextGoogleFonts = "1.10.0"
 firebaseCrashlytics = "20.0.3"
 googleFirebaseCrashlytics = "3.0.6"
 javaxInject = "1"
+klint_version = "14.0.1"
 
 [libraries]
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
@@ -90,6 +91,7 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 kotlinx-serializtion = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 appolo-client-android = { id = "com.apollographql.apollo3" , version.ref = "appoloCleint" }
+ktlint = {id = "org.jlleitschuh.gradle.ktlint", version.ref = "klint_version"}
 
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "googleFirebaseCrashlytics" }

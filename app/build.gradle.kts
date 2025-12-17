@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.appolo.client.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.firebase.crashlytics)
+    alias(libs.plugins.ktlint)
 }
 
 apollo {
@@ -130,6 +131,18 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 }
 
+tasks.register<Copy>("installGitHook") {
+    from(rootProject.file("pre-commit"))
+    into(rootProject.file(".git/hooks"))
+    filePermissions {
+        unix("rwxrwxrwx")
+    }
+}
+
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
+}
+
+tasks.named("preBuild") {
+    dependsOn("installGitHook")
 }
