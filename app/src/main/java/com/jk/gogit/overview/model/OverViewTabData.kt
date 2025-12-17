@@ -30,7 +30,6 @@ data class OverViewTabData(
         )
     }
 
-
     data class OverViewScreenData(
         val user: GetUserQuery.User?,
         val org: GetOrganizationDetailQuery.Organization? = null,
@@ -39,9 +38,17 @@ data class OverViewTabData(
         val list: List<OverViewItem>,
     ) {
         sealed class OverViewItem {
-            data class PinnedRepository(val repo: Repos) : OverViewItem()
-            data class PinnedGist(val gist: GistFields) : OverViewItem()
-            data class PopularRepository(val repo: Repos) : OverViewItem()
+            data class PinnedRepository(
+                val repo: Repos,
+            ) : OverViewItem()
+
+            data class PinnedGist(
+                val gist: GistFields,
+            ) : OverViewItem()
+
+            data class PopularRepository(
+                val repo: Repos,
+            ) : OverViewItem()
         }
     }
 }

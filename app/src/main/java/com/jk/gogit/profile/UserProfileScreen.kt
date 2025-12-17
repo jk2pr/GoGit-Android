@@ -38,8 +38,10 @@ import org.koin.core.parameter.parametersOf
 fun UserProfileScreen() {
     val localNavController = LocalNavController.current
     val login =
-        (localNavController.previousBackStackEntry?.savedStateHandle?.get<String>(AppScreens.USERPROFILE.route)
-            ?: AuthManager.getLogin())!!
+        (
+            localNavController.previousBackStackEntry?.savedStateHandle?.get<String>(AppScreens.USERPROFILE.route)
+                ?: AuthManager.getLogin()
+        )!!
     val viewModel = koinViewModel<UserProfileViewModel>(parameters = { parametersOf(login) })
     val scrollState = rememberScrollState()
     val title = remember { mutableStateOf("") }
@@ -53,53 +55,58 @@ fun UserProfileScreen() {
                     text = currentTitle,
                 )
             }
-
-        }) {
+        },
+    ) {
         when (val result = viewModel.feedStateFlow.collectAsState().value) {
             is UiState.Loading ->
                 CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(50.dp)
+                    modifier =
+                        Modifier
+                            .size(50.dp),
                 )
 
             is UiState.Content -> {
-
                 if (result.data is OverViewTabData.OverViewScreenData) {
                     val overViewTabData = result.data
 
                     Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(scrollState)
-                            .padding( 8.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .verticalScroll(scrollState)
+                                .padding(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
                     ) {
                         UserProfileHeader(
                             data = overViewTabData.user!!,
                             onFollow = { viewerIsFollowing ->
-                                if (viewerIsFollowing) // if following
+                                if (viewerIsFollowing) {
+                                    // if following
                                     viewModel.setState(
                                         UserProfileViewModel.MainState.UnFollowEvent(
-                                            overViewTabData.user.id
-                                        )
+                                            overViewTabData.user.id,
+                                        ),
                                     )
-                                else //Not following
+                                } else {
+                                    // Not following
                                     viewModel.setState(
                                         UserProfileViewModel.MainState.FollowEvent(
-                                            overViewTabData.user.id
-                                        )
+                                            overViewTabData.user.id,
+                                        ),
                                     )
-                            })
+                                }
+                            },
+                        )
 
                         OverViewTab(overViewTabData = overViewTabData) { ownerName, repoName, defaultBranch ->
                             localNavController.currentBackStackEntry
-                                ?.savedStateHandle?.let {
+                                ?.savedStateHandle
+                                ?.let {
                                     it[AppScreens.USERPROFILE.route] = ownerName
                                     it[AppScreens.REPOLIST.route] = defaultBranch
                                     it[AppScreens.REPODETAIL.route] = repoName
                                 }
                             localNavController.navigate(AppScreens.REPODETAIL.route)
-
                         }
                     }
                     title.value =
@@ -115,15 +122,13 @@ fun UserProfileScreen() {
                 }*/
                 } else {
                     Log.d("UserProfileScreen", "Follow ${result.data}")
-
                 }
             }
 
-            is UiState.Error -> OfflineError(message = result.message,)
+            is UiState.Error -> OfflineError(message = result.message)
 
             is UiState.Empty -> {}
         }
-
     }
 }
 
@@ -134,4 +139,3 @@ fun UserProfileScreenPreview() {
         UserProfileScreen()
     }
 }
-

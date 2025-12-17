@@ -22,7 +22,7 @@ import com.jk.gogit.users.UserListScreen
 fun Start() {
     NavHost(
         navController = LocalNavController.current,
-        startDestination = if (AuthManager.getAccessToken().isNullOrEmpty()) AppScreens.LOGIN.route else AppScreens.HOME.route
+        startDestination = if (AuthManager.getAccessToken().isNullOrEmpty()) AppScreens.LOGIN.route else AppScreens.HOME.route,
     ) {
         composable(route = AppScreens.LOGIN.route) {
             LoginScreen()
@@ -65,5 +65,3 @@ fun Start() {
         }
     }
 }
-
-

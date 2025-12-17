@@ -19,9 +19,10 @@ apollo {
 }
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
-val keystoreProperties = Properties().apply {
-    load(FileInputStream(keystorePropertiesFile))
-}
+val keystoreProperties =
+    Properties().apply {
+        load(FileInputStream(keystorePropertiesFile))
+    }
 
 android {
     namespace = "com.jk.gogit"
@@ -52,11 +53,10 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
             signingConfig = signingConfigs["release"]
         }
-
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -85,18 +85,17 @@ dependencies {
     implementation(libs.firebase.crashlytics)
 
     implementation(libs.apollo.runtime)
-    implementation( libs.logging.interceptor)
+    implementation(libs.logging.interceptor)
 
     // Ktor Client
     implementation(libs.ktor.clientloggging)
     implementation(libs.ktor.content.negotioation)
     implementation(libs.ktor.kotlinx.json)
-    //implementation(libs.kotlinx.serialization)
+    // implementation(libs.kotlinx.serialization)
     implementation(libs.ktor.client.android)
     implementation(libs.ktor.client.auth)
 
-
-    //Koin
+    // Koin
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(libs.koin.android)
@@ -111,14 +110,13 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.constraintlayout.compose)
 
-
-    //Network Monitor
-    implementation (libs.connext)
+    // Network Monitor
+    implementation(libs.connext)
 
     implementation(libs.coil)
     implementation(libs.joda.time)
 
-    implementation (libs.markdownview.android)
+    implementation(libs.markdownview.android)
     implementation(project(":networkmodule"))
     implementation(libs.androidx.ui.text.google.fonts)
 

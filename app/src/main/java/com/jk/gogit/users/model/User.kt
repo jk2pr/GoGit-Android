@@ -22,5 +22,5 @@ data class User(
     @SerialName("events_url") val eventsUrl: String,
     @SerialName("received_events_url") val receivedEventsUrl: String,
     @SerialName("type") val type: String,
-    @SerialName("site_admin") val siteAdmin: Boolean
+    @SerialName("site_admin") val siteAdmin: Boolean,
 )

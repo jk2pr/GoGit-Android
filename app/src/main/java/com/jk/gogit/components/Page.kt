@@ -34,8 +34,13 @@ sealed class GoGitSnackbarVisuals(
     override val actionLabel: String? = null,
     override val withDismissAction: Boolean = false,
 ) : SnackbarVisuals {
-    class Normal(message: String) : GoGitSnackbarVisuals(message)
-    class Error(message: String) : GoGitSnackbarVisuals(message)
+    data class Normal(
+        override val message: String,
+    ) : GoGitSnackbarVisuals(message)
+
+    data class Error(
+        override val message: String,
+    ) : GoGitSnackbarVisuals(message)
 }
 
 @Composable
@@ -44,9 +49,8 @@ fun Page(
     menuItems: List<DropdownMenuItemContent> = emptyList(),
     floatingActionButton: @Composable () -> Unit = {},
     contentAlignment: Alignment = Alignment.Center,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
-
     val snackBarHostState = LocalSnackBarHostState.current
     val connection by connectivityStatus()
     val isConnected = connection === ConnectionStatus.Connected
@@ -55,50 +59,59 @@ fun Page(
         floatingActionButton = floatingActionButton,
         content = { paddingValues ->
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = paddingValues.calculateTopPadding()),
-                contentAlignment = contentAlignment
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(top = paddingValues.calculateTopPadding()),
+                contentAlignment = contentAlignment,
             ) {
                 content()
-                if (!isConnected) LaunchedEffect(connection) {
-                    snackBarHostState.showSnackbar(GoGitSnackbarVisuals.Normal("No Internet Connection"))
+                if (!isConnected) {
+                    LaunchedEffect(connection) {
+                        snackBarHostState.showSnackbar(GoGitSnackbarVisuals.Normal("No Internet Connection"))
+                    }
                 }
             }
         },
         snackbarHost = {
             SnackbarHost(
                 hostState = snackBarHostState,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(Alignment.Bottom),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(Alignment.Bottom),
                 snackbar = { snackbarData ->
                     val isError = snackbarData.visuals is GoGitSnackbarVisuals.Error
-                    val backgroundColor = if (isError) {
-                        MaterialTheme.colorScheme.error
-                    } else {
-                        MaterialTheme.colorScheme.inverseSurface
-                    }
-                    val contentColor = if (isError) {
-                        MaterialTheme.colorScheme.onError
-                    } else {
-                        MaterialTheme.colorScheme.inverseOnSurface
-                    }
+                    val backgroundColor =
+                        if (isError) {
+                            MaterialTheme.colorScheme.error
+                        } else {
+                            MaterialTheme.colorScheme.inverseSurface
+                        }
+                    val contentColor =
+                        if (isError) {
+                            MaterialTheme.colorScheme.onError
+                        } else {
+                            MaterialTheme.colorScheme.inverseOnSurface
+                        }
 
                     Snackbar(
                         snackbarData = snackbarData,
                         containerColor = backgroundColor,
                         contentColor = contentColor,
                     )
-                }
+                },
             )
-        }
+        },
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AppBar(menuItems: List<DropdownMenuItemContent>, title: @Composable () -> Unit) {
+private fun AppBar(
+    menuItems: List<DropdownMenuItemContent>,
+    title: @Composable () -> Unit,
+) {
     TopAppBar(
         title = title,
         actions = { menuItems.forEach { it.menu() } },
@@ -107,13 +120,11 @@ private fun AppBar(menuItems: List<DropdownMenuItemContent>, title: @Composable 
             val isRootScreen = navController.previousBackStackEntry == null
             if (!isRootScreen) NavigationIcon(navController = navController)
         },
-
-        )
+    )
 }
 
 @Composable
 private fun NavigationIcon(navController: NavController) {
-
     IconButton(
         onClick = { navController.popBackStack() },
     ) {
@@ -124,4 +135,6 @@ private fun NavigationIcon(navController: NavController) {
     }
 }
 
-data class DropdownMenuItemContent(var menu: @Composable () -> Unit)
+data class DropdownMenuItemContent(
+    val menu: @Composable () -> Unit,
+)

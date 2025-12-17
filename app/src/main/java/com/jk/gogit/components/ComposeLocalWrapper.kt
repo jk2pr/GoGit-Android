@@ -13,6 +13,6 @@ fun ComposeLocalWrapper(content: @Composable () -> Unit) {
     CompositionLocalProvider(
         LocalNavController provides rememberNavController(),
         LocalSnackBarHostState provides remember { SnackbarHostState() },
-        content = content
+        content = content,
     )
 }

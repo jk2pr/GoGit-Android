@@ -19,32 +19,29 @@ class OrgListViewModel(
     private val dispatchers: DispatcherProvider,
     private val login: String,
 ) : ViewModel() {
-
     private val _orgStateFlow = MutableStateFlow<UiState>(UiState.Empty)
     val orgStateFlow = _orgStateFlow.asStateFlow()
-
 
     init {
         setState(mainState = MainState.FetchEvent)
     }
 
     @ExperimentalCoroutinesApi
-     fun setState(mainState: MainState) =
+    fun setState(mainState: MainState) =
         viewModelScope.launch {
             when (mainState) {
                 is MainState.FetchEvent -> {
                     flow {
                         emit(UiState.Loading)
-                        val r = orgExecutor.execute(user = login,)
+                        val r = orgExecutor.execute(user = login)
                         emit(UiState.Content(r))
                     }.catch {
                         emit(UiState.Error(it.printifyMessage()))
-                    }.flowOn(dispatchers.main).collect {
-                        _orgStateFlow.value = it
-                    }
+                    }.flowOn(dispatchers.main)
+                        .collect {
+                            _orgStateFlow.value = it
+                        }
                 }
-
-
             }
         }
 
@@ -52,4 +49,3 @@ class OrgListViewModel(
         data object FetchEvent : MainState()
     }
 }
-

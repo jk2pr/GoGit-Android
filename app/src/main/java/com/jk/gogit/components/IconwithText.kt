@@ -13,14 +13,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun IconWithText(text: String, res: Int, tint: Color = Color.Black) {
+fun IconWithText(
+    text: String,
+    res: Int,
+    tint: Color = Color.Black,
+) {
     Row(horizontalArrangement = Arrangement.spacedBy(1.dp)) {
-
         Icon(
             painter = painterResource(id = res),
             contentDescription = null,
             tint = tint,
-            modifier = Modifier.size(16.dp)
+            modifier = Modifier.size(16.dp),
         )
         Text(
             text = text,

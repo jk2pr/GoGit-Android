@@ -18,17 +18,17 @@ import kotlinx.coroutines.launch
 class FeedViewModel(
     private val feedExecutor: FeedExecutor,
     private val dispatchers: DispatcherProvider,
-    private val login:String
+    private val login: String,
 ) : ViewModel() {
-
     private val _feedStateFlow = MutableStateFlow<UiState>(UiState.Empty)
-     val feedStateFlow = _feedStateFlow.asStateFlow()
+    val feedStateFlow = _feedStateFlow.asStateFlow()
 
     init {
         setState(MainState.FeedEvent)
     }
+
     @ExperimentalCoroutinesApi
-     private fun setState(mainState: MainState) =
+    private fun setState(mainState: MainState) =
         viewModelScope.launch {
             when (mainState) {
                 is MainState.FeedEvent -> {
@@ -40,9 +40,10 @@ class FeedViewModel(
                         emit(UiState.Content(result))
                     }.catch {
                         emit(UiState.Error(it.printifyMessage()))
-                    }.flowOn(dispatchers.main).collect {
-                        _feedStateFlow.value = it
-                    }
+                    }.flowOn(dispatchers.main)
+                        .collect {
+                            _feedStateFlow.value = it
+                        }
                 }
 
                 is MainState.RefreshEvent -> {
@@ -52,6 +53,7 @@ class FeedViewModel(
 
     sealed class MainState {
         object FeedEvent : MainState()
+
         object RefreshEvent : MainState()
     }
 }

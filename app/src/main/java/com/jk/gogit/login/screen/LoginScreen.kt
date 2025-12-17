@@ -29,7 +29,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-// import androidx.compose.ui.text.withStyle // Removed unused import
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,10 +49,8 @@ import com.jk.gogit.navigation.AppScreens
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-
 @Composable
 fun LoginScreen() {
-
     val localNavController = LocalNavController.current
 
     val authViewModel: AuthViewModel = koinViewModel<AuthViewModel>()
@@ -79,8 +76,8 @@ fun LoginScreen() {
                     scope.launch {
                         snackbarHostState.showSnackbar(
                             GoGitSnackbarVisuals.Error(
-                                state.message ?: "Authentication Failed"
-                            )
+                                state.message ?: "Authentication Failed",
+                            ),
                         )
                         authViewModel.resetState()
                     }
@@ -90,7 +87,6 @@ fun LoginScreen() {
             is AuthenticationState.Loading ->
                 // Show loader
                 CircularProgressIndicator(modifier = Modifier.size(50.dp))
-
         }
     }
 }
@@ -101,17 +97,19 @@ private fun Login(authViewModel: AuthViewModel) {
     val provider = OAuthProvider.newBuilder("github.com")
     provider.scopes = AuthRequestModel().generate().scopes
     Column(
-        verticalArrangement = Arrangement.spacedBy(
-            space = 8.dp,
-            alignment = Alignment.Top
-        ),
+        verticalArrangement =
+            Arrangement.spacedBy(
+                space = 8.dp,
+                alignment = Alignment.Top,
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(horizontal = 8.dp),
     ) {
         Image(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .size(148.dp),
+            modifier =
+                Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .size(148.dp),
             contentDescription = "App Icon",
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
             painter = painterResource(id = R.mipmap.ic_launcher_foreground),
@@ -123,12 +121,13 @@ private fun Login(authViewModel: AuthViewModel) {
                 activity.lifecycleScope.launch {
                     authViewModel.signInWithGithub(
                         activity = activity,
-                        provider = provider
+                        provider = provider,
                     )
                 }
             },
-            modifier = Modifier
-                .padding(vertical = 8.dp)
+            modifier =
+                Modifier
+                    .padding(vertical = 8.dp),
         ) {
             Text(text = stringResource(id = R.string.sign_in))
         }
@@ -137,50 +136,54 @@ private fun Login(authViewModel: AuthViewModel) {
         val preLinkText = "Your login indicates acceptance of our "
         val linkText = "\nPrivacy Policy"
 
-        val annotatedString = buildAnnotatedString {
-            pushStyle(style = ParagraphStyle(textAlign = TextAlign.Center))
-            append(preLinkText)
+        val annotatedString =
+            buildAnnotatedString {
+                pushStyle(style = ParagraphStyle(textAlign = TextAlign.Center))
+                append(preLinkText)
 
-            val startIndex = length
-            append(linkText)
-            val endIndex = length
+                val startIndex = length
+                append(linkText)
+                val endIndex = length
 
-            // Apply visual style to the link text
-            addStyle(
-                style = SpanStyle(textDecoration = TextDecoration.Underline),
-                start = startIndex,
-                end = endIndex
-            )
+                // Apply visual style to the link text
+                addStyle(
+                    style = SpanStyle(textDecoration = TextDecoration.Underline),
+                    start = startIndex,
+                    end = endIndex,
+                )
 
-            // Create and add the LinkAnnotation
-            val clickableAnnotation = LinkAnnotation.Clickable(
-                tag = "PrivacyPolicyURL", // Semantic tag for the link
-                linkInteractionListener = object : LinkInteractionListener {
-                    override fun onClick(link: LinkAnnotation) {
-                        val uri = privacyPolicyUrl.toUri()
-                        val intent = Intent(Intent.ACTION_VIEW, uri)
-                        activity.startActivity(intent)
-                    }
-                }
-            )
-            addLink(
-                clickableAnnotation, // Corrected: pass annotation directly
-                start = startIndex,
-                end = endIndex
-            )
-            pop() // Pop the ParagraphStyle
-        }
-
+                // Create and add the LinkAnnotation
+                val clickableAnnotation =
+                    LinkAnnotation.Clickable(
+                        tag = "PrivacyPolicyURL", // Semantic tag for the link
+                        linkInteractionListener =
+                            object : LinkInteractionListener {
+                                override fun onClick(link: LinkAnnotation) {
+                                    val uri = privacyPolicyUrl.toUri()
+                                    val intent = Intent(Intent.ACTION_VIEW, uri)
+                                    activity.startActivity(intent)
+                                }
+                            },
+                    )
+                addLink(
+                    clickableAnnotation, // Corrected: pass annotation directly
+                    start = startIndex,
+                    end = endIndex,
+                )
+                pop() // Pop the ParagraphStyle
+            }
 
         Text(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally),
+            modifier =
+                Modifier
+                    .align(Alignment.CenterHorizontally),
             text = annotatedString,
-            style = LocalTextStyle.current.copy(
-                color = MaterialTheme.colorScheme.outline,
-                fontSize = 14.sp
-            ),
-            maxLines = 2
+            style =
+                LocalTextStyle.current.copy(
+                    color = MaterialTheme.colorScheme.outline,
+                    fontSize = 14.sp,
+                ),
+            maxLines = 2,
         )
     }
 }
@@ -188,7 +191,6 @@ private fun Login(authViewModel: AuthViewModel) {
 @Preview
 @Composable
 private fun LoginScreenPreview() {
-
     ComposeLocalWrapper {
         LoginScreen()
     }

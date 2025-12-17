@@ -1,4 +1,4 @@
-package com.jk.gogit.search// ViewModel file: RepoSearchViewModel.kt
+package com.jk.gogit.search // ViewModel file: RepoSearchViewModel.kt
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,36 +17,39 @@ class SearchViewModel(
     private val searchExecutor: SearchExecutor,
     private val dispatchers: DispatcherProvider,
 ) : ViewModel() {
-
-    private var _searchQuery = ""
+    private var searchQuery = ""
     private val _searchStateFlow = MutableStateFlow<UiState>(UiState.Empty)
     val searchStateFlow = _searchStateFlow.asStateFlow()
-    private var _typeStateFlow = SearchType.REPOSITORY
+    private var typeStateFlow = SearchType.REPOSITORY
 
-    fun performSearch(query: String = _searchQuery, type: SearchType = _typeStateFlow) {
-        _searchQuery = query
+    fun performSearch(
+        query: String = searchQuery,
+        type: SearchType = typeStateFlow,
+    ) {
+        searchQuery = query
         viewModelScope.launch {
             flow {
                 if (query.length <= 5) {
-                    _typeStateFlow = SearchType.REPOSITORY
+                    typeStateFlow = SearchType.REPOSITORY
                     emit(UiState.Content(emptyList<Any>()))
                     return@flow
                 }
                 emit(UiState.Loading)
                 val repositories =
-                    searchExecutor.execute(user = _searchQuery, type = type)
+                    searchExecutor.execute(user = searchQuery, type = type)
                 emit(UiState.Content(repositories))
                 // updateLanguageMap(repositories)
             }.catch { e ->
                 emit(UiState.Error(e.printifyMessage()))
-            }.flowOn(dispatchers.main).collect {
-                _searchStateFlow.value = it
-            }
+            }.flowOn(dispatchers.main)
+                .collect {
+                    _searchStateFlow.value = it
+                }
         }
     }
 
     fun updateType(type: SearchType) {
-        _typeStateFlow = type
+        typeStateFlow = type
         performSearch()
     }
 }

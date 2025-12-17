@@ -25,54 +25,57 @@ fun RepositoryItem(repo: Repos) {
     val localNavController = LocalNavController.current
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp)
-            .clickable {
-                localNavController.currentBackStackEntry
-                    ?.savedStateHandle?.let {
-                        it[AppScreens.USERPROFILE.route] = repo.owner.login
-                        it[AppScreens.REPOLIST.route] = repo.defaultBranchRef?.name.orEmpty()
-                        it[AppScreens.REPODETAIL.route] = repo.repoName
-                    }
-                localNavController.navigate(AppScreens.REPODETAIL.route)
-            }
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp)
+                .clickable {
+                    localNavController.currentBackStackEntry
+                        ?.savedStateHandle
+                        ?.let {
+                            it[AppScreens.USERPROFILE.route] = repo.owner.login
+                            it[AppScreens.REPOLIST.route] = repo.defaultBranchRef?.name.orEmpty()
+                            it[AppScreens.REPODETAIL.route] = repo.repoName
+                        }
+                    localNavController.navigate(AppScreens.REPODETAIL.route)
+                },
     ) {
         Text(
             text = repo.repoName,
             style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.primary),
-            modifier = Modifier.padding(bottom = 4.dp)
+            modifier = Modifier.padding(bottom = 4.dp),
         )
-        if (repo.isFork)
+        if (repo.isFork) {
             Text(
                 text = "Forked from ${repo.owner.login}/${repo.repoName}",
-                style = MaterialTheme.typography.bodySmall.copy(MaterialTheme.colorScheme.primary)
+                style = MaterialTheme.typography.bodySmall.copy(MaterialTheme.colorScheme.primary),
             )
+        }
         if (!repo.description.isNullOrBlank()) {
             Text(
                 text = repo.description,
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 5,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(bottom = 4.dp)
+                modifier = Modifier.padding(bottom = 4.dp),
             )
-
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             ColoredBullet(repo.primaryLanguage?.color)
             Text(
                 text = repo.primaryLanguage?.name ?: "",
                 style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 4.dp)
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .padding(start = 4.dp),
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
             ) {
                 IconWithText(
                     res = R.drawable.baseline_star_24,
@@ -90,9 +93,7 @@ fun RepositoryItem(repo: Repos) {
             text = repo.updatedAt.toString(),
             style = MaterialTheme.typography.bodySmall,
             //   fontFamily = FontFamily(Font(R.font.bebasneue_light)),
-            textAlign = TextAlign.End
+            textAlign = TextAlign.End,
         )
     }
-
 }
-

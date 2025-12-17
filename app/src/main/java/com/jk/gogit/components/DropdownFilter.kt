@@ -22,17 +22,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-
 @Composable
 fun DropdownFilter(
     options: List<String>,
-    onFilterSelected: (String?) -> Unit
+    onFilterSelected: (String?) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf<String?>(null) }
     var filterLabel by remember { mutableStateOf("Language") }
 
-    Column{
+    Column {
         SuggestionChip(onClick = { expanded = true }, label = {
             Row(
                 modifier = Modifier.padding(horizontal = 8.dp),
@@ -51,7 +50,7 @@ fun DropdownFilter(
         DropdownMenu(
             modifier = Modifier.wrapContentWidth(),
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
         ) {
             options.forEach { option ->
                 DropdownMenuItem(
@@ -63,16 +62,16 @@ fun DropdownFilter(
                         expanded = false
                     },
                     trailingIcon = {
-                        if (option == selectedOption)
+                        if (option == selectedOption) {
                             Icon(
                                 imageVector = Icons.Filled.CheckCircle,
                                 contentDescription = "Done Icon",
                             )
+                        }
                     },
                     text = {
                         Text(option)
-
-                    }
+                    },
                 )
             }
         }

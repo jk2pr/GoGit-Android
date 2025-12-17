@@ -11,12 +11,21 @@ import com.hoppers.networkmodule.model.UserProfile
 import com.jk.gogit.MainActivity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 sealed class AuthenticationState {
     data object Initial : AuthenticationState()
-    data class Authenticated(val profile: Any?) : AuthenticationState()
-    data class AuthenticationFailed(val message: String?) : AuthenticationState()
+
+    data class Authenticated(
+        val profile: Any?,
+    ) : AuthenticationState()
+
+    data class AuthenticationFailed(
+        val message: String?,
+    ) : AuthenticationState()
+
     data object Loading : AuthenticationState()
 }
 
@@ -25,11 +34,18 @@ class AuthViewModel : ViewModel() {
         MutableStateFlow<AuthenticationState>(AuthenticationState.Initial)
     val authenticationState: StateFlow<AuthenticationState> = _authenticationState
 
-    fun signInWithGithub(provider: OAuthProvider.Builder, activity: MainActivity) {
+    @OptIn(ExperimentalSerializationApi::class)
+    fun signInWithGithub(
+        provider: OAuthProvider.Builder,
+        activity: MainActivity,
+    ) {
         val firebaseAuth = FirebaseAuth.getInstance()
         val currentUser = firebaseAuth.currentUser
-        if (currentUser != null && !AuthManager.getAccessToken()
-                .isNullOrEmpty() && AuthManager.getAvatarUrl() != null
+        if (currentUser != null &&
+            !AuthManager
+                .getAccessToken()
+                .isNullOrEmpty() &&
+            AuthManager.getAvatarUrl() != null
         ) {
             _authenticationState.value =
                 AuthenticationState.Authenticated(profile = currentUser.providerData.first())
@@ -39,18 +55,19 @@ class AuthViewModel : ViewModel() {
         _authenticationState.value = AuthenticationState.Loading // Set loading state
 
         val pendingResultTask = firebaseAuth.pendingAuthResult
-        pendingResultTask?.addOnSuccessListener {
-            _authenticationState.value =
-                AuthenticationState.Authenticated(it.user?.providerData?.first())
-        }?.addOnFailureListener { exception ->
-            _authenticationState.value = AuthenticationState.AuthenticationFailed(exception.message)
-        } ?: run {
-
+        pendingResultTask
+            ?.addOnSuccessListener {
+                _authenticationState.value =
+                    AuthenticationState.Authenticated(it.user?.providerData?.first())
+            }?.addOnFailureListener { exception ->
+                _authenticationState.value = AuthenticationState.AuthenticationFailed(exception.message)
+            } ?: run {
             val browserIntent = Intent(Intent.ACTION_VIEW, "https://github.com".toUri())
             if (activity.packageManager.resolveActivity(browserIntent, 0) == null) {
-                _authenticationState.value = AuthenticationState.AuthenticationFailed(
-                    "No web browser is installed. Please install one to proceed with authentication."
-                )
+                _authenticationState.value =
+                    AuthenticationState.AuthenticationFailed(
+                        "No web browser is installed. Please install one to proceed with authentication.",
+                    )
                 return
             }
             firebaseAuth
@@ -67,16 +84,15 @@ class AuthViewModel : ViewModel() {
                         AuthenticationState.Authenticated(profile = userProfile)
 
                     val accessToken = (authResult.credential as? OAuthCredential)?.accessToken
-                    if (!accessToken.isNullOrBlank())
+                    if (!accessToken.isNullOrBlank()) {
                         AuthManager.saveAccessToken(
                             token = accessToken,
                             avatarUrl = userProfile.avatarUrl.orEmpty(),
-                            login = userProfile.login.orEmpty()
+                            login = userProfile.login.orEmpty(),
                         )
+                    }
                     //  AuthManager.saveUserData(data= jsonString)
-                }
-
-                .addOnFailureListener {
+                }.addOnFailureListener {
                     // Handle failure
                     _authenticationState.value =
                         AuthenticationState.AuthenticationFailed("Authentication failed")

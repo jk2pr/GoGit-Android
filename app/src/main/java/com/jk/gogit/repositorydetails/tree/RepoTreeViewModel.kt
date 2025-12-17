@@ -13,15 +13,13 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
-
 class RepoTreeViewModel(
     private val repoTreeExecutor: RepoTreeExecutor,
     private val dispatchers: DispatcherProvider,
     private val login: String,
     private val repo: String,
-    private var basePath: String
+    private var basePath: String,
 ) : ViewModel() {
-
     private val _userListStateFlow = MutableStateFlow<UiState>(UiState.Empty)
     val userListStateFlow = _userListStateFlow.asStateFlow()
 
@@ -35,22 +33,25 @@ class RepoTreeViewModel(
                 is MainState.FeedEvent -> {
                     flow {
                         //  emit(UiState.Loading)
-                        val result = repoTreeExecutor.execute(
-                            user = login,
-                            repo = repo,
-                            path = basePath
-                        )
+                        val result =
+                            repoTreeExecutor.execute(
+                                user = login,
+                                repo = repo,
+                                path = basePath,
+                            )
 
-                        val pathToFile = toPathToFile(
-                            path =  basePath,
-                            file = result,
-                        )
+                        val pathToFile =
+                            toPathToFile(
+                                path = basePath,
+                                file = result,
+                            )
                         emit(UiState.Content(pathToFile))
                     }.catch {
                         // emit(UiState.Error(it.message.toString()))
-                    }.flowOn(dispatchers.main).collect {
-                        _userListStateFlow.value = it
-                    }
+                    }.flowOn(dispatchers.main)
+                        .collect {
+                            _userListStateFlow.value = it
+                        }
                 }
 
                 is MainState.RefreshEvent -> {
@@ -63,10 +64,10 @@ class RepoTreeViewModel(
                         emit(UiState.Content(pathToFile))
                     }.catch {
                         emit(UiState.Error(it.printifyMessage()))
-                    }.flowOn(dispatchers.main).collect {
-                        _userListStateFlow.value = it
-                    }
-
+                    }.flowOn(dispatchers.main)
+                        .collect {
+                            _userListStateFlow.value = it
+                        }
                 }
             }
         }
@@ -79,11 +80,11 @@ class RepoTreeViewModel(
         file = file,
     )
 
-
     sealed class MainState {
         data object FeedEvent : MainState()
-        class RefreshEvent(val newPath: String) : MainState()
+
+        class RefreshEvent(
+            val newPath: String,
+        ) : MainState()
     }
-
-
 }

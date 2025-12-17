@@ -30,51 +30,50 @@ import com.jk.gogit.components.SearchComponent
 import com.jk.gogit.components.UserItem
 import org.koin.androidx.compose.koinViewModel
 
-
 @Composable
 fun SearchScreen() {
-
     val viewModel = koinViewModel<SearchViewModel>()
     val isSearchActivated = remember { mutableStateOf(false) }
     Page(
-        menuItems = mutableListOf(
-            DropdownMenuItemContent(menu = {
-                SearchComponent(isSearchActivated) { query ->
-                    viewModel.performSearch(query)
-                }
-            })
-        )
+        menuItems =
+            mutableListOf(
+                DropdownMenuItemContent(menu = {
+                    SearchComponent(isSearchActivated) { query ->
+                        viewModel.performSearch(query)
+                    }
+                }),
+            ),
     ) {
         Column(
             Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 16.dp),
         ) {
             HorizontalDivider()
             AnimatedVisibility(visible = isSearchActivated.value) {
-
                 Chip(
                     modifier = Modifier.fillMaxWidth(),
-                    types = listOf(SearchType.REPOSITORY, SearchType.USER, SearchType.ISSUE)
+                    types = listOf(SearchType.REPOSITORY, SearchType.USER, SearchType.ISSUE),
                 ) {
                     viewModel.updateType(it)
                 }
             }
             when (val result = viewModel.searchStateFlow.collectAsState().value) {
-                is UiState.Loading -> Box(
-                    Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(50.dp)
-                            .align(Alignment.Center),
-                    )
-                }
+                is UiState.Loading ->
+                    Box(
+                        Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        CircularProgressIndicator(
+                            modifier =
+                                Modifier
+                                    .size(50.dp)
+                                    .align(Alignment.Center),
+                        )
+                    }
 
-                is UiState.Error -> OfflineError(message = result.message,)
+                is UiState.Error -> OfflineError(message = result.message)
                 is UiState.Empty -> {}
-
 
                 is UiState.Content -> {
                     val nodes = result.data as List<*>
@@ -92,5 +91,3 @@ fun SearchScreen() {
         }
     }
 }
-
-

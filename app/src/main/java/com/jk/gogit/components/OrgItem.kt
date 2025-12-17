@@ -27,22 +27,23 @@ fun OrgItem(org: Org) {
     LocalNavController.current
     val navController = LocalNavController.current
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable {
-                navController.currentBackStackEntry
-                    ?.savedStateHandle
-                    ?.set(AppScreens.ORGDETAIL.route, org.login)
-                navController.navigate(AppScreens.ORGDETAIL.route)
-            }
-
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+                .clickable {
+                    navController.currentBackStackEntry
+                        ?.savedStateHandle
+                        ?.set(AppScreens.ORGDETAIL.route, org.login)
+                    navController.navigate(AppScreens.ORGDETAIL.route)
+                },
     ) {
         Image(
             painter = rememberAsyncImagePainter(org.avatarUrl),
             contentDescription = null,
-            modifier = Modifier
-                .size(50.dp)
+            modifier =
+                Modifier
+                    .size(50.dp),
         )
         Spacer(modifier = Modifier.width(8.dp))
         Column {
@@ -52,7 +53,7 @@ fun OrgItem(org: Org) {
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.labelLarge,
-                    modifier = Modifier.widthIn(max = 200.dp)
+                    modifier = Modifier.widthIn(max = 200.dp),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
@@ -61,15 +62,14 @@ fun OrgItem(org: Org) {
                     style = MaterialTheme.typography.labelMedium,
                 )
             }
-            if (!org.description.isNullOrBlank())
+            if (!org.description.isNullOrBlank()) {
                 Text(
                     text = org.description,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 3,
                     style = MaterialTheme.typography.bodySmall,
                 )
-
+            }
         }
     }
 }
-

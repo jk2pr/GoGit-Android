@@ -11,17 +11,19 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ColoredBullet(color: String?) {
-    val col: Color = color?.let {
-        Color(android.graphics.Color.parseColor(it))
-    } ?: MaterialTheme.colorScheme.surface
+    val col: Color =
+        color?.let {
+            Color(android.graphics.Color.parseColor(it))
+        } ?: MaterialTheme.colorScheme.surface
     Canvas(
-        modifier = Modifier
-            .size(8.dp)
+        modifier =
+            Modifier
+                .size(8.dp),
     ) {
         drawCircle(
             color = col,
             radius = 4f,
-            style = Stroke(width = 4.dp.toPx())
+            style = Stroke(width = 4.dp.toPx()),
         )
     }
 }

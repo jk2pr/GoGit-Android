@@ -1,6 +1,5 @@
 package com.jk.gogit.overview
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -54,11 +53,9 @@ import dev.jeziellago.compose.markdowntext.MarkdownText
 @Composable
 fun OverViewTab(
     overViewTabData: OverViewTabData.OverViewScreenData,
-    onClick: (String, String, String) -> Unit
+    onClick: (String, String, String) -> Unit,
 ) {
-
-    //val viewModel = koinViewModel<OverViewModel>(parameters = { parametersOf(login) })
-
+    // val viewModel = koinViewModel<OverViewModel>(parameters = { parametersOf(login) })
 
     val file = overViewTabData.html
     val items = overViewTabData.list
@@ -68,13 +65,14 @@ fun OverViewTab(
     }
     val hasPinned = items.any { it is PinnedRepository || it is PinnedGist }
     Column(
-        modifier = Modifier
-            .fillMaxHeight(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier =
+            Modifier
+                .fillMaxHeight(),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 ImageVector.vectorResource(id = if (hasPinned) R.drawable.pin_26 else R.drawable.baseline_star_24),
@@ -84,39 +82,41 @@ fun OverViewTab(
             Text(
                 text = if (hasPinned) "Pinned" else "Popular",
                 style = MaterialTheme.typography.labelLarge,
-                modifier = Modifier.padding(vertical = 8.dp)
+                modifier = Modifier.padding(vertical = 8.dp),
             )
         }
-        val itemModifier = Modifier
-            .width(200.dp)
-            .height(150.dp)
+        val itemModifier =
+            Modifier
+                .width(200.dp)
+                .height(150.dp)
         // .padding(end = 8.dp)
         LazyRow(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             items(items.size) { index ->
                 if (index > 0) VerticalDivider(thickness = 8.dp)
                 when (val item = items[index]) {
-                    is PinnedRepository -> PinnedItems(
-                        repo = item.repo, modifier = itemModifier
-                    ) { ownerName, repoName, defaultBranch ->
-                        onClick(ownerName, repoName, defaultBranch)
+                    is PinnedRepository ->
+                        PinnedItems(
+                            repo = item.repo,
+                            modifier = itemModifier,
+                        ) { ownerName, repoName, defaultBranch ->
+                            onClick(ownerName, repoName, defaultBranch)
+                        }
 
-                    }
+                    is PopularRepository ->
+                        PinnedItems(
+                            repo = item.repo,
+                            modifier = itemModifier,
+                        ) { ownerName, repoName, defaultBranch ->
+                            onClick(ownerName, repoName, defaultBranch)
+                        }
 
-                    is PopularRepository -> PinnedItems(
-                        repo = item.repo, modifier = itemModifier
-                    ) { ownerName, repoName, defaultBranch ->
-                        onClick(ownerName, repoName, defaultBranch)
-
-                    }
-
-
-                    is PinnedGist -> GistItem(
-                        gist = item.gist, modifier = itemModifier
-                    )
-
-
+                    is PinnedGist ->
+                        GistItem(
+                            gist = item.gist,
+                            modifier = itemModifier,
+                        )
                 }
             }
         }
@@ -125,45 +125,50 @@ fun OverViewTab(
         MarkdownText(
             markdown = file,
             modifier = Modifier.padding(vertical = 8.dp),
-            style = MaterialTheme.typography.bodyMedium.copy(
-                color = LocalContentColor.current
-            )
+            style =
+                MaterialTheme.typography.bodyMedium.copy(
+                    color = LocalContentColor.current,
+                ),
         )
     }
-
-
 }
 
-
 @Composable
-fun PinnedItems(repo: Repos, modifier: Modifier, onClick: (String, String, String) -> Unit) {
+fun PinnedItems(
+    repo: Repos,
+    modifier: Modifier,
+    onClick: (String, String, String) -> Unit,
+) {
     ElevatedCard(
-        modifier = modifier.clickable {
-            onClick(repo.owner.login, repo.repoName, repo.defaultBranchRef?.name.orEmpty())
-        },
+        modifier =
+            modifier.clickable {
+                onClick(repo.owner.login, repo.repoName, repo.defaultBranchRef?.name.orEmpty())
+            },
     ) {
         Column(
             modifier = Modifier.padding(8.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 val painter =
                     rememberAsyncImagePainter(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(repo.owner.avatarUrl)
-                            .build(),
+                        model =
+                            ImageRequest
+                                .Builder(LocalContext.current)
+                                .data(repo.owner.avatarUrl)
+                                .build(),
                         contentScale = ContentScale.Inside,
-
-                        )
+                    )
                 Image(
                     painter = painter,
                     contentDescription = null,
-                    modifier = Modifier
-                        .size(16.dp)
-                        .clip(CircleShape)
+                    modifier =
+                        Modifier
+                            .size(16.dp)
+                            .clip(CircleShape),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(text = repo.owner.login)
@@ -173,18 +178,18 @@ fun PinnedItems(repo: Repos, modifier: Modifier, onClick: (String, String, Strin
                 style = MaterialTheme.typography.labelLarge.merge(MaterialTheme.colorScheme.primary),
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
-                modifier = Modifier.padding(bottom = 4.dp)
+                modifier = Modifier.padding(bottom = 4.dp),
             )
             Text(
                 text = repo.description.orEmpty(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(bottom = 4.dp)
+                modifier = Modifier.padding(bottom = 4.dp),
             )
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 ColoredBullet(repo.primaryLanguage?.color)
                 Spacer(modifier = Modifier.width(4.dp))
@@ -192,9 +197,10 @@ fun PinnedItems(repo: Repos, modifier: Modifier, onClick: (String, String, Strin
                     Text(
                         text = repo.primaryLanguage.name,
                         style = MaterialTheme.typography.labelLarge,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(end = 8.dp)
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .padding(end = 8.dp),
                     )
                 }
 
@@ -202,14 +208,14 @@ fun PinnedItems(repo: Repos, modifier: Modifier, onClick: (String, String, Strin
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_star_24),
                         contentDescription = null,
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(16.dp),
                     )
                     Text(
                         text = repo.stargazerCount.toString(),
                         style = MaterialTheme.typography.labelSmall,
                         //  fontFamily = FontFamily(Font(R.font.bebasneue_light)),
                         fontSize = 14.sp,
-                        modifier = Modifier.padding(start = 4.dp, end = 8.dp)
+                        modifier = Modifier.padding(start = 4.dp, end = 8.dp),
                     )
                 }
 
@@ -217,13 +223,13 @@ fun PinnedItems(repo: Repos, modifier: Modifier, onClick: (String, String, Strin
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_fork_left_24),
                         contentDescription = null,
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(16.dp),
                     )
                     Text(
                         text = repo.forkCount.toString(),
                         style = MaterialTheme.typography.labelSmall,
                         //  fontFamily = FontFamily(Font(R.font.bebasneue_light)),
-                        modifier = Modifier.padding(start = 4.dp)
+                        modifier = Modifier.padding(start = 4.dp),
                     )
                 }
             }
@@ -233,34 +239,44 @@ fun PinnedItems(repo: Repos, modifier: Modifier, onClick: (String, String, Strin
                 style = MaterialTheme.typography.labelSmall,
                 //   fontFamily = FontFamily(Font(R.font.bebasneue_light)),
                 fontSize = 12.sp,
-                textAlign = TextAlign.End
+                textAlign = TextAlign.End,
             )
         }
     }
-
 }
 
 @Composable
-fun GistItem(gist: GistFields, modifier: Modifier) {
+fun GistItem(
+    gist: GistFields,
+    modifier: Modifier,
+) {
     ElevatedCard(
-        modifier = modifier.clickable {
-            //onClick()
-        },
-    )
-    {
+        modifier =
+            modifier.clickable {
+                // onClick()
+            },
+    ) {
         Column(
             modifier = Modifier.padding(8.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                text = gist.files?.first()?.name.orEmpty(),
+                text =
+                    gist.files
+                        ?.first()
+                        ?.name
+                        .orEmpty(),
                 style = MaterialTheme.typography.labelLarge.merge(MaterialTheme.colorScheme.primary),
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 8.dp),
             )
             Text(
-                text = gist.files?.first()?.text.orEmpty(),
+                text =
+                    gist.files
+                        ?.first()
+                        ?.text
+                        .orEmpty(),
                 maxLines = 3,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
         }
     }
@@ -280,7 +296,7 @@ private fun InfoCard(user: GetUserQuery.User) {
             keys?.forEach { savedStateHandle.remove<Any>(it) }
             savedStateHandle?.set(
                 AppScreens.REPOLIST.route,
-                user.login
+                user.login,
             )
             localNavController.navigate(AppScreens.REPOLIST.route)
         }
@@ -288,37 +304,34 @@ private fun InfoCard(user: GetUserQuery.User) {
             iconId = R.drawable.organization_65,
             label = "Organizations",
             count = user.organizations.totalCount,
-            tint = Color.Red
+            tint = Color.Red,
         ) {
             val savedStateHandle = localNavController.currentBackStackEntry?.savedStateHandle
             val keys = savedStateHandle?.keys()
             keys?.forEach { savedStateHandle.remove<Any>(it) }
             savedStateHandle?.set(
                 AppScreens.ORGLIST.route,
-                user.login
+                user.login,
             )
             localNavController.navigate(AppScreens.ORGLIST.route)
-
         }
         InfoRow(
             iconId = R.drawable.baseline_star_24,
             label = "Starred",
             count = user.starredRepositories.totalCount,
-            tint = Color(android.graphics.Color.parseColor("#FFA500"))
+            tint = Color(android.graphics.Color.parseColor("#FFA500")),
         ) {
             val savedStateHandle = localNavController.currentBackStackEntry?.savedStateHandle
             val keys = savedStateHandle?.keys()
             keys?.forEach { savedStateHandle.remove<Any>(it) }
             savedStateHandle?.let {
                 it[AppScreens.REPOLIST.route] = user.login
-                //Is Starred true
+                // Is Starred true
                 it[AppScreens.USERPROFILE.route] = true
             }
 
-
             localNavController.navigate(AppScreens.REPOLIST.route)
         }
-
     }
 }
 
@@ -328,21 +341,22 @@ fun InfoRow(
     label: String,
     count: Int? = null,
     tint: Color = LocalContentColor.current,
-    onClick: (() -> Unit) = {}
+    onClick: (() -> Unit) = {},
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable {
-                onClick()
-            },
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .clickable {
+                    onClick()
+                },
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Icon(
                 ImageVector.vectorResource(id = iconId),
@@ -357,5 +371,3 @@ fun InfoRow(
         }
     }
 }
-
-

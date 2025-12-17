@@ -1,6 +1,5 @@
 package com.jk.gogit.repos
 
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,7 +38,6 @@ import org.koin.core.parameter.parametersOf
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun RepositoryListScreen() {
-
     val localNavyController = LocalNavController.current
     val savedStateHandle = (localNavyController.previousBackStackEntry?.savedStateHandle)
     val login =
@@ -50,42 +48,47 @@ fun RepositoryListScreen() {
     val filter = savedStateHandle?.get<String>(NavigationArgs.FILTER) ?: ""
     val repoName = savedStateHandle?.get<String>(NavigationArgs.REPO_NAME) ?: ""
 
-    val viewModel = koinViewModel<RepoListViewModel>(parameters = {
-        parametersOf(
-            login,
-            isStarred,
-            isOrg,
-            filter,
-            repoName
-        )
-    })
+    val viewModel =
+        koinViewModel<RepoListViewModel>(parameters = {
+            parametersOf(
+                login,
+                isStarred,
+                isOrg,
+                filter,
+                repoName,
+            )
+        })
     Page(title = {
         Text(
-            text = if (isStarred) "Starred Repositories"
-            else if (filter.isNotEmpty()) filter
-            else "Repositories"
+            text =
+                if (isStarred) {
+                    "Starred Repositories"
+                } else if (filter.isNotEmpty()) {
+                    filter
+                } else {
+                    "Repositories"
+                },
         )
     }) {
         when (val result = viewModel.repoStateFlow.collectAsState().value) {
             is UiState.Loading -> CircularProgressIndicator()
-            is UiState.Error -> OfflineError(message = result.message,)
+            is UiState.Error -> OfflineError(message = result.message)
             is UiState.Empty -> {}
             is UiState.Content -> {
-
                 val nodes = result.data as List<*>
-                if (nodes.isEmpty())
+                if (nodes.isEmpty()) {
                     Text(
                         text = "No repositories found",
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.fillMaxSize(),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
-                else
+                } else {
                     Column(
                         Modifier
                             .fillMaxSize()
-                            .padding( 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)
+                            .padding(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
                     ) {
                         if (filter.isEmpty()) {
                             val languageMap = viewModel.languageMapStateFlow.collectAsState().value
@@ -97,18 +100,19 @@ fun RepositoryListScreen() {
                             items(nodes.size) {
                                 if (it > 0) HorizontalDivider()
                                 nodes[it]?.let { nodes ->
-                                    if (filter == "Forks")
+                                    if (filter == "Forks") {
                                         ForksItem(nodes as Repos)
-                                    else
+                                    } else {
                                         RepositoryItem(nodes as Repos)
+                                    }
                                 }
                             }
                         }
                     }
+                }
             }
         }
     }
-
 }
 
 @Composable
@@ -116,20 +120,21 @@ fun ForksItem(repo: Repos) {
     val localNavController = LocalNavController.current
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp)
-            .clickable {
-                localNavController.currentBackStackEntry
-                    ?.savedStateHandle?.let {
-                        it[AppScreens.USERPROFILE.route] = repo.owner.login
-                        it[AppScreens.REPOLIST.route] = repo.defaultBranchRef?.name.orEmpty()
-                        it[AppScreens.REPODETAIL.route] = repo.repoName
-                    }
-                localNavController.navigate(AppScreens.REPODETAIL.route)
-            }
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp)
+                .clickable {
+                    localNavController.currentBackStackEntry
+                        ?.savedStateHandle
+                        ?.let {
+                            it[AppScreens.USERPROFILE.route] = repo.owner.login
+                            it[AppScreens.REPOLIST.route] = repo.defaultBranchRef?.name.orEmpty()
+                            it[AppScreens.REPODETAIL.route] = repo.repoName
+                        }
+                    localNavController.navigate(AppScreens.REPODETAIL.route)
+                },
     ) {
-
         Text(
             text = "${repo.owner.login}/${repo.repoName}",
             style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.primary),
@@ -138,23 +143,23 @@ fun ForksItem(repo: Repos) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-
             IconWithText(
-                repo.stargazerCount.toString(), R.drawable.baseline_star_24, tint = Color(
-                    android.graphics.Color.parseColor("#FFA500")
-                )
+                repo.stargazerCount.toString(),
+                R.drawable.baseline_star_24,
+                tint =
+                    Color(
+                        android.graphics.Color.parseColor("#FFA500"),
+                    ),
             )
             IconWithText(repo.forkCount.toString(), R.drawable.baseline_fork_left_24)
-
         }
         Text(
             text = "Updated on " + repo.updatedAt.toString(),
             style = MaterialTheme.typography.bodySmall,
             //   fontFamily = FontFamily(Font(R.font.bebasneue_light)),
-            textAlign = TextAlign.End
+            textAlign = TextAlign.End,
         )
     }
-
 }

@@ -29,17 +29,15 @@ import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.extensions.toColor
 import com.jk.gogit.navigation.AppScreens
 
-
 val GREEN_500 = "#1B5E20".toColor()
 val MAGENTA_500 = "#8250F4".toColor()
 
 @Composable
 fun PullRequestListScreen() {
-
     val localNavyController = LocalNavController.current
     val items =
         localNavyController.previousBackStackEntry?.savedStateHandle?.get<Any>(
-            AppScreens.PULLREQUESTS.route
+            AppScreens.PULLREQUESTS.route,
         )!!
     items as List<*>
     val tt =
@@ -54,14 +52,16 @@ fun PullRequestListScreen() {
             return@Page
         }
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
         ) {
             items(items.size) { index ->
-                if (index > 0)
-                // Add a line as a separator
+                if (index > 0) {
+                    // Add a line as a separator
                     HorizontalDivider()
+                }
                 items[index]?.let {
                     val title: String
                     val body: String
@@ -84,75 +84,86 @@ fun PullRequestListScreen() {
                         createdAt = it.createdAt.toString()
                         authorLogin = it.author?.login.orEmpty()
                         state = it.state.rawValue
-
                     }
 
-                    val message = when (state) {
-                        "OPEN" -> "#${number} opened on $createdAt by $authorLogin"
-                        "CLOSED" -> "#${number} was closed by $authorLogin on $createdAt"
-                        "MERGED" -> "#${number} by $authorLogin was merged on $createdAt"
-                        else -> ""
-                    }
+                    val message =
+                        when (state) {
+                            "OPEN" -> "#$number opened on $createdAt by $authorLogin"
+                            "CLOSED" -> "#$number was closed by $authorLogin on $createdAt"
+                            "MERGED" -> "#$number by $authorLogin was merged on $createdAt"
+                            else -> ""
+                        }
 
                     val imageVector =
                         ImageVector.vectorResource(
-                            if (it is GetRepoDetailsQuery.Pr)  // Handle PR
+                            if (it is GetRepoDetailsQuery.Pr) {
+                                // Handle PR
                                 when (state) {
                                     "OPEN" -> R.drawable.git_pull_request_merge
                                     "CLOSED" -> R.drawable.git_pull_request_closed_svgrepo_com
                                     else -> R.drawable.git_pull_request_svgrepo_com
                                 }
-                            else
-                                if (state == "OPEN") R.drawable.issue_opened_16 else R.drawable.issue_closed_svgrepo_com
-
+                            } else {
+                                if (state == "OPEN") {
+                                    R.drawable.issue_opened_16
+                                } else {
+                                    R.drawable.issue_closed_svgrepo_com
+                                }
+                            },
                         )
                     val tint =
-                        if (it is GetRepoDetailsQuery.Pr)
+                        if (it is GetRepoDetailsQuery.Pr) {
                             when (state) {
                                 "OPEN" -> GREEN_500
                                 "MERGED" -> MAGENTA_500
                                 else -> Color.Red
                             }
-                        else if (state == "OPEN") MAGENTA_500 else GREEN_500
+                        } else if (state == "OPEN") {
+                            MAGENTA_500
+                        } else {
+                            GREEN_500
+                        }
 
                     PullRequestItem(
                         title = title,
                         body = body,
                         message = "$state $message",
                         tint = tint,
-                        imageVector = imageVector
+                        imageVector = imageVector,
                     )
                 }
             }
         }
     }
-
 }
 
 @Composable
 fun PullRequestItem(
-    title: String, body: String,
-    message: String, tint: Color,
-    imageVector: ImageVector
+    title: String,
+    body: String,
+    message: String,
+    tint: Color,
+    imageVector: ImageVector,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable {
-                //   navController.currentBackStackEntry
-                //    ?.savedStateHandle
-                //    ?.set(AppScreens.USERPROFILE.route, node.author)
-                // navController.navigate(AppScreens.USERPROFILE.route)
-            }
-
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+                .clickable {
+                    //   navController.currentBackStackEntry
+                    //    ?.savedStateHandle
+                    //    ?.set(AppScreens.USERPROFILE.route, node.author)
+                    // navController.navigate(AppScreens.USERPROFILE.route)
+                },
     ) {
         Icon(
             imageVector = imageVector,
             tint = tint,
             contentDescription = null,
-            modifier = Modifier
-                .size(16.dp)
+            modifier =
+                Modifier
+                    .size(16.dp),
         )
         Spacer(modifier = Modifier.width(8.dp))
         Column {
@@ -162,7 +173,7 @@ fun PullRequestItem(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.labelLarge,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
@@ -181,4 +192,3 @@ fun PullRequestItem(
         }
     }
 }
-

@@ -19,7 +19,6 @@ class OrgDetailsViewModel(
     private val dispatchers: DispatcherProvider,
     private val login: String,
 ) : ViewModel() {
-
     private val _feedStateFlow = MutableStateFlow<UiState>(UiState.Empty)
     val feedStateFlow = _feedStateFlow.asStateFlow()
 
@@ -34,13 +33,14 @@ class OrgDetailsViewModel(
                 is MainState.FetchEvent -> {
                     flow {
                         emit(UiState.Loading)
-                        val overViewTabData = orgDetailsExecutor.execute(login = login )
+                        val overViewTabData = orgDetailsExecutor.execute(login = login)
                         emit(UiState.Content(overViewTabData.toOverViewScreenData()))
                     }.catch {
                         emit(UiState.Error(it.printifyMessage()))
-                    }.flowOn(dispatchers.main).collect {
-                        _feedStateFlow.value = it
-                    }
+                    }.flowOn(dispatchers.main)
+                        .collect {
+                            _feedStateFlow.value = it
+                        }
                 }
 
                 is MainState.RefreshEvent -> {
@@ -50,7 +50,7 @@ class OrgDetailsViewModel(
 
     sealed class MainState {
         object FetchEvent : MainState()
+
         object RefreshEvent : MainState()
     }
 }
-

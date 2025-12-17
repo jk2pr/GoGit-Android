@@ -1,0 +1,17 @@
+#!/bin/sh
+
+echo "Running ktlint check..."
+./gradlew assembleDebug
+./gradlew ktlintCheck
+
+# Get the exit code of the ktlintCheck task
+RESULT=$?
+
+# If ktlintCheck fails, abort the commit
+if [ $RESULT -ne 0 ]; then
+  echo "ktlint check failed. Please fix the style issues before committing."
+  exit 1
+fi
+
+echo "ktlint check passed."
+exit 0

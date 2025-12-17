@@ -26,29 +26,72 @@ import com.jk.gogit.users.viewmodel.UserListViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
-val appModule = module {
-    single { ktorHttpClient }
-    single { apolloClient }
-    single<DispatcherProvider> { DefaultDispatchers() }
-    single<UserProfileExecutor> { UserProfileExecutor(get()) }
-    single<FeedExecutor> { FeedExecutor(get()) }
-    single<RepoExecutor> { RepoExecutor(get()) }
-    single<RepoTreeExecutor> { RepoTreeExecutor(get()) }
-    single<SearchExecutor> { SearchExecutor(get()) }
-    single<UserListExecutor> { UserListExecutor(get()) }
-    single<RepoDetailExecutor> { RepoDetailExecutor(get()) }
-    single<OrgExecutor> { OrgExecutor(get()) }
-    single<OrgDetailsExecutor> { OrgDetailsExecutor(get()) }
-    single<CommitListExecutor> { CommitListExecutor(get()) }
-    viewModel { _ -> AuthViewModel() }
-    viewModel { params -> FeedViewModel(feedExecutor = get(), dispatchers = get(), login = params.get()) }
-    viewModel { params -> UserProfileViewModel(userProfileExecutor = get(), dispatchers = get(), login = params.get()) }
-    viewModel { params -> RepoListViewModel(repoExecutor = get(), dispatchers = get(), login = params.get(), isStarred = params.get(), isOrg = params.get(), filter = params.get(), repoName = params.get()) }
-    viewModel { params -> UserListViewModel(userListExecutor = get(), dispatchers = get(), login = params.get(), filter = params.get(), repoName = params.get()) }
-    viewModel { _ -> SearchViewModel(searchExecutor = get(), dispatchers = get()) }
-    viewModel { params -> RepoDetailViewModel(repoDetailExecutor = get(), dispatchers = get(), login = params.get(), repo = params.get(), path = params.get()) }
-    viewModel { params -> OrgListViewModel(orgExecutor = get(), dispatchers = get(), login = params.get(),) }
-    viewModel { params -> OrgDetailsViewModel(orgDetailsExecutor = get(), dispatchers = get(), login = params.get(),) }
-    viewModel { params -> RepoTreeViewModel(repoTreeExecutor = get(), dispatchers = get(), login = params.get(), repo = params.get(), basePath = params.get()) }
-    viewModel { params -> CommitListViewModel(commitListExecutor = get(), dispatchers = get(), login = params.get(), path = params.get(), repo = params.get()) }
-}
+val appModule =
+    module {
+        single { ktorHttpClient }
+        single { apolloClient }
+        single<DispatcherProvider> { DefaultDispatchers() }
+        single<UserProfileExecutor> { UserProfileExecutor(get()) }
+        single<FeedExecutor> { FeedExecutor(get()) }
+        single<RepoExecutor> { RepoExecutor(get()) }
+        single<RepoTreeExecutor> { RepoTreeExecutor(get()) }
+        single<SearchExecutor> { SearchExecutor(get()) }
+        single<UserListExecutor> { UserListExecutor(get()) }
+        single<RepoDetailExecutor> { RepoDetailExecutor(get()) }
+        single<OrgExecutor> { OrgExecutor(get()) }
+        single<OrgDetailsExecutor> { OrgDetailsExecutor(get()) }
+        single<CommitListExecutor> { CommitListExecutor(get()) }
+        viewModel { _ -> AuthViewModel() }
+        viewModel { params -> FeedViewModel(feedExecutor = get(), dispatchers = get(), login = params.get()) }
+        viewModel { params -> UserProfileViewModel(userProfileExecutor = get(), dispatchers = get(), login = params.get()) }
+        viewModel { params ->
+            RepoListViewModel(
+                repoExecutor = get(),
+                dispatchers = get(),
+                login = params.get(),
+                isStarred = params.get(),
+                isOrg = params.get(),
+                filter = params.get(),
+                repoName = params.get(),
+            )
+        }
+        viewModel { params ->
+            UserListViewModel(
+                userListExecutor = get(),
+                dispatchers = get(),
+                login = params.get(),
+                filter = params.get(),
+                repoName = params.get(),
+            )
+        }
+        viewModel { _ -> SearchViewModel(searchExecutor = get(), dispatchers = get()) }
+        viewModel { params ->
+            RepoDetailViewModel(
+                repoDetailExecutor = get(),
+                dispatchers = get(),
+                login = params.get(),
+                repo = params.get(),
+                path = params.get(),
+            )
+        }
+        viewModel { params -> OrgListViewModel(orgExecutor = get(), dispatchers = get(), login = params.get()) }
+        viewModel { params -> OrgDetailsViewModel(orgDetailsExecutor = get(), dispatchers = get(), login = params.get()) }
+        viewModel { params ->
+            RepoTreeViewModel(
+                repoTreeExecutor = get(),
+                dispatchers = get(),
+                login = params.get(),
+                repo = params.get(),
+                basePath = params.get(),
+            )
+        }
+        viewModel { params ->
+            CommitListViewModel(
+                commitListExecutor = get(),
+                dispatchers = get(),
+                login = params.get(),
+                path = params.get(),
+                repo = params.get(),
+            )
+        }
+    }

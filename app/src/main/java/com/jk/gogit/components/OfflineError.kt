@@ -22,18 +22,18 @@ fun OfflineError(
     modifier: Modifier = Modifier,
     retryHandler: () -> Unit = {},
     title: String = "Oops!",
-    message: String = "Seems you are offline. Please check your internet connection."
+    message: String = "Seems you are offline. Please check your internet connection.",
 ) {
-
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(painterResource(id = R.drawable.wifi_off_48dp), contentDescription = "Error")
         Text(text = title, style = MaterialTheme.typography.headlineSmall)
         Text(
-            text = message, style = MaterialTheme.typography.bodyLarge,
+            text = message,
+            style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
             modifier = modifier.padding(horizontal = 8.dp),
         )
@@ -42,5 +42,4 @@ fun OfflineError(
             Text(text = "Try again")
         }
     }
-
 }

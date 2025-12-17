@@ -32,35 +32,36 @@ fun UserItem(node: UserFields) {
     val navController = LocalNavController.current
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable {
-                navController.currentBackStackEntry
-                    ?.savedStateHandle
-                    ?.set(AppScreens.USERPROFILE.route, node.login)
-                navController.navigate(AppScreens.USERPROFILE.route)
-            }
-
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+                .clickable {
+                    navController.currentBackStackEntry
+                        ?.savedStateHandle
+                        ?.set(AppScreens.USERPROFILE.route, node.login)
+                    navController.navigate(AppScreens.USERPROFILE.route)
+                },
     ) {
         Image(
             painter = rememberAsyncImagePainter(node.avatarUrl),
             contentDescription = null,
-            modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
+            modifier =
+                Modifier
+                    .size(48.dp)
+                    .clip(CircleShape),
         )
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
                     text = node.name.orEmpty().trim(),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.labelLarge,
-                    modifier = Modifier.widthIn(max = 200.dp)
+                    modifier = Modifier.widthIn(max = 200.dp),
                 )
                 Text(
                     text = node.login,
@@ -68,16 +69,17 @@ fun UserItem(node: UserFields) {
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
-            if (!node.bio.isNullOrBlank())
+            if (!node.bio.isNullOrBlank()) {
                 Text(
                     text = node.bio,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                     style = MaterialTheme.typography.bodySmall,
                 )
+            }
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 if (!node.company.isNullOrBlank()) {
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -91,8 +93,9 @@ fun UserItem(node: UserFields) {
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier
-                                .widthIn(max = 150.dp)
+                            modifier =
+                                Modifier
+                                    .widthIn(max = 150.dp),
                         )
                     }
                 }
@@ -108,7 +111,7 @@ fun UserItem(node: UserFields) {
                             text = node.location,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodySmall,
                         )
                     }
                 }

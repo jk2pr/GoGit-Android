@@ -43,60 +43,61 @@ import com.jk.gogit.components.localproviders.LocalNavController
 @Composable
 fun OrgDetailsHeader(
     data: GetOrganizationDetailQuery.Organization,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LocalNavController.current
 
     Column(modifier = modifier) {
         val painter =
             rememberAsyncImagePainter(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(data.avatarUrl)
-                    .placeholder(R.drawable.ic_image_black_24dp)
-                    .error(R.drawable.ic_broken_image_black_24dp)
-                    .crossfade(enable = true)
-                    .build(),
-                contentScale = ContentScale.Inside
+                model =
+                    ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(data.avatarUrl)
+                        .placeholder(R.drawable.ic_image_black_24dp)
+                        .error(R.drawable.ic_broken_image_black_24dp)
+                        .crossfade(enable = true)
+                        .build(),
+                contentScale = ContentScale.Inside,
             )
-
 
         Row(modifier = Modifier.fillMaxWidth()) {
             Image(
                 painter = painter,
                 contentDescription = null,
-                modifier = Modifier
-                    .size(80.dp),
-                contentScale = ContentScale.Crop
+                modifier =
+                    Modifier
+                        .size(80.dp),
+                contentScale = ContentScale.Crop,
             )
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp),
             ) {
-
                 /* if (!data.name.isNullOrBlank()) {
                     Text(text = data.name)
                 }*/
                 Text(
                     softWrap = true,
                     text = data.name.orEmpty(),
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge,
                 )
                 Text(
                     softWrap = true,
                     text = data.login,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
 
                 BulletList(
                     style = MaterialTheme.typography.bodyMedium,
-                    items = mapOf(
-                        Icons.Outlined.MailOutline to data.email,
-                        Icons.Outlined.LocationOn to data.location,
-                    )
+                    items =
+                        mapOf(
+                            Icons.Outlined.MailOutline to data.email,
+                            Icons.Outlined.LocationOn to data.location,
+                        ),
                 )
-
-
             }
         }
 
@@ -104,15 +105,16 @@ fun OrgDetailsHeader(
             Row(
                 verticalAlignment = Alignment.Top,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
-
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
             ) {
                 Column(
-                    modifier = Modifier
-                        .wrapContentWidth()
-                        .weight(0.5f)
+                    modifier =
+                        Modifier
+                            .wrapContentWidth()
+                            .weight(0.5f),
                 ) {
                     /* BulletList(
                         style = MaterialTheme.typography.bodyMedium,
@@ -121,23 +123,20 @@ fun OrgDetailsHeader(
                     BulletList(
                         style = MaterialTheme.typography.bodyMedium,
                         maxLine = 1,
-                        items = mapOf(ImageVector.vectorResource(id = R.drawable.baseline_link_24) to data.websiteUrl?.toString())
+                        items = mapOf(ImageVector.vectorResource(id = R.drawable.baseline_link_24) to data.websiteUrl?.toString()),
                     )
-
                 }
-
-
             }
             BulletList(
                 style = MaterialTheme.typography.bodyMedium,
-                items = mapOf(Icons.Outlined.Info to data.description)
-
+                items = mapOf(Icons.Outlined.Info to data.description),
             )
         }
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.End,
         ) {
@@ -145,21 +144,20 @@ fun OrgDetailsHeader(
                 contentPadding = PaddingValues(horizontal = 24.dp),
                 shape = MaterialTheme.shapes.small,
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                //colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.outline, contentColor = MaterialTheme.colorScheme.onPrimary),
+                // colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.outline, contentColor = MaterialTheme.colorScheme.onPrimary),
                 onClick = { /* Follow Button Clicked */ },
             ) {
                 Text(
                     text = "Follow",
                     // style = TextStyle(color = Color.Blue),
                     //   modifier = Modifier.wrapContentWidth(),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
         }
     }
     HorizontalDivider()
 }
-
 
 @Composable
 fun BulletList(
@@ -174,13 +172,13 @@ fun BulletList(
         items.forEach {
             if (it.value.isNullOrBlank()) return@forEach
             Row(
-                verticalAlignment = if (maxLine == 1) Alignment.CenterVertically else Alignment.Top
+                verticalAlignment = if (maxLine == 1) Alignment.CenterVertically else Alignment.Top,
             ) {
                 Icon(
                     imageVector = it.key,
                     contentDescription = "",
                     modifier = modifier.size(16.dp),
-                    tint = tint
+                    tint = tint,
                 )
                 Spacer(modifier = Modifier.size(lineSpacing))
                 Text(
@@ -191,7 +189,6 @@ fun BulletList(
                     modifier = Modifier.weight(1f, fill = true),
                 )
             }
-
         }
     }
 }

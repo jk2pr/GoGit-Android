@@ -60,12 +60,12 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun OrgDetailsScreen() {
-
-
     val localNavController = LocalNavController.current
     val login =
-        (localNavController.previousBackStackEntry?.savedStateHandle?.get<String>(AppScreens.ORGDETAIL.route)
-            ?: AuthManager.getLogin())!!
+        (
+            localNavController.previousBackStackEntry?.savedStateHandle?.get<String>(AppScreens.ORGDETAIL.route)
+                ?: AuthManager.getLogin()
+        )!!
     val viewModel = koinViewModel<OrgDetailsViewModel>(parameters = { parametersOf(login) })
     val scrollState = rememberScrollState()
     val title = remember { mutableStateOf("") }
@@ -79,22 +79,23 @@ fun OrgDetailsScreen() {
                     text = currentTitle,
                 )
             }
-        }) {
+        },
+    ) {
         when (val result = viewModel.feedStateFlow.collectAsState().value) {
             is UiState.Loading ->
                 CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(50.dp)
+                    modifier =
+                        Modifier
+                            .size(50.dp),
                 )
 
             is UiState.Content -> {
-
-
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(scrollState)
-                        .padding(horizontal = 16.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .verticalScroll(scrollState)
+                            .padding(horizontal = 16.dp),
                     verticalArrangement = Arrangement.Top,
                 ) {
                     // Header(data = overViewTabData.user)
@@ -110,13 +111,15 @@ fun OrgDetailsScreen() {
                     }
                     val hasPinned = items.any { it is PinnedRepository || it is PinnedGist }
                     Column(
-                        modifier = Modifier
-                            .fillMaxHeight()
+                        modifier =
+                            Modifier
+                                .fillMaxHeight(),
                     ) {
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Icon(
                                 ImageVector.vectorResource(id = if (hasPinned) R.drawable.pin_26 else R.drawable.baseline_star_24),
@@ -127,34 +130,39 @@ fun OrgDetailsScreen() {
                             Text(
                                 text = if (hasPinned) "Pinned" else "Popular",
                                 style = MaterialTheme.typography.labelLarge,
-                                modifier = Modifier.padding(vertical = 8.dp)
+                                modifier = Modifier.padding(vertical = 8.dp),
                             )
                         }
-                        val itemModifier = Modifier
-                            .width(200.dp)
-                            .height(150.dp)
-                            .padding(end = 8.dp)
+                        val itemModifier =
+                            Modifier
+                                .width(200.dp)
+                                .height(150.dp)
+                                .padding(end = 8.dp)
                         LazyRow(
                             Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 8.dp)
-                                .wrapContentHeight()
+                                .wrapContentHeight(),
                         ) {
                             items(items.size) { index ->
                                 when (val item = items[index]) {
-                                    is PinnedRepository -> PinnedItems(
-                                        repo = item.repo, modifier = itemModifier
-                                    ) { _, _, _ -> }
+                                    is PinnedRepository ->
+                                        PinnedItems(
+                                            repo = item.repo,
+                                            modifier = itemModifier,
+                                        ) { _, _, _ -> }
 
-                                    is PopularRepository -> PinnedItems(
-                                        repo = item.repo, modifier = itemModifier
-                                    ) { _, _, _ -> }
+                                    is PopularRepository ->
+                                        PinnedItems(
+                                            repo = item.repo,
+                                            modifier = itemModifier,
+                                        ) { _, _, _ -> }
 
-                                    is PinnedGist -> GistItem(
-                                        gist = item.gist, modifier = itemModifier
-                                    )
-
-
+                                    is PinnedGist ->
+                                        GistItem(
+                                            gist = item.gist,
+                                            modifier = itemModifier,
+                                        )
                                 }
                             }
                         }
@@ -162,8 +170,7 @@ fun OrgDetailsScreen() {
                             border = BorderStroke(DividerDefaults.Thickness, DividerDefaults.color),
                             modifier = Modifier.padding(vertical = 8.dp),
                             colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-
-                            ) {
+                        ) {
                             InfoRow(
                                 iconId = R.drawable.git_repository_line_1,
                                 label = "Repositories",
@@ -176,7 +183,7 @@ fun OrgDetailsScreen() {
 
                                 savedStateHandle?.let {
                                     it[AppScreens.REPOLIST.route] = overViewTabData.org.login
-                                    //Is Org true
+                                    // Is Org true
                                     it[AppScreens.REPODETAIL.route] = true
                                 }
                                 localNavController.navigate(AppScreens.REPOLIST.route)
@@ -186,9 +193,10 @@ fun OrgDetailsScreen() {
                         MarkdownText(
                             markdown = file,
                             modifier = Modifier.padding(vertical = 8.dp),
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                color = LocalContentColor.current
-                            )
+                            style =
+                                MaterialTheme.typography.bodyMedium.copy(
+                                    color = LocalContentColor.current,
+                                ),
                         )
 
                         LaunchedEffect(Unit) {
@@ -196,21 +204,23 @@ fun OrgDetailsScreen() {
                             snapshotFlow { scrollState.value }
                                 .collect { scrollOffset ->
                                     // Change title text based on scroll offset
-                                    title.value = if (scrollOffset > 100) overViewTabData.org.name
-                                        ?: overViewTabData.org.login
-                                    else ""
+                                    title.value =
+                                        if (scrollOffset > 100) {
+                                            overViewTabData.org.name
+                                                ?: overViewTabData.org.login
+                                        } else {
+                                            ""
+                                        }
                                 }
                         }
                     }
                 }
             }
 
-
-            is UiState.Error -> OfflineError(message = result.message,)
+            is UiState.Error -> OfflineError(message = result.message)
 
             is UiState.Empty -> {}
         }
-
     }
 }
 
@@ -221,4 +231,3 @@ fun UserProfileScreenPreview() {
         OrgDetailsScreen()
     }
 }
-
