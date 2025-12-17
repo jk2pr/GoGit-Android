@@ -30,8 +30,8 @@ jobs:
           gradlePath: app/build.gradle.kts # or app/build.gradle.kts
           versionCode: ${{github.run_number}}
           versionName: 2.0.0
-      - name: Install NDK
-        run: echo "y" | sudo /usr/local/lib/android/sdk/tools/bin/sdkmanager --install "ndk;21.0.6113669" --sdk_root=${ANDROID_SDK_ROOT}
+     # - name: Install NDK
+     #   run: echo "y" | sudo /usr/local/lib/android/sdk/tools/bin/sdkmanager --install "ndk;21.0.6113669" --sdk_root=${ANDROID_SDK_ROOT}
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
       - name: Clean
