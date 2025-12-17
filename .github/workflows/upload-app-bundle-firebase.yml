@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
       - name: set up JDK 11
         uses: actions/setup-java@v1
         with:
@@ -43,7 +43,7 @@ jobs:
       - name: build prod
         run: ./gradlew app:bundleDebug --stacktrace
       - name: Upload AAB
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: aab
           path: app/build/outputs/bundle/debug/**.aab
