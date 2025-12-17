@@ -21,10 +21,6 @@ jobs:
       env:
         KEYSTORE: ${{ secrets.KEYSTORE }}
       run: echo "$KEYSTORE" > ./keystore.properties
-    - name: create secret.properties
-      env:
-        SECRET: ${{ secrets.SECRET }}
-      run: echo "$SECRET" > ./secret.properties
     - name: create google_service.json
       env:
         GOOGLE_SERVICE_JSON: ${{ secrets.GOOGLE_SERVICE_JSON }}
