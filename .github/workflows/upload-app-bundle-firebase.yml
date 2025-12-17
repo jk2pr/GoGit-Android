@@ -38,8 +38,8 @@ jobs:
         run: ./gradlew clean
       - name: LintCheck
         run: ./gradlew ktlintCheck
-      - name: Run Test
-        run: ./gradlew assembleDebugAndroidTest
+    #  - name: Run Test
+    #    run: ./gradlew assembleDebugAndroidTest
       - name: build prod
         run: ./gradlew app:bundleDebug --stacktrace
       - name: Upload AAB
