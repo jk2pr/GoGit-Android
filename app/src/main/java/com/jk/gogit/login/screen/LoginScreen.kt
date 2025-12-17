@@ -13,8 +13,10 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -37,8 +39,10 @@ import com.google.firebase.auth.OAuthProvider
 import com.jk.gogit.MainActivity
 import com.jk.gogit.R
 import com.jk.gogit.components.ComposeLocalWrapper
+import com.jk.gogit.components.GoGitSnackbarVisuals
 import com.jk.gogit.components.Page
 import com.jk.gogit.components.localproviders.LocalNavController
+import com.jk.gogit.components.localproviders.LocalSnackBarHostState
 import com.jk.gogit.login.AuthRequestModel
 import com.jk.gogit.login.AuthViewModel
 import com.jk.gogit.login.AuthenticationState
@@ -49,125 +53,135 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LoginScreen() {
-    val activity = LocalActivity.current as MainActivity
-    val provider = OAuthProvider.newBuilder("github.com")
-    provider.scopes = AuthRequestModel().generate().scopes
 
     val localNavController = LocalNavController.current
-
 
     val authViewModel: AuthViewModel = koinViewModel<AuthViewModel>()
 
     val authenticationState by authViewModel.authenticationState.collectAsState()
+    val snackbarHostState = LocalSnackBarHostState.current
+    val scope = rememberCoroutineScope()
     Page {
-        when (authenticationState) {
-            AuthenticationState.Initial ->
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(
-                        space = 8.dp,
-                        alignment = Alignment.Top
-                    ),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                ) {
-                    Image(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .size(148.dp),
-                        contentDescription = "App Icon",
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
-                        painter = painterResource(id = R.mipmap.ic_launcher_foreground),
-                        alignment = Alignment.Center,
-                    )
+        when (val state = authenticationState) {
+            is AuthenticationState.Initial ->
+                Login(authViewModel)
 
-                    Button(
-                        onClick = {
-                            activity.lifecycleScope.launch {
-                                authViewModel.signInWithGithub(
-                                    activity = activity,
-                                    provider = provider
-                                )
-                            }
-                        },
-                        modifier = Modifier
-                            .padding(vertical = 8.dp)
-                    ) {
-                        Text(text = stringResource(id = R.string.sign_in))
-                    }
-
-                    val privacyPolicyUrl = "https://jk2pr.github.io"
-                    val preLinkText = "Your login indicates acceptance of our "
-                    val linkText = "\nPrivacy Policy"
-
-                    val annotatedString = buildAnnotatedString {
-                        pushStyle(style = ParagraphStyle(textAlign = TextAlign.Center))
-                        append(preLinkText)
-
-                        val startIndex = length
-                        append(linkText)
-                        val endIndex = length
-
-                        // Apply visual style to the link text
-                        addStyle(
-                            style = SpanStyle(textDecoration = TextDecoration.Underline),
-                            start = startIndex,
-                            end = endIndex
-                        )
-
-                        // Create and add the LinkAnnotation
-                        val clickableAnnotation = LinkAnnotation.Clickable(
-                            tag = "PrivacyPolicyURL", // Semantic tag for the link
-                            linkInteractionListener = object : LinkInteractionListener {
-                                override fun onClick(link: LinkAnnotation) {
-                                    val uri = privacyPolicyUrl.toUri()
-                                    val intent = Intent(Intent.ACTION_VIEW, uri)
-                                    activity.startActivity(intent)
-                                }
-                            }
-                        )
-                        addLink(
-                            clickableAnnotation, // Corrected: pass annotation directly
-                            start = startIndex,
-                            end = endIndex
-                        )
-                        pop() // Pop the ParagraphStyle
-                    }
-
-
-                    Text(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally),
-                        text = annotatedString,
-                        style = LocalTextStyle.current.copy(
-                            color = MaterialTheme.colorScheme.outline,
-                            fontSize = 14.sp
-                        ),
-                        maxLines = 2
-                    )
-
-
-                    // Other UI elements
-
-                }
-
-           is AuthenticationState.Authenticated ->
+            is AuthenticationState.Authenticated ->
                 localNavController.navigate(AppScreens.HOME.route) {
                     popUpTo(AppScreens.LOGIN.route) {
                         inclusive = true
                     }
                 }
 
-
-            AuthenticationState.AuthenticationFailed -> {
-                // Handle authentication failure
-                // You may display an error message to the user
+            is AuthenticationState.AuthenticationFailed -> {
+                Login(authViewModel)
+                LaunchedEffect(state) {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            GoGitSnackbarVisuals.Error(
+                                state.message ?: "Authentication Failed"
+                            )
+                        )
+                        authViewModel.resetState()
+                    }
+                }
             }
 
-            AuthenticationState.Loading ->
+            is AuthenticationState.Loading ->
                 // Show loader
                 CircularProgressIndicator(modifier = Modifier.size(50.dp))
 
         }
+    }
+}
+
+@Composable
+private fun Login(authViewModel: AuthViewModel) {
+    val activity = LocalActivity.current as MainActivity
+    val provider = OAuthProvider.newBuilder("github.com")
+    provider.scopes = AuthRequestModel().generate().scopes
+    Column(
+        verticalArrangement = Arrangement.spacedBy(
+            space = 8.dp,
+            alignment = Alignment.Top
+        ),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(horizontal = 8.dp),
+    ) {
+        Image(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .size(148.dp),
+            contentDescription = "App Icon",
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
+            painter = painterResource(id = R.mipmap.ic_launcher_foreground),
+            alignment = Alignment.Center,
+        )
+
+        Button(
+            onClick = {
+                activity.lifecycleScope.launch {
+                    authViewModel.signInWithGithub(
+                        activity = activity,
+                        provider = provider
+                    )
+                }
+            },
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+        ) {
+            Text(text = stringResource(id = R.string.sign_in))
+        }
+
+        val privacyPolicyUrl = "https://jk2pr.github.io"
+        val preLinkText = "Your login indicates acceptance of our "
+        val linkText = "\nPrivacy Policy"
+
+        val annotatedString = buildAnnotatedString {
+            pushStyle(style = ParagraphStyle(textAlign = TextAlign.Center))
+            append(preLinkText)
+
+            val startIndex = length
+            append(linkText)
+            val endIndex = length
+
+            // Apply visual style to the link text
+            addStyle(
+                style = SpanStyle(textDecoration = TextDecoration.Underline),
+                start = startIndex,
+                end = endIndex
+            )
+
+            // Create and add the LinkAnnotation
+            val clickableAnnotation = LinkAnnotation.Clickable(
+                tag = "PrivacyPolicyURL", // Semantic tag for the link
+                linkInteractionListener = object : LinkInteractionListener {
+                    override fun onClick(link: LinkAnnotation) {
+                        val uri = privacyPolicyUrl.toUri()
+                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                        activity.startActivity(intent)
+                    }
+                }
+            )
+            addLink(
+                clickableAnnotation, // Corrected: pass annotation directly
+                start = startIndex,
+                end = endIndex
+            )
+            pop() // Pop the ParagraphStyle
+        }
+
+
+        Text(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally),
+            text = annotatedString,
+            style = LocalTextStyle.current.copy(
+                color = MaterialTheme.colorScheme.outline,
+                fontSize = 14.sp
+            ),
+            maxLines = 2
+        )
     }
 }
 

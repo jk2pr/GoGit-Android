@@ -10,8 +10,12 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +27,16 @@ import com.jk.gogit.components.localproviders.LocalNavController
 import com.jk.gogit.components.localproviders.LocalSnackBarHostState
 import com.tusharhow.connext.helper.connectivityStatus
 import com.tusharhow.connext.models.ConnectionStatus
+
+sealed class GoGitSnackbarVisuals(
+    override val message: String,
+    override val duration: SnackbarDuration = SnackbarDuration.Short,
+    override val actionLabel: String? = null,
+    override val withDismissAction: Boolean = false,
+) : SnackbarVisuals {
+    class Normal(message: String) : GoGitSnackbarVisuals(message)
+    class Error(message: String) : GoGitSnackbarVisuals(message)
+}
 
 @Composable
 fun Page(
@@ -48,7 +62,7 @@ fun Page(
             ) {
                 content()
                 if (!isConnected) LaunchedEffect(connection) {
-                    snackBarHostState.showSnackbar("No Internet Connection")
+                    snackBarHostState.showSnackbar(GoGitSnackbarVisuals.Normal("No Internet Connection"))
                 }
             }
         },
@@ -57,7 +71,26 @@ fun Page(
                 hostState = snackBarHostState,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentHeight(Alignment.Bottom)
+                    .wrapContentHeight(Alignment.Bottom),
+                snackbar = { snackbarData ->
+                    val isError = snackbarData.visuals is GoGitSnackbarVisuals.Error
+                    val backgroundColor = if (isError) {
+                        MaterialTheme.colorScheme.error
+                    } else {
+                        MaterialTheme.colorScheme.inverseSurface
+                    }
+                    val contentColor = if (isError) {
+                        MaterialTheme.colorScheme.onError
+                    } else {
+                        MaterialTheme.colorScheme.inverseOnSurface
+                    }
+
+                    Snackbar(
+                        snackbarData = snackbarData,
+                        containerColor = backgroundColor,
+                        contentColor = contentColor,
+                    )
+                }
             )
         }
     )
