@@ -27,7 +27,7 @@ jobs:
       - name: Bump version
         uses: chkfung/android-version-actions@v1.1
         with:
-          gradlePath: app/build.gradle # or app/build.gradle.kts 
+          gradlePath: app/build.gradle.kts # or app/build.gradle.kts
           versionCode: ${{github.run_number}}
           versionName: 2.0.0
       - name: Install NDK
