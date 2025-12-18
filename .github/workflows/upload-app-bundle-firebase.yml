@@ -13,14 +13,14 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+      - name: Decode Keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: echo "$KEYSTORE_BASE64" | base64 --decode > ./Keystore
       - name: create keystore.properties
         env:
           KEYSTORE: ${{ secrets.KEYSTORE }}
         run: echo "$KEYSTORE" > ./keystore.properties
-        # - name: create gradle.properties
-        #   env:
-        # GRADLE_PROPERTIES: ${{ secrets.GRADLE_PROPERTIES }}
-        #run: echo "$GRADLE_PROPERTIES" > ./gradle.properties
       - name: create google_service.json
         env:
           GOOGLE_SERVICE_JSON: ${{ secrets.GOOGLE_SERVICE_JSON }}
