@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set git safe directory
-        run: git config --global --add safe.directory /github/workspace
+        run: git config --global --add safe.directory '*'
       - name: set up JDK 17
         uses: actions/setup-java@v4
         with:
