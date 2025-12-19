@@ -166,11 +166,11 @@ private fun Login(authViewModel: AuthViewModel) {
                                     scope.launch {
                                         snackbarHostState.showSnackbar(
                                             GoGitSnackbarVisuals.Error(
-                                                "Unable to open privacy policy",
+                                                "No web browser found. Please install a browser to open this link.",
                                             ),
                                         )
-                                        return@launch
                                     }
+                                    return@LinkInteractionListener
                                 }
                                 activity.startActivity(intent)
                             },
