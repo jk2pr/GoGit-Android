@@ -94,6 +94,8 @@ fun LoginScreen() {
 @Composable
 private fun Login(authViewModel: AuthViewModel) {
     val activity = LocalActivity.current as MainActivity
+    val snackbarHostState = LocalSnackBarHostState.current
+    val scope = rememberCoroutineScope()
     val provider = OAuthProvider.newBuilder("github.com")
     provider.scopes = AuthRequestModel().generate().scopes
     Column(
@@ -157,12 +159,20 @@ private fun Login(authViewModel: AuthViewModel) {
                     LinkAnnotation.Clickable(
                         tag = "PrivacyPolicyURL", // Semantic tag for the link
                         linkInteractionListener =
-                            object : LinkInteractionListener {
-                                override fun onClick(link: LinkAnnotation) {
-                                    val uri = privacyPolicyUrl.toUri()
-                                    val intent = Intent(Intent.ACTION_VIEW, uri)
-                                    activity.startActivity(intent)
+                            LinkInteractionListener {
+                                val uri = privacyPolicyUrl.toUri()
+                                val intent = Intent(Intent.ACTION_VIEW, uri)
+                                if (activity.packageManager.resolveActivity(intent, 0) == null) {
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar(
+                                            GoGitSnackbarVisuals.Error(
+                                                "Unable to open privacy policy",
+                                            ),
+                                        )
+                                        return@launch
+                                    }
                                 }
+                                activity.startActivity(intent)
                             },
                     )
                 addLink(
