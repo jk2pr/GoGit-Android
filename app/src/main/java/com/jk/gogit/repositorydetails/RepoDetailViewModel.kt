@@ -17,9 +17,8 @@ class RepoDetailViewModel(
     private val dispatchers: DispatcherProvider,
     private val login: String,
     private val repo: String,
-    private val path: String
+    private val path: String,
 ) : ViewModel() {
-
     private val _userListStateFlow = MutableStateFlow<UiState>(UiState.Empty)
     val userListStateFlow = _userListStateFlow.asStateFlow()
 
@@ -33,20 +32,22 @@ class RepoDetailViewModel(
                 is MainState.FeedEvent -> {
                     flow {
                         emit(UiState.Loading)
-                        val result = repoDetailExecutor.execute(
-                            page = 1,
-                            perPage = 10,
-                            user = login,
-                            repo = repo,
-                            path = path
-                        )
+                        val result =
+                            repoDetailExecutor.execute(
+                                page = 1,
+                                perPage = 10,
+                                user = login,
+                                repo = repo,
+                                path = path,
+                            )
 
                         emit(UiState.Content(result))
                     }.catch {
                         emit(UiState.Error(it.printifyMessage()))
-                    }.flowOn(dispatchers.main).collect {
-                        _userListStateFlow.value = it
-                    }
+                    }.flowOn(dispatchers.main)
+                        .collect {
+                            _userListStateFlow.value = it
+                        }
                 }
 
                 is MainState.RefreshEvent -> {
@@ -56,9 +57,7 @@ class RepoDetailViewModel(
 
     sealed class MainState {
         object FeedEvent : MainState()
+
         object RefreshEvent : MainState()
     }
 }
-
-
-

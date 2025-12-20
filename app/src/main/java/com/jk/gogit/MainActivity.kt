@@ -22,13 +22,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             GoGitTheme {
                 ComposeLocalWrapper {
-                        Start()
+                    Start()
                 }
             }
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

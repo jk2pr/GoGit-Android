@@ -35,19 +35,17 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun CommitListScreen() {
-
     val localNavyController = LocalNavController.current
     val savedStateHandle = (localNavyController.previousBackStackEntry?.savedStateHandle)
-
 
     val login =
         savedStateHandle?.get<String>(AppScreens.USERPROFILE.route) ?: AuthManager.getLogin()!!
     val branchName = savedStateHandle?.get<String>(AppScreens.REPOLIST.route) ?: false
     val repoName = savedStateHandle?.get<String>(AppScreens.REPODETAIL.route) ?: false
-    val viewModel = koinViewModel<CommitListViewModel>(
-        parameters = { parametersOf(login, branchName, repoName) }
-    )
-
+    val viewModel =
+        koinViewModel<CommitListViewModel>(
+            parameters = { parametersOf(login, branchName, repoName) },
+        )
 
     Page(title = {
         Text(text = "Commits")
@@ -55,41 +53,39 @@ fun CommitListScreen() {
         when (val result = viewModel.commListStateFlow.collectAsState().value) {
             is UiState.Loading -> CircularProgressIndicator()
 
-            is UiState.Error -> OfflineError(message = result.message,)
+            is UiState.Error -> OfflineError(message = result.message)
             is UiState.Empty -> {}
             is UiState.Content -> {
                 val commits = result.data as List<*>
-                if (commits.isEmpty())
+                if (commits.isEmpty()) {
                     Text(
                         text = "No repositories found",
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.fillMaxSize(),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
-                else
+                } else {
                     LazyColumn(
                         Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.Top,
-                        //contentPadding = PaddingValues(vertical = 8.dp)
+                        // contentPadding = PaddingValues(vertical = 8.dp)
                     ) {
                         commits.forEach { data ->
                             val commitData = data as CommitData
 
-
                             val com = commitData.commits
                             items(com.size) { index ->
-                                if (index > 0)
-                                // Add a line as a separator
+                                if (index > 0) {
+                                    // Add a line as a separator
                                     HorizontalDivider()
+                                }
                                 CommitsItem(commitData)
                             }
                         }
-
                     }
+                }
             }
         }
-
-
     }
 }
 
@@ -97,52 +93,57 @@ fun CommitListScreen() {
 private fun CommitsItem(commit: CommitData) {
     OutlinedCard(
         //  border = BorderStroke(DividerDefaults.Thickness, DividerDefaults.color),
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth(),
+        modifier =
+            Modifier
+                .padding(8.dp)
+                .fillMaxWidth(),
     ) {
         Column {
             Text(
                 text = commit.date,
                 style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-                    .fillMaxWidth()
-                    .padding(8.dp)
+                modifier =
+                    Modifier
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                        .fillMaxWidth()
+                        .padding(8.dp),
             )
 
             Column {
-                val modifier = Modifier
-                    //.fillMaxWidth()
-                    .padding(8.dp)
+                val modifier =
+                    Modifier
+                        // .fillMaxWidth()
+                        .padding(8.dp)
                 commit.commits.forEach { commit ->
                     Text(
                         text = commit?.description.orEmpty(),
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.titleMedium,
-                        modifier = modifier
+                        modifier = modifier,
                     )
                     HorizontalDivider()
                     Spacer(modifier = Modifier.width(8.dp))
                     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopStart) {
                         Text(
                             text = commit?.message.orEmpty(),
-                            modifier = modifier.widthIn(max = 220.dp)
+                            modifier = modifier.widthIn(max = 220.dp),
                         )
 
                         Text(
-                            modifier = modifier
-                                .align(Alignment.TopEnd),
+                            modifier =
+                                modifier
+                                    .align(Alignment.TopEnd),
                             style = MaterialTheme.typography.labelMedium,
-                            text = commit?.oid.toString().trim().substring(0, 7),
-
-                            )
-
+                            text =
+                                commit
+                                    ?.oid
+                                    .toString()
+                                    .trim()
+                                    .substring(0, 7),
+                        )
                     }
                 }
             }
         }
     }
-
 }
-

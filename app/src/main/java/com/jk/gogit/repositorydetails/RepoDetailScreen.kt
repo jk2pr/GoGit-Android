@@ -76,7 +76,6 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun RepoDetailScreen() {
-
     val localNavyController = LocalNavController.current
     val savedStateHandle = localNavyController.previousBackStackEntry?.savedStateHandle
     val login =
@@ -91,21 +90,21 @@ fun RepoDetailScreen() {
             parametersOf(
                 login,
                 repoName,
-                "$path:README.md"
+                "$path:README.md",
             )
         })
     val scrollState = rememberScrollState()
     val titleKey = remember { mutableStateOf("") }
     val titleValue = remember { mutableStateOf("") }
 
-    Page(title = {
-        Column {
-            Text(text = titleKey.value)
-            TitleText(title = titleValue.value)
-        }
-    }
+    Page(
+        title = {
+            Column {
+                Text(text = titleKey.value)
+                TitleText(title = titleValue.value)
+            }
+        },
     ) {
-
         when (val result = viewModel.userListStateFlow.collectAsState().value) {
             is UiState.Loading ->
                 CircularProgressIndicator()
@@ -114,10 +113,11 @@ fun RepoDetailScreen() {
                 val repo = result.data as GetRepoDetailsQuery.Repository
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(scrollState)
-                        .padding(8.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .verticalScroll(scrollState)
+                            .padding(8.dp),
                 ) {
                     RepoDetailHeader(repo = repo)
                     RepoDetail(repo = repo)
@@ -126,10 +126,12 @@ fun RepoDetailScreen() {
                     scrollState.scrollTo(0)
                     snapshotFlow { scrollState.value }
                         .collect { scrollOffset ->
-                            val (newTitleKey, newTitleValue) = if (scrollOffset > 100)
-                                repo.owner.login to repo.name
-                            else
-                                "" to ""
+                            val (newTitleKey, newTitleValue) =
+                                if (scrollOffset > 100) {
+                                    repo.owner.login to repo.name
+                                } else {
+                                    "" to ""
+                                }
 
                             titleKey.value = newTitleKey
                             titleValue.value = newTitleValue
@@ -137,10 +139,9 @@ fun RepoDetailScreen() {
                 }
             }
 
-            is UiState.Error -> OfflineError(message = result.message,)
+            is UiState.Error -> OfflineError(message = result.message)
             is UiState.Empty -> {}
         }
-
     }
 }
 
@@ -156,10 +157,11 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
         InfoRow(
             iconId = R.drawable.issue_opened_16,
             label = "Issue",
-            count = repo.issues.allIssues?.count { it?.state == IssueState.OPEN }
+            count = repo.issues.allIssues?.count { it?.state == IssueState.OPEN },
         ) {
-            if (repo.issues.allIssues.isNullOrEmpty())
+            if (repo.issues.allIssues.isNullOrEmpty()) {
                 return@InfoRow
+            }
             savedStateHandle
                 ?.set(AppScreens.PULLREQUESTS.route, repo.issues.allIssues)
             localNavController.navigate(AppScreens.PULLREQUESTS.route)
@@ -168,10 +170,11 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
         InfoRow(
             iconId = R.drawable.git_pull_request_merge,
             label = "Pull Requests",
-            count = repo.pullRequests.pr?.size
+            count = repo.pullRequests.pr?.size,
         ) {
-            if (repo.pullRequests.pr.isNullOrEmpty())
+            if (repo.pullRequests.pr.isNullOrEmpty()) {
                 return@InfoRow
+            }
             savedStateHandle
                 ?.set(AppScreens.PULLREQUESTS.route, repo.pullRequests.pr)
             localNavController.navigate(AppScreens.PULLREQUESTS.route)
@@ -191,8 +194,7 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
                 localNavController.navigate(AppScreens.USERLIST.route)
             }
         }
-        InfoRow(iconId = R.drawable.baseline_fork_left_24, label = "Forks", count = repo.forkCount)
-        {
+        InfoRow(iconId = R.drawable.baseline_fork_left_24, label = "Forks", count = repo.forkCount) {
             if (repo.forkCount > 0) {
                 val keys = savedStateHandle?.keys()
                 keys?.forEach { savedStateHandle.remove<Any>(it) }
@@ -226,7 +228,7 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
         InfoRow(
             iconId = R.drawable.baseline_remove_red_eye_24,
             label = "Watchers",
-            count = repo.watchers.totalCount
+            count = repo.watchers.totalCount,
         ) {
             if (repo.watchers.totalCount > 0) {
                 val keys = savedStateHandle?.keys()
@@ -245,23 +247,25 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
             ) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.branch_svgrepo_com),
                         contentDescription = null,
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(16.dp),
                     )
                     Text(
                         text = selectedBranch.value,
                         overflow = TextOverflow.Ellipsis,
-                        maxLines = 1, modifier = Modifier.widthIn(max = 200.dp)
+                        maxLines = 1,
+                        modifier = Modifier.widthIn(max = 200.dp),
                     )
                 }
                 TextButton(onClick = { isSheetOpen = true }) {
@@ -271,7 +275,8 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
             HorizontalDivider()
             InfoRow(iconId = R.drawable.code_2_svgrepo_com, label = "Code") {
                 localNavController.currentBackStackEntry
-                    ?.savedStateHandle?.let {
+                    ?.savedStateHandle
+                    ?.let {
                         it[AppScreens.USERPROFILE.route] = repo.owner.login
                         it[AppScreens.REPOLIST.route] = selectedBranch.value
                         it[AppScreens.REPODETAIL.route] = repo.name
@@ -281,13 +286,19 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
             InfoRow(
                 iconId = R.drawable.commit_svgrepo_com,
                 label = "Commits",
-                count = repo.refs?.commits?.find {
-                    it?.name == selectedBranch.value
-                }?.target?.onCommit?.history?.totalCount
+                count =
+                    repo.refs
+                        ?.commits
+                        ?.find {
+                            it?.name == selectedBranch.value
+                        }?.target
+                        ?.onCommit
+                        ?.history
+                        ?.totalCount,
             ) {
-
                 localNavController.currentBackStackEntry
-                    ?.savedStateHandle?.let {
+                    ?.savedStateHandle
+                    ?.let {
                         it[AppScreens.USERPROFILE.route] = repo.owner.login
                         it[AppScreens.REPOLIST.route] = selectedBranch.value
                         it[AppScreens.REPODETAIL.route] = repo.name
@@ -302,13 +313,13 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
     //  if (readmeText.isNullOrEmpty()) {
     //    Text(text = "No Description")
     //  return
-    //}
+    // }
     MarkdownText(
         markdown = readmeText.orEmpty(),
         modifier = Modifier.background(MaterialTheme.colorScheme.background),
-        style = LocalTextStyle.current.copy(color = LocalContentColor.current)
+        style = LocalTextStyle.current.copy(color = LocalContentColor.current),
     )
-    if (isSheetOpen)
+    if (isSheetOpen) {
         repo.refs?.commits.orEmpty().let {
             BottomSheetLayout(
                 modalSheetState = modalSheetState,
@@ -318,61 +329,64 @@ fun RepoDetail(repo: GetRepoDetailsQuery.Repository) {
                 onDismiss = { isSheetOpen = false },
                 onBranchSelected = { sb ->
                     selectedBranch.value = sb
-                })
+                },
+            )
         }
+    }
 }
-
 
 @Composable
 fun RepoDetailHeader(repo: GetRepoDetailsQuery.Repository) {
-
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             val painter =
                 rememberAsyncImagePainter(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(repo.owner.avatarUrl)
-                        .build(),
+                    model =
+                        ImageRequest
+                            .Builder(LocalContext.current)
+                            .data(repo.owner.avatarUrl)
+                            .build(),
                     contentScale = ContentScale.Inside,
                 )
 
             Image(
                 painter = painter,
                 contentDescription = null,
-                modifier = Modifier
-                    .size(16.dp)
-                    .clip(CircleShape)
+                modifier =
+                    Modifier
+                        .size(16.dp)
+                        .clip(CircleShape),
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(text = repo.owner.login)
         }
         TitleText(title = repo.name)
-        if (repo.isFork)
+        if (repo.isFork) {
             Text(
                 text = "Forked from ${repo.owner.login}/${repo.name}",
-                style = MaterialTheme.typography.bodySmall.copy(MaterialTheme.colorScheme.primary)
+                style = MaterialTheme.typography.bodySmall.copy(MaterialTheme.colorScheme.primary),
             )
+        }
         Spacer(modifier = Modifier.height(8.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_star_24),
                 contentDescription = null,
                 tint = Color(android.graphics.Color.parseColor("#FFA500")),
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier.size(16.dp),
             )
             Text(text = "${repo.stargazerCount} Stars")
             Spacer(modifier = Modifier.width(8.dp))
             Icon(
                 painter = painterResource(id = R.drawable.baseline_fork_left_24),
                 contentDescription = null,
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier.size(16.dp),
             )
             Text(text = "${repo.forkCount} Forks")
         }
-
     }
 }
 
@@ -384,16 +398,18 @@ fun BottomSheetLayout(
     selectedBranch: String,
     data: List<GetRepoDetailsQuery.Commit?>,
     onBranchSelected: (String) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
 
     val isSheetFullScreen by remember { mutableStateOf(false) }
-    val modifier = if (isSheetFullScreen)
-        Modifier
-            .fillMaxSize()
-    else
-        Modifier.fillMaxWidth()
+    val modifier =
+        if (isSheetFullScreen) {
+            Modifier
+                .fillMaxSize()
+        } else {
+            Modifier.fillMaxWidth()
+        }
 
     BackHandler(modalSheetState.isVisible) {
         coroutineScope.launch { modalSheetState.hide() }
@@ -410,61 +426,63 @@ fun BottomSheetLayout(
             ) {
                 LazyColumn(
                     contentPadding = PaddingValues(4.dp),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 8.dp, vertical = 8.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 8.dp, vertical = 8.dp),
                 ) {
                     items(data.size) { index ->
-                        if (index > 0)
-                        // Add a line as a separator
+                        if (index > 0) {
+                            // Add a line as a separator
                             HorizontalDivider()
+                        }
                         data[index]?.let { branch ->
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .padding(8.dp)
-                                    .clickable {
-                                        onBranchSelected(branch.name)
-                                    }
+                                modifier =
+                                    Modifier
+                                        .padding(8.dp)
+                                        .clickable {
+                                            onBranchSelected(branch.name)
+                                        },
                                 //  horizontalArrangement = if (index == 0) Arrangement.SpaceEvenly else Arrangement.Start
                             ) {
                                 Row {
                                     Text(
                                         text = branch.name,
-                                        modifier = Modifier.widthIn(max = 250.dp)
+                                        modifier = Modifier.widthIn(max = 250.dp),
                                     )
                                 }
                                 Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 4.dp)
+                                    modifier =
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 4.dp),
                                 ) {
                                     Card {
                                         if (branch.name == defaultBranch) {
                                             Text(
                                                 text = "default",
-                                                modifier = Modifier.padding(horizontal = 8.dp)
+                                                modifier = Modifier.padding(horizontal = 8.dp),
                                             )
                                             Spacer(modifier = Modifier.width(24.dp))
                                         }
                                     }
-                                    if (branch.name == selectedBranch)
+                                    if (branch.name == selectedBranch) {
                                         Icon(
                                             modifier = Modifier.align(Alignment.CenterEnd),
                                             imageVector = Icons.Outlined.CheckCircle,
                                             contentDescription = "Done Icon",
                                             tint = MaterialTheme.colorScheme.primary,
-                                            //modifier = Modifier.sizeIn(48.dp)
-
+                                            // modifier = Modifier.sizeIn(48.dp)
                                         )
-
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-
-
-        })
+        },
+    )
 }

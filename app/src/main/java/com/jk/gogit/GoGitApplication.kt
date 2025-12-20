@@ -2,12 +2,12 @@ package com.jk.gogit
 
 import android.app.Application
 import android.widget.Toast
+import androidx.core.content.edit
 import com.google.firebase.auth.FirebaseAuth
 import com.hoppers.networkmodule.AuthManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
-import androidx.core.content.edit
 
 class GoGitApplication : Application() {
     override fun onCreate() {
@@ -28,8 +28,8 @@ class GoGitApplication : Application() {
     }
 
     private fun showToast() {
-        Toast.makeText(this, "Your session logged out, Please login again ", Toast.LENGTH_SHORT)
+        Toast
+            .makeText(this, "Your session logged out, Please login again ", Toast.LENGTH_SHORT)
             .show()
-
     }
 }

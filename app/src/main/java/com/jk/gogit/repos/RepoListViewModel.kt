@@ -22,11 +22,10 @@ class RepoListViewModel(
     private val dispatchers: DispatcherProvider,
     private val login: String,
     private val isOrg: Boolean = false,
-    private val isStarred:Boolean = false,
+    private val isStarred: Boolean = false,
     private val filter: String = "",
-    private val repoName: String = ""
+    private val repoName: String = "",
 ) : ViewModel() {
-
     private val _repoStateFlow = MutableStateFlow<UiState>(UiState.Empty)
     val repoStateFlow = _repoStateFlow.asStateFlow()
     private val _languageMapStateFlow = MutableStateFlow<Map<String, List<Repos?>>>(emptyMap())
@@ -39,22 +38,30 @@ class RepoListViewModel(
     }
 
     @ExperimentalCoroutinesApi
-     fun setState(mainState: MainState) =
+    fun setState(mainState: MainState) =
         viewModelScope.launch {
             when (mainState) {
                 is MainState.FetchEvent -> {
                     flow {
                         emit(UiState.Loading)
-                        val r = repoExecutor.execute(user = login, isStarred = isStarred, isOrg = isOrg, filter = filter, repoName = repoName)
+                        val r =
+                            repoExecutor.execute(
+                                user = login,
+                                isStarred = isStarred,
+                                isOrg = isOrg,
+                                filter = filter,
+                                repoName = repoName,
+                            )
                         result.clear()
                         result.addAll(r)
                         emit(UiState.Content(result))
                         updateLanguageMap(result)
                     }.catch {
                         emit(UiState.Error(it.printifyMessage()))
-                    }.flowOn(dispatchers.main).collect {
-                        _repoStateFlow.value = it
-                    }
+                    }.flowOn(dispatchers.main)
+                        .collect {
+                            _repoStateFlow.value = it
+                        }
                 }
 
                 is MainState.FilterEvent -> {
@@ -74,21 +81,25 @@ class RepoListViewModel(
                     }.flowOn(dispatchers.main).collect {
                         _repoStateFlow.value = it
                     }
-
                 }
             }
         }
 
     sealed class MainState {
         data object FetchEvent : MainState()
-        data class FilterEvent(val language: String?) : MainState()
+
+        data class FilterEvent(
+            val language: String?,
+        ) : MainState()
     }
+
     private fun updateLanguageMap(nodes: List<Repos?>) {
-        val languageMap = nodes.groupBy { me ->
-            (me as Repos).primaryLanguage?.name.orEmpty()
-        }.filterKeys { it.isNotEmpty() }
+        val languageMap =
+            nodes
+                .groupBy { me ->
+                    (me as Repos).primaryLanguage?.name.orEmpty()
+                }.filterKeys { it.isNotEmpty() }
         _languageMapStateFlow.value = languageMap
         Log.d("RepoViewModel", "languageMap: $languageMap")
     }
 }
-

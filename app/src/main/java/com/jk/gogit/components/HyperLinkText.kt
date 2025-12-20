@@ -15,51 +15,53 @@ import androidx.compose.ui.text.withStyle
 
 @Composable
 fun HyperLinkText(
-    hyperLink: String,      // Data for the link action, also part of displayed text
+    hyperLink: String, // Data for the link action, also part of displayed text
     modifier: Modifier,
-    localString: String,    // Text following the hyperLink part
-    startIndex: Int,        // Start index of the clickable link segment
-    endIndex: Int,          // End index of the clickable link segment
+    localString: String, // Text following the hyperLink part
+    startIndex: Int, // Start index of the clickable link segment
+    endIndex: Int, // End index of the clickable link segment
     hyperLinkStyle: SpanStyle = SpanStyle(), // Style for the link segment
     localStringStyle: TextStyle = LocalTextStyle.current, // Base style for the entire text
-    action: (String) -> Unit // Lambda to execute on link click
+    action: (String) -> Unit, // Lambda to execute on link click
 ) {
-
-    val annotatedString = buildAnnotatedString {
-        // 1. Append text content
-        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-            append(hyperLink)
-        }
-        append(localString)
-
-        // 2. Apply visual style to the link segment
-        addStyle(
-            style = hyperLinkStyle,
-            start = startIndex,
-            end = endIndex
-        )
-
-        // 3. Create and add the LinkAnnotation
-        val clickableAnnotation = LinkAnnotation.Clickable(
-            tag = "URL", // Semantic tag for the link
-            linkInteractionListener = object : LinkInteractionListener {
-                override fun onClick(link: LinkAnnotation) { // Renamed parameter here
-                    // When the link is clicked, this listener is invoked.
-                    // We use the 'hyperLink' value captured from the HyperLinkText function's parameters.
-                    action(hyperLink)
-                }
+    val annotatedString =
+        buildAnnotatedString {
+            // 1. Append text content
+            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                append(hyperLink)
             }
-        )
+            append(localString)
 
-        // Apply the clickable annotation to the specified range.
-        // Ensure addLink is called correctly (no named argument for clickableAnnotation itself)
-        addLink(clickableAnnotation, start = startIndex, end = endIndex)
-    }
+            // 2. Apply visual style to the link segment
+            addStyle(
+                style = hyperLinkStyle,
+                start = startIndex,
+                end = endIndex,
+            )
+
+            // 3. Create and add the LinkAnnotation
+            val clickableAnnotation =
+                LinkAnnotation.Clickable(
+                    tag = "URL", // Semantic tag for the link
+                    linkInteractionListener =
+                        object : LinkInteractionListener {
+                            override fun onClick(link: LinkAnnotation) { // Renamed parameter here
+                                // When the link is clicked, this listener is invoked.
+                                // We use the 'hyperLink' value captured from the HyperLinkText function's parameters.
+                                action(hyperLink)
+                            }
+                        },
+                )
+
+            // Apply the clickable annotation to the specified range.
+            // Ensure addLink is called correctly (no named argument for clickableAnnotation itself)
+            addLink(clickableAnnotation, start = startIndex, end = endIndex)
+        }
 
     Text(
         modifier = modifier,
         style = localStringStyle.copy(color = LocalContentColor.current),
-        text = annotatedString
+        text = annotatedString,
         // Click handling is managed by the LinkAnnotation.Clickable's LinkInteractionListener
     )
 }

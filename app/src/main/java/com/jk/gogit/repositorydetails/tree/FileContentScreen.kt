@@ -15,20 +15,22 @@ import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @Composable
 fun FileContentScreen() {
-
     val localNavyController = LocalNavController.current
     val savedStateHandle = localNavyController.previousBackStackEntry?.savedStateHandle
     val filePath = savedStateHandle?.get<String>(NavigationArgs.FILE_CONTENT)!!
     val fileName = savedStateHandle.get<String>(NavigationArgs.FILE_NAME)!!
 
-    Page(title = {Text(text = fileName)},
-        contentAlignment = Alignment.TopStart) {
+    Page(
+        title = { Text(text = fileName) },
+        contentAlignment = Alignment.TopStart,
+    ) {
         MarkdownText(
             markdown = filePath,
             modifier = Modifier.padding(8.dp),
-            style = MaterialTheme.typography.bodyMedium.copy(
-                color = LocalContentColor.current
-            )
+            style =
+                MaterialTheme.typography.bodyMedium.copy(
+                    color = LocalContentColor.current,
+                ),
         )
     }
 }

@@ -29,9 +29,7 @@ fun Date.formatDateRelativeToToday(): String {
     val hoursDifference = ChronoUnit.HOURS.between(localDateTime, now)
     val minutesDifference = ChronoUnit.MINUTES.between(localDateTime, now)
 
-
     return when {
-
         daysDifference == 0L && hoursDifference == 0L && minutesDifference == 0L -> "just now"
         daysDifference == 0L && hoursDifference == 0L -> "$minutesDifference minutes ago"
         daysDifference == 0L -> if (hoursDifference == 1L) "an hour ago" else "$hoursDifference hours ago"
@@ -40,44 +38,42 @@ fun Date.formatDateRelativeToToday(): String {
         daysDifference < 7L -> "$daysDifference days ago"
         daysDifference < 14L -> "last week"
         else -> localDateTime.format(DateTimeFormatter.ofPattern("dd MMM yyyy"))
-
     }
 }
 
-fun Int.formatNumber(): String {
-    return when {
+fun Int.formatNumber(): String =
+    when {
         this >= 1_000_000_000 -> "${(this / 1_000_000_000.toFloat()).format()}B"
         this >= 1_000_000 -> "${(this / 1_000_000.toFloat()).format()}M"
         this >= 1_000 -> "${(this / 1_000.toFloat()).format()}K"
         else -> this.toString()
     }
-}
 
-fun Float.format(): String {
-    return if (this == this.toInt().toFloat()) {
+fun Float.format(): String =
+    if (this == this.toInt().toFloat()) {
         this.toInt().toString()
     } else {
         "%.1f".format(this)
     }
-}
 
-fun String.toColor(): Color {
-    return Color(android.graphics.Color.parseColor(this))
-}
+fun String.toColor(): Color = Color(android.graphics.Color.parseColor(this))
 
-fun Throwable.printifyMessage(): String {
-    return when (this) {
+fun Throwable.printifyMessage(): String =
+    when (this) {
         is ApolloHttpException ->
-            if (this.statusCode == 401) "Unauthorized access, Please login again"
-            else "Something went wrong, Pleas try again"
+            if (this.statusCode == 401) {
+                "Unauthorized access, Please login again"
+            } else {
+                "Something went wrong, Pleas try again"
+            }
 
         is ApolloNetworkException,
-        is UnknownHostException -> "No Internet Connection"
+        is UnknownHostException,
+        -> "No Internet Connection"
 
         is IllegalStateException -> "Access to this data is restricted by organization."
         else -> "Something went wrong, Pleas try again"
     }
-}
 /*return when {
     this >= 1000000 -> (this / 1000000).toDouble().roundToInt().toString() + "M"
     this >= 1000 -> (this / 1000).toDouble().roundToInt().toString() + "k"

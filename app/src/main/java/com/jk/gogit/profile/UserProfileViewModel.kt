@@ -21,7 +21,6 @@ class UserProfileViewModel(
     private val dispatchers: DispatcherProvider,
     private val login: String,
 ) : ViewModel() {
-
     private val _feedStateFlow = MutableStateFlow<UiState>(UiState.Empty)
     val feedStateFlow = _feedStateFlow.asStateFlow()
     private lateinit var overViewScreenData: OverViewTabData.OverViewScreenData
@@ -42,9 +41,10 @@ class UserProfileViewModel(
                         emit(UiState.Content(overViewScreenData))
                     }.catch {
                         emit(UiState.Error(it.printifyMessage()))
-                    }.flowOn(dispatchers.main).collect {
-                        _feedStateFlow.value = it
-                    }
+                    }.flowOn(dispatchers.main)
+                        .collect {
+                            _feedStateFlow.value = it
+                        }
                 }
 
                 is MainState.RefreshEvent -> {
@@ -54,42 +54,49 @@ class UserProfileViewModel(
                     flow {
                         emit(UiState.Loading)
                         userProfileExecutor.followUser(userId = mainState.id)
-                        val temp = overViewScreenData.copy(
-                            user = overViewScreenData.user?.copy(viewerIsFollowing = true)
-                        )
+                        val temp =
+                            overViewScreenData.copy(
+                                user = overViewScreenData.user?.copy(viewerIsFollowing = true),
+                            )
                         emit(UiState.Content(temp))
                     }.catch {
                         emit(UiState.Error(it.printifyMessage()))
-                    }.flowOn(dispatchers.main).collect {
-                        _feedStateFlow.value = it
-                    }
-
+                    }.flowOn(dispatchers.main)
+                        .collect {
+                            _feedStateFlow.value = it
+                        }
                 }
 
                 is MainState.UnFollowEvent -> {
                     flow {
                         emit(UiState.Loading)
                         userProfileExecutor.unFollowUser(userId = mainState.id)
-                        val temp = overViewScreenData.copy(
-                            user = overViewScreenData.user?.copy(viewerIsFollowing = false)
-                        )
+                        val temp =
+                            overViewScreenData.copy(
+                                user = overViewScreenData.user?.copy(viewerIsFollowing = false),
+                            )
                         emit(UiState.Content(temp))
                     }.catch {
                         emit(UiState.Error(it.printifyMessage()))
-                    }.flowOn(dispatchers.main).collect {
-                        _feedStateFlow.value = it
-                    }
-
+                    }.flowOn(dispatchers.main)
+                        .collect {
+                            _feedStateFlow.value = it
+                        }
                 }
             }
         }
 
-
     sealed class MainState {
         object FetchEvent : MainState()
+
         object RefreshEvent : MainState()
-        data class FollowEvent(val id: String) : MainState()
-        data class UnFollowEvent(val id: String) : MainState()
+
+        data class FollowEvent(
+            val id: String,
+        ) : MainState()
+
+        data class UnFollowEvent(
+            val id: String,
+        ) : MainState()
     }
 }
-

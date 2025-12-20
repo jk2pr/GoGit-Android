@@ -20,7 +20,6 @@ class UserListViewModel(
     private val filter: String,
     private val repoName: String,
 ) : ViewModel() {
-
     private val _userListStateFlow = MutableStateFlow<UiState>(UiState.Empty)
     val userListStateFlow = _userListStateFlow.asStateFlow()
 
@@ -35,29 +34,30 @@ class UserListViewModel(
                     flow {
                         emit(UiState.Loading)
 
-
                         val result =
-                            if (repoName.isEmpty())
+                            if (repoName.isEmpty()) {
                                 userListExecutor.executeFollowersAndFollowing(
                                     page = 1,
                                     perPage = 100,
                                     user = login,
-                                    type = filter
+                                    type = filter,
                                 )
-                            else
+                            } else {
                                 userListExecutor.executeFilters(
                                     page = 1,
                                     perPage = 100,
                                     user = login,
                                     repoName = repoName,
-                                    filter = filter
+                                    filter = filter,
                                 )
+                            }
                         emit(UiState.Content(result))
                     }.catch {
                         emit(UiState.Error(it.printifyMessage()))
-                    }.flowOn(dispatchers.main).collect {
-                        _userListStateFlow.value = it
-                    }
+                    }.flowOn(dispatchers.main)
+                        .collect {
+                            _userListStateFlow.value = it
+                        }
                 }
 
                 is MainState.RefreshEvent -> {
@@ -67,7 +67,7 @@ class UserListViewModel(
 
     sealed class MainState {
         object FeedEvent : MainState()
+
         object RefreshEvent : MainState()
     }
 }
-

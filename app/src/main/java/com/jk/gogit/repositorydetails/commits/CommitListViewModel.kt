@@ -12,17 +12,15 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
-
 class CommitListViewModel(
     private val commitListExecutor: CommitListExecutor,
     private val dispatchers: DispatcherProvider,
     private val login: String,
     private val repo: String,
-    private val path: String
+    private val path: String,
 ) : ViewModel() {
-
-    private val _commitListStateFlow = MutableStateFlow<UiState>(UiState.Empty)
-    val commListStateFlow = _commitListStateFlow.asStateFlow()
+    private val commitListStateFlowInternal = MutableStateFlow<UiState>(UiState.Empty)
+    val commListStateFlow = commitListStateFlowInternal.asStateFlow()
 
     init {
         setState(MainState.FeedEvent)
@@ -34,20 +32,22 @@ class CommitListViewModel(
                 is MainState.FeedEvent -> {
                     flow {
                         emit(UiState.Loading)
-                        val result = commitListExecutor.execute(
-                            page = 1,
-                            perPage = 10,
-                            user = login,
-                            repo = repo,
-                            branch = path
-                        )
+                        val result =
+                            commitListExecutor.execute(
+                                page = 1,
+                                perPage = 10,
+                                user = login,
+                                repo = repo,
+                                branch = path,
+                            )
 
                         emit(UiState.Content(result))
                     }.catch {
                         emit(UiState.Error(it.printifyMessage()))
-                    }.flowOn(dispatchers.main).collect {
-                        _commitListStateFlow.value = it
-                    }
+                    }.flowOn(dispatchers.main)
+                        .collect {
+                            commitListStateFlowInternal.value = it
+                        }
                 }
 
                 is MainState.RefreshEvent -> {
@@ -57,8 +57,7 @@ class CommitListViewModel(
 
     sealed class MainState {
         object FeedEvent : MainState()
+
         object RefreshEvent : MainState()
     }
-
-
 }

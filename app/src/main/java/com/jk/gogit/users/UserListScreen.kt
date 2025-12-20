@@ -30,7 +30,6 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun UserListScreen() {
-
     val savedStateHandle =
         LocalNavController.current.previousBackStackEntry?.savedStateHandle ?: return
     val login = savedStateHandle.get<String>(NavigationArgs.USER_NAME)!!
@@ -42,43 +41,39 @@ fun UserListScreen() {
         koinViewModel<UserListViewModel>(parameters = { parametersOf(login, filter, repoName) })
 
     Page(title = { Text(text = filter.replaceFirstChar { it.uppercase() }) }) {
-
         when (val result = viewModel.userListStateFlow.collectAsState().value) {
             is UiState.Loading -> CircularProgressIndicator()
             is UiState.Content -> {
-
                 val items = result.data as List<*>
                 LazyColumn(
                     verticalArrangement = Arrangement.Top,
-                    modifier = Modifier.padding(8.dp).fillMaxSize()
-                   ) {
+                    modifier = Modifier.padding(8.dp).fillMaxSize(),
+                ) {
                     items(items.size) { index ->
-                        if (index > 0)
-                        // Add a line as a separator
+                        if (index > 0) {
+                            // Add a line as a separator
                             HorizontalDivider()
+                        }
 
                         UserItem(items[index] as UserFields)
                     }
                 }
             }
 
-            is UiState.Error -> OfflineError(message = result.message,)
+            is UiState.Error -> OfflineError(message = result.message)
 
-            is UiState.Empty -> Text(
-                text = stringResource(id = R.string.no_data_available),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                textAlign = TextAlign.Center,
-                fontSize = 20.sp,
-                //   fontFamily = FontFamily(Font(R.font.bebasneue_regular)),
-                color = Color.Black
-            )
-
-
+            is UiState.Empty ->
+                Text(
+                    text = stringResource(id = R.string.no_data_available),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp,
+                    //   fontFamily = FontFamily(Font(R.font.bebasneue_regular)),
+                    color = Color.Black,
+                )
         }
-
     }
 }
-
-

@@ -57,49 +57,57 @@ fun HomeScreen() {
     val navController = LocalNavController.current
     val onSearchClick: () -> Unit = { navController.navigate(AppScreens.SEARCH.route) }
     val onProfileClick: () -> Unit = {
-        navController.currentBackStackEntry?.savedStateHandle
+        navController.currentBackStackEntry
+            ?.savedStateHandle
             ?.set(AppScreens.USERPROFILE.route, login)
         navController.navigate(AppScreens.USERPROFILE.route)
     }
 
     Page(
         title = { Text(stringResource(id = R.string.app_name)) },
-        menuItems = listOf(
-            DropdownMenuItemContent {
-                IconButton(onClick = onSearchClick) {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "Search",
-                        modifier = Modifier
-                            .clip(CircleShape),
-                    )
-                }
-                IconButton(onClick = onProfileClick) {
-                    val imagePainter = rememberAsyncImagePainter(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(getAvatarUrl)
-                            .placeholder(R.drawable.face_24dp_fill0_wght400_grad0_opsz24)
-                            .error(R.drawable.face_24dp_fill0_wght400_grad0_opsz24)
-                            .crossfade(enable = true)
-                            .build(),
-                        contentScale = ContentScale.Inside
-                    )
-                    Image(
-                        contentDescription = "Profile Image",
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .size(24.dp),
-                        painter = imagePainter
-                    )
-                }
-            }
-        ),
+        menuItems =
+            listOf(
+                DropdownMenuItemContent {
+                    IconButton(onClick = onSearchClick) {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "Search",
+                            modifier =
+                                Modifier
+                                    .clip(CircleShape),
+                        )
+                    }
+                    IconButton(onClick = onProfileClick) {
+                        val imagePainter =
+                            rememberAsyncImagePainter(
+                                model =
+                                    ImageRequest
+                                        .Builder(LocalContext.current)
+                                        .data(getAvatarUrl)
+                                        .placeholder(R.drawable.face_24dp_fill0_wght400_grad0_opsz24)
+                                        .error(R.drawable.face_24dp_fill0_wght400_grad0_opsz24)
+                                        .crossfade(enable = true)
+                                        .build(),
+                                contentScale = ContentScale.Inside,
+                            )
+                        Image(
+                            contentDescription = "Profile Image",
+                            modifier =
+                                Modifier
+                                    .clip(CircleShape)
+                                    .size(24.dp),
+                            painter = imagePainter,
+                        )
+                    }
+                },
+            ),
         content = {
             when (val result = viewModel.feedStateFlow.collectAsState().value) {
                 is UiState.Loading ->
                     CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(50.dp)
+                        modifier =
+                            Modifier
+                                .size(50.dp),
                     )
 
                 is UiState.Content -> {
@@ -107,11 +115,12 @@ fun HomeScreen() {
                         LazyColumn(
                             Modifier
                                 .padding(8.dp)
-                                .fillMaxSize()
+                                .fillMaxSize(),
                         ) {
                             items(items.size) {
                                 if (it > 0) HorizontalDivider()
-                                FeedItem(feed = items[it] as Feed,
+                                FeedItem(
+                                    feed = items[it] as Feed,
                                     onActorClick = { feed ->
                                         navController.currentBackStackEntry
                                             ?.savedStateHandle
@@ -123,64 +132,71 @@ fun HomeScreen() {
                                         val owner = a[4]
                                         val repo = a[5]
                                         navController.currentBackStackEntry
-                                            ?.savedStateHandle?.let { s ->
+                                            ?.savedStateHandle
+                                            ?.let { s ->
                                                 s[AppScreens.USERPROFILE.route] = owner
                                                 s[AppScreens.REPODETAIL.route] = repo
                                             }
 
                                         navController.navigate(AppScreens.REPODETAIL.route)
-                                    })
+                                    },
+                                )
                             }
                         }
                     }
                 }
 
-
                 is UiState.Error -> OfflineError(message = result.message)
 
-
                 is UiState.Empty -> {}
-
-
             }
-        })
+        },
+    )
 }
 
 @Composable
-fun FeedItem(feed: Feed, onActorClick: (Feed) -> Unit = {}, onRepoClick: (String) -> Unit = {}) {
+fun FeedItem(
+    feed: Feed,
+    onActorClick: (Feed) -> Unit = {},
+    onRepoClick: (String) -> Unit = {},
+) {
     val actorName = feed.actor.display_login
     val eventName = feed.getEventName()
     val time = feed.createdAt
 
-    val painter = rememberAsyncImagePainter(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(feed.actor.avatar_url)
-            .placeholder(R.drawable.ic_image_black_24dp)
-            .error(R.drawable.ic_broken_image_black_24dp)
-            .crossfade(enable = true)
-            .build(),
-        contentScale = ContentScale.Inside
-    )
+    val painter =
+        rememberAsyncImagePainter(
+            model =
+                ImageRequest
+                    .Builder(LocalContext.current)
+                    .data(feed.actor.avatar_url)
+                    .placeholder(R.drawable.ic_image_black_24dp)
+                    .error(R.drawable.ic_broken_image_black_24dp)
+                    .crossfade(enable = true)
+                    .build(),
+            contentScale = ContentScale.Inside,
+        )
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .wrapContentHeight(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+                .wrapContentHeight(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Image(
             painter = painter,
             contentDescription = "Image",
-            modifier = Modifier
-                .align(Alignment.Top)
-                .size(48.dp)
-                .clip(CircleShape)
-                .clickable { onActorClick(feed) },
-            contentScale = ContentScale.FillBounds
+            modifier =
+                Modifier
+                    .align(Alignment.Top)
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .clickable { onActorClick(feed) },
+            contentScale = ContentScale.FillBounds,
         )
         Column(modifier = Modifier.fillMaxWidth()) {
-
             HyperLinkText(
                 hyperLink = actorName,
                 localStringStyle = LocalTextStyle.current,
@@ -188,12 +204,13 @@ fun FeedItem(feed: Feed, onActorClick: (Feed) -> Unit = {}, onRepoClick: (String
                 localString = " $eventName",
                 startIndex = 0,
                 endIndex = actorName.length,
-                action = { onActorClick(feed) })
+                action = { onActorClick(feed) },
+            )
 
             Text(
                 text = time,
                 style = MaterialTheme.typography.bodySmall,
-                textAlign = TextAlign.End
+                textAlign = TextAlign.End,
             )
             val data = feed.repo
             TextButton(
@@ -201,28 +218,25 @@ fun FeedItem(feed: Feed, onActorClick: (Feed) -> Unit = {}, onRepoClick: (String
                 onClick = { onRepoClick(data.url) },
                 content = {
                     Text(text = data.name)
-                }
+                },
             )
-
         }
     }
-
-
 }
-
 
 @Preview
 @Composable
 private fun FeedScreenPreview() {
     FeedItem(
-        feed = Feed(
-            "",
-            "",
-            Feed.Actor(0, "jie", "", "", "", ""),
-            Feed.Repo(0, "", ""),
-            null,
-            true,
-            ""
-        )
+        feed =
+            Feed(
+                "",
+                "",
+                Feed.Actor(0, "jie", "", "", "", ""),
+                Feed.Repo(0, "", ""),
+                null,
+                true,
+                "",
+            ),
     )
 }

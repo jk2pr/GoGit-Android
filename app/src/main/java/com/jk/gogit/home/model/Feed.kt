@@ -17,7 +17,7 @@ data class Feed(
     val public: Boolean,
     @SerialName("created_at")
     val createdAt: String,
-    val org: Org? = null
+    val org: Org? = null,
 ) {
     @Serializable
     data class Payload(
@@ -40,7 +40,7 @@ data class Feed(
         val gravatarId: String,
         @SerialName(value = "avatar_url")
         val avatarUrl: String,
-        val url: String
+        val url: String,
     )
 
     @Serializable
@@ -50,18 +50,18 @@ data class Feed(
         val display_login: String,
         val gravatar_id: String,
         val url: String,
-        val avatar_url: String
+        val avatar_url: String,
     )
 
     @Serializable
     data class Repo(
         val id: Int,
         val name: String,
-        val url: String
+        val url: String,
     )
 
-    fun getEventName(): String {
-        return when (type) {
+    fun getEventName(): String =
+        when (type) {
             "CreateEvent" ->
                 "created a repository"
 
@@ -93,5 +93,4 @@ data class Feed(
                 type
             }
         }
-    }
 }

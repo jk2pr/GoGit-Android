@@ -1,6 +1,5 @@
 package com.jk.gogit.organisation
 
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -30,7 +29,6 @@ import org.koin.core.parameter.parametersOf
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun OrgListScreen() {
-
     val localNavyController = LocalNavController.current
     val savedStateHandle = (localNavyController.previousBackStackEntry?.savedStateHandle)
     val login =
@@ -42,27 +40,26 @@ fun OrgListScreen() {
         when (val result = viewModel.orgStateFlow.collectAsState().value) {
             is UiState.Loading ->
                 CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(50.dp)
+                    modifier =
+                        Modifier
+                            .size(50.dp),
                 )
 
-
-            is UiState.Error -> OfflineError(message = result.message,)
+            is UiState.Error -> OfflineError(message = result.message)
             is UiState.Empty -> {}
             is UiState.Content -> {
-
                 val nodes = result.data as List<*>
-                if (nodes.isEmpty())
+                if (nodes.isEmpty()) {
                     Text(
                         text = "No organizations found",
                         style = MaterialTheme.typography.bodyLarge,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
-                else
+                } else {
                     Column(
                         Modifier
                             .fillMaxSize()
-                            .padding(horizontal = 16.dp)
+                            .padding(horizontal = 16.dp),
                     ) {
                         LazyColumn {
                             items(nodes.size) {
@@ -73,7 +70,7 @@ fun OrgListScreen() {
                             }
                         }
                     }
-
+                }
             }
         }
     }

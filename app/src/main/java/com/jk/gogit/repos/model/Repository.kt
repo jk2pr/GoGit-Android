@@ -34,7 +34,7 @@ data class Owner(
     @SerialName("gravatar_id")
     val gravatarId: String,
     @SerialName("organizations_url")
-    val organizationsUrl: String
+    val organizationsUrl: String,
 )
 
 @Serializable
@@ -167,11 +167,20 @@ data class Repo(
     val watchersCount: Int,
     val homepage: String? = null,
     @SerialName("forks_count")
-    val forksCount: Int
+    val forksCount: Int,
 )
 
 @Serializable
-data class Permissions(val pull: Boolean, val admin: Boolean, val push: Boolean)
+data class Permissions(
+    val pull: Boolean,
+    val admin: Boolean,
+    val push: Boolean,
+)
 
 @Serializable
-data class License(val key: String, val name: String,@SerialName("spdx_id") val spdxId: String, val url: String?)
+data class License(
+    val key: String,
+    val name: String,
+    @SerialName("spdx_id") val spdxId: String,
+    val url: String?,
+)

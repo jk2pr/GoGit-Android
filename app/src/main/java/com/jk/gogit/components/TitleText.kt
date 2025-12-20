@@ -7,14 +7,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 
 @Composable
- fun TitleText(title: String, modifier: Modifier = Modifier) {
+fun TitleText(
+    title: String,
+    modifier: Modifier = Modifier,
+) {
     Text(
         softWrap = true,
         maxLines = 1,
         text = title,
         modifier = modifier,
-        style = MaterialTheme.typography.headlineSmall.copy(
-            fontWeight = FontWeight.Bold,
-        )
+        style =
+            MaterialTheme.typography.headlineSmall.copy(
+                fontWeight = FontWeight.Bold,
+            ),
     )
 }

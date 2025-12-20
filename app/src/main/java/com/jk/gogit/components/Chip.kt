@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.hoppers.type.SearchType
@@ -19,26 +21,30 @@ fun Chip(
     types: List<SearchType>,
     onTypeSelected: (SearchType) -> Unit = {},
 ) {
-    val selectedType = remember { mutableStateOf(types.first()) }
+    var selectedType by remember { mutableStateOf(types.first()) }
 
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         types.forEach { type ->
-            val isSelected = selectedType.value == type
-            FilterChip(label = {
-                Text(
-                    text = type.name,
-                    modifier = Modifier.padding(8.dp)
-                )
-            }, selected = isSelected,
+
+            val isSelected = selectedType == type
+            FilterChip(
+                label = {
+                    Text(
+                        text = type.name,
+                        modifier = Modifier.padding(8.dp),
+                    )
+                },
+                selected = isSelected,
                 onClick = {
-                    selectedType.value = type
+                    selectedType = type
                     onTypeSelected(type)
-                }
+                },
             )
         }
     }

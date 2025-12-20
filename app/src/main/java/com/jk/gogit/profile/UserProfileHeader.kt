@@ -50,61 +50,65 @@ import com.jk.gogit.navigation.NavigationArgs
 fun UserProfileHeader(
     data: GetUserQuery.User,
     modifier: Modifier = Modifier,
-    onFollow: (Boolean) -> Unit
+    onFollow: (Boolean) -> Unit,
 ) {
     val localNavController = LocalNavController.current
     val loggedInUser = AuthManager.getLogin()
 
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
     ) {
         val painter =
             rememberAsyncImagePainter(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(data.avatarUrl)
-                    .placeholder(R.drawable.ic_image_black_24dp)
-                    .error(R.drawable.ic_broken_image_black_24dp)
-                    .crossfade(enable = true)
-                    .build(),
-                contentScale = ContentScale.Inside
+                model =
+                    ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(data.avatarUrl)
+                        .placeholder(R.drawable.ic_image_black_24dp)
+                        .error(R.drawable.ic_broken_image_black_24dp)
+                        .crossfade(enable = true)
+                        .build(),
+                contentScale = ContentScale.Inside,
             )
-
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Image(
                 painter = painter,
                 contentDescription = null,
-                modifier = Modifier
-                    .size(112.dp),
+                modifier =
+                    Modifier
+                        .size(112.dp),
             )
             Column {
                 Text(
                     softWrap = true,
-                    text = buildAnnotatedString {
-                        append(data.login)
-                        if (data.pronouns.orEmpty().isNotBlank()) {
-                            append(" \u2022 (${data.pronouns})")
-                        }
-                    },
+                    text =
+                        buildAnnotatedString {
+                            append(data.login)
+                            if (data.pronouns.orEmpty().isNotBlank()) {
+                                append(" \u2022 (${data.pronouns})")
+                            }
+                        },
                 )
 
                 BulletList(
                     maxLine = 1,
-                    items = mapOf(
-                        Icons.Outlined.MailOutline to data.email,
-                        Icons.Outlined.LocationOn to data.location,
-                        ImageVector.vectorResource(id = R.drawable.outline_home_work_24) to data.company
-                    )
+                    items =
+                        mapOf(
+                            Icons.Outlined.MailOutline to data.email,
+                            Icons.Outlined.LocationOn to data.location,
+                            ImageVector.vectorResource(id = R.drawable.outline_home_work_24) to data.company,
+                        ),
                 )
             }
         }
         BulletList(
             maxLine = 1,
-            items = mapOf(ImageVector.vectorResource(id = R.drawable.baseline_link_24) to data.websiteUrl?.toString())
+            items = mapOf(ImageVector.vectorResource(id = R.drawable.baseline_link_24) to data.websiteUrl?.toString()),
         )
 
         BulletList(items = mapOf(Icons.Outlined.Info to data.bio))
@@ -119,16 +123,18 @@ fun UserProfileHeader(
                     contentPadding = PaddingValues(0.dp),
                     onClick = {
                         localNavController.currentBackStackEntry
-                            ?.savedStateHandle?.let {
+                            ?.savedStateHandle
+                            ?.let {
                                 it[NavigationArgs.USER_NAME] = data.login
                                 it[NavigationArgs.FILTER] = "followers"
                             }
 
                         localNavController.navigate(AppScreens.USERLIST.route)
-                    }) {
+                    },
+                ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.group_24dp),
@@ -142,50 +148,50 @@ fun UserProfileHeader(
                     modifier = Modifier.align(Alignment.CenterVertically),
                     onClick = {
                         localNavController.currentBackStackEntry
-                            ?.savedStateHandle?.let {
+                            ?.savedStateHandle
+                            ?.let {
                                 it[NavigationArgs.USER_NAME] = data.login
                                 it[NavigationArgs.FILTER] = "following"
                             }
 
                         localNavController.navigate(AppScreens.USERLIST.route)
-                    }) {
+                    },
+                ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.bullet_24dp),
                             contentDescription = "following icon",
                         )
                         Text(
-                            text = "${data.following.totalCount.formatNumber()} following"
+                            text = "${data.following.totalCount.formatNumber()} following",
                         )
                     }
-
                 }
             }
-            if (data.login != loggedInUser)
+            if (data.login != loggedInUser) {
                 ElevatedButton(
                     shape = MaterialTheme.shapes.small,
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                    //colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.outline, contentColor = MaterialTheme.colorScheme.onPrimary),
+                    // colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.outline, contentColor = MaterialTheme.colorScheme.onPrimary),
                     onClick = {
                         onFollow(data.viewerIsFollowing)
-
                     },
                 ) {
                     Text(
                         text = if (data.viewerIsFollowing) "unfollow" else "Follow",
                         // style = TextStyle(color = Color.Blue),
                         //   modifier = Modifier.wrapContentWidth(),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
+            }
         }
     }
     HorizontalDivider()
 }
-
 
 @Composable
 fun BulletList(
@@ -198,18 +204,18 @@ fun BulletList(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterVertically)
+        verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterVertically),
     ) {
         items.forEach {
             if (it.value.isNullOrBlank()) return@forEach
             Row(
                 horizontalArrangement = Arrangement.spacedBy(lineSpacing),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
                     imageVector = it.key,
                     contentDescription = "",
-                    tint = tint
+                    tint = tint,
                 )
                 Text(
                     text = HtmlCompat.fromHtml(it.value!!, 0).toString(),
@@ -219,7 +225,6 @@ fun BulletList(
                     modifier = Modifier.weight(1f, fill = true),
                 )
             }
-
         }
     }
 }
